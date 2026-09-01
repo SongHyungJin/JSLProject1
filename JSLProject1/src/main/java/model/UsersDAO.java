@@ -91,7 +91,7 @@ public class UsersDAO {
 	}
 	
 	//로그인
-		public UsersDTO searchByIdPw(String email) {
+		public UsersDTO loginByEmail(String email) {
 			Connection conn =null;
 			PreparedStatement pstmt = null;
 			ResultSet rs = null;
@@ -126,5 +126,86 @@ public class UsersDAO {
 			return dto;
 			
 		} 
+		
+	//닉네임 수정 
+		public void updateNickname(int id, String nickname) {
+			Connection conn = null;
+			PreparedStatement pstmt = null;
+			
+			String sql ="update users set nickname=? where id=?";
+			
+			try {
+				conn = DBmanager.getInstance();
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, nickname);
+				pstmt.setInt(2, id);
+				pstmt.executeUpdate();
+				
+			}catch(Exception e) {
+				e.printStackTrace();
+				
+			}finally {
+				DBmanager.close(pstmt, conn);
+			}
+		}
+		
+	//비밀번호 변경(service에서 입력받은 비밀번호 일치 확인 후,BCrypt암호화해서 변경)
+		public void updatePassword(int id,String password) {
+			Connection conn = null;
+			PreparedStatement pstmt = null;
+			
+			String sql ="update users set password=? where id=?";
+			
+			try {
+				conn = DBmanager.getInstance();
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, password);
+				pstmt.setInt(2, id);
+				pstmt.executeUpdate();
+				
+			}catch(Exception e) {
+				e.printStackTrace();
+				
+			}finally {
+				DBmanager.close(pstmt, conn);
+			}
+		}
+		
+		//프로필 조회
+		public UsersDTO getProfile(int id) {
+			Connection conn = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			UsersDTO dto = null;
+			
+			String sql ="select * from users where id=?";
+			
+			try {
+				conn = DBmanager.getInstance();
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setInt(1, id);
+				rs = pstmt.executeQuery();
+				
+				if(rs.next()) {
+					dto = new UsersDTO();
+					dto.setId(rs.getInt("id"));
+					dto.setEmail(rs.getString("email"));
+					dto.setNickname(rs.getString("nickname"));
+					dto.setRole(rs.getString("role"));
+					dto.setLanguage(rs.getString("language"));
+					dto.setCreated_at(rs.getTimestamp("created_at").toLocalDateTime());
+					dto.setUpdate_at(rs.getTimestamp("update_at").toLocalDateTime());
+				}
+				
+			}catch(Exception e) {
+				e.printStackTrace();
+				
+			}finally {
+				DBmanager.close(pstmt, conn, rs);
+			}
+			return dto;
+		}
+		
+		
 	
 }
