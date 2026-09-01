@@ -12,6 +12,8 @@ import util.DBmanager;
 public class ReviewsDAO {
 	// 리뷰 등록
     public int insert(ReviewsDTO dto) {
+    	Connection conn = null;
+		PreparedStatement pstmt = null;
 
         String sql = "INSERT INTO reviews ("
                    + "id, users_id, places_id, rating, content"
@@ -21,9 +23,9 @@ public class ReviewsDAO {
 
         int result = 0;
 
-        try (Connection conn = DBmanager.getInstance();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
+        try  {
+        	conn = DBmanager.getInstance();
+        	pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, dto.getUsersId());
             pstmt.setInt(2, dto.getPlacesId());
             pstmt.setInt(3, dto.getRating());
@@ -33,7 +35,9 @@ public class ReviewsDAO {
 
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+        }finally {
+			DBmanager.close(pstmt, conn);
+		}
 
         return result;
     }
@@ -41,6 +45,9 @@ public class ReviewsDAO {
 
     // 리뷰 수정
     public int update(ReviewsDTO dto) {
+    	
+    	Connection conn = null;
+		PreparedStatement pstmt = null;
 
         String sql = "UPDATE reviews SET "
                    + "rating = ?, "
@@ -51,9 +58,9 @@ public class ReviewsDAO {
 
         int result = 0;
 
-        try (Connection conn = DBmanager.getInstance();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
+        try {
+        	conn = DBmanager.getInstance();
+        	pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, dto.getRating());
             pstmt.setString(2, dto.getContent());
             pstmt.setInt(3, dto.getId());
@@ -62,6 +69,8 @@ public class ReviewsDAO {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        }finally {
+        	DBmanager.close(pstmt, conn);
         }
 
         return result;
@@ -70,6 +79,9 @@ public class ReviewsDAO {
 
     // 전체 리뷰 조회
     public List<ReviewsDTO> selectAll() {
+    	Connection conn=null;
+        PreparedStatement pstmt=null;
+        ResultSet rs=null;
 
         List<ReviewsDTO> list = new ArrayList<>();
 
@@ -77,9 +89,10 @@ public class ReviewsDAO {
                    + "WHERE deleted = 0 "
                    + "ORDER BY id DESC";
 
-        try (Connection conn = DBmanager.getInstance();
-             PreparedStatement pstmt = conn.prepareStatement(sql);
-             ResultSet rs = pstmt.executeQuery()) {
+        try {
+        	conn = DBmanager.getInstance();
+        	pstmt = conn.prepareStatement(sql);
+            rs= pstmt.executeQuery();
 
             while (rs.next()) {
 
@@ -109,7 +122,9 @@ public class ReviewsDAO {
 
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+        }finally {
+			DBmanager.close(pstmt, conn,rs);
+		}
 
         return list;
     }

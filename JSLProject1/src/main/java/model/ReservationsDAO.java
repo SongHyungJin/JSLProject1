@@ -11,6 +11,8 @@ import util.DBmanager;
 public class ReservationsDAO {
 	 // 예약 등록
     public int insert(ReservationsDTO dto) {
+    	Connection conn = null;
+		PreparedStatement pstmt = null;
 
         String sql = "INSERT INTO reservations ("
                    + "id, users_id, places_id, reservation_date, "
@@ -21,9 +23,9 @@ public class ReservationsDAO {
 
         int result = 0;
 
-        try (Connection conn = DBmanager.getInstance();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
+        try  {
+        	conn = DBmanager.getInstance();
+        	pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, dto.getUsers_id());
             pstmt.setInt(2, dto.getPlaces_id());
 
@@ -41,6 +43,8 @@ public class ReservationsDAO {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        }finally {
+        	DBmanager.close(pstmt, conn);
         }
 
         return result;
@@ -49,6 +53,9 @@ public class ReservationsDAO {
 
     // 예약 수정
     public int update(ReservationsDTO dto) {
+    	
+    	Connection conn = null;
+		PreparedStatement pstmt = null;
 
         String sql = "UPDATE reservations SET "
                    + "reservation_date = ?, "
@@ -61,9 +68,9 @@ public class ReservationsDAO {
 
         int result = 0;
 
-        try (Connection conn = DBmanager.getInstance();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
+        try {
+        	conn = DBmanager.getInstance();
+        	pstmt = conn.prepareStatement(sql);
             pstmt.setDate(
                 1,
                 java.sql.Date.valueOf(dto.getReservation_date())
@@ -79,7 +86,9 @@ public class ReservationsDAO {
 
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+        }finally {
+			DBmanager.close(pstmt, conn);
+		}
 
         return result;
     }

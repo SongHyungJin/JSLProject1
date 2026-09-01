@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import util.DBmanager;
 
 public class UsersDAO {
-	//회원정보 DB등록 메서드 
+	//회원정보 DB등록 메서드 (회원가입)
 	public void insertUsers(UsersDTO dto) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -55,7 +55,7 @@ public class UsersDAO {
 			e.printStackTrace();
 			
 		}finally {
-			
+			DBmanager.close(pstmt, conn);
 		}
 		return result;
 	}
@@ -85,8 +85,46 @@ public class UsersDAO {
 			e.printStackTrace();
 			
 		}finally {
-			
+			DBmanager.close(pstmt, conn);
 		}
 		return result;
 	}
+	
+	//로그인
+		public UsersDTO searchByIdPw(String email) {
+			Connection conn =null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			int result = 0;
+			
+			String sql ="select * from users where email=?";
+			
+			UsersDTO dto =null;
+			
+			try {
+				
+				conn= DBmanager.getInstance();
+				pstmt =conn.prepareStatement(sql);
+				pstmt.setString(1, email);
+				rs =pstmt.executeQuery();
+			
+					if(rs.next()) {
+						dto = new UsersDTO();
+						dto.setEmail(rs.getString("email"));
+						dto.setPassword(rs.getString("password"));
+						return dto;
+					}
+				
+					
+				
+			}catch(Exception e) {
+				
+				e.printStackTrace();
+			}finally {
+				DBmanager.close(pstmt, conn, rs);
+			}
+			return dto;
+			
+		} 
+	
 }

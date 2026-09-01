@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import util.DBmanager;
 
@@ -11,6 +13,9 @@ public class BookmarksDAO {
 	
 	// 북마크 등록
     public int insert(BookmarksDTO dto) {
+    	
+    	Connection conn = null;
+		PreparedStatement pstmt = null;
 
         String sql = "INSERT INTO bookmarks ("
                    + "id, users_id, places_id"
@@ -20,9 +25,9 @@ public class BookmarksDAO {
 
         int result = 0;
 
-        try (Connection conn = DBmanager.getInstance();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
+        try{
+        	conn = DBmanager.getInstance();
+        	pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, dto.getUsersId());
             pstmt.setInt(2, dto.getPlacesId());
 
@@ -30,7 +35,10 @@ public class BookmarksDAO {
 
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+            
+        }finally {
+			DBmanager.close(pstmt, conn);
+		}
 
         return result;
     }
@@ -38,6 +46,9 @@ public class BookmarksDAO {
 
     // 북마크 삭제
     public int delete(int usersId, int placesId) {
+    	
+    	Connection conn = null;
+		PreparedStatement pstmt = null;
 
         String sql = "DELETE FROM bookmarks "
                    + "WHERE users_id = ? "
@@ -45,9 +56,9 @@ public class BookmarksDAO {
 
         int result = 0;
 
-        try (Connection conn = DBmanager.getInstance();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
+        try {
+        	conn = DBmanager.getInstance();
+        	pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, usersId);
             pstmt.setInt(2, placesId);
 
@@ -55,6 +66,8 @@ public class BookmarksDAO {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        }finally {
+        	DBmanager.close(pstmt, conn);
         }
 
         return result;
@@ -62,24 +75,26 @@ public class BookmarksDAO {
 
 
     // 특정 사용자 북마크 조회
-    public BookmarksDTO selectOne(int usersId) {
+    public List<BookmarksDTO> selectBookmarksBy(int usersId) {
+    	
+    	Connection conn=null;
+        PreparedStatement pstmt=null;
+        ResultSet rs=null;
 
         String sql = "SELECT * FROM bookmarks "
-                   + "WHERE users_id = ? "
-                   + "AND places_id = ?";
+                   + "WHERE users_id = ? ";
 
-        BookmarksDTO dto = null;
+        List<BookmarksDTO> list = new ArrayList<BookmarksDTO>();
 
-        try (Connection conn = DBmanager.getInstance();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
+        try {
+        	conn = DBmanager.getInstance();
+        	pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, usersId);
-
-            try (ResultSet rs = pstmt.executeQuery()) {
-
-                if (rs.next()) {
-
-                    dto = new BookmarksDTO();
+            rs= pstmt.executeQuery();
+            
+                while (rs.next()) {
+                	
+                    BookmarksDTO dto = new BookmarksDTO();
 
                     dto.setId(rs.getInt("id"));
                     dto.setUsersId(rs.getInt("users_id"));
@@ -90,13 +105,17 @@ public class BookmarksDAO {
                             rs.getTimestamp("created_at").toLocalDateTime()
                         );
                     }
+                    list.add(dto);
                 }
-            }
+            
 
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+            
+        }finally {
+			DBmanager.close(pstmt, conn,rs);
+		}
 
-        return dto;
+        return list;
     }
 }
