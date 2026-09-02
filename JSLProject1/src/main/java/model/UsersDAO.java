@@ -11,7 +11,7 @@ public class UsersDAO {
 	public int insertUsers(UsersDTO dto) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		
+		int result = 0; //회원가입 성공여부 확인용
 		String sql ="insert into users(id,email,password,nickname) values(users_seq.nextval,?,?,?)";
 		
 		try {
@@ -20,15 +20,15 @@ public class UsersDAO {
 			pstmt.setString(1, dto.getEmail());
 			pstmt.setString(2, dto.getPassword());
 			pstmt.setString(3, dto.getNickname());
-			pstmt.executeUpdate();
+			result = pstmt.executeUpdate(); //성공시 1
 			
 		}catch(Exception e) {
 			e.printStackTrace();
-			return 0; //회원가입 실패
+			return result; //회원가입 실패
 		}finally {
 			DBmanager.close(pstmt, conn);
 		}
-		return 1; //회원가입 성공
+		return result; //회원가입 성공
 	}
 	//이메일 중복여부 확인 메서드(유저확인용),email unique 제약조건 
 	public int checkEmail(String email) {
@@ -68,7 +68,7 @@ public class UsersDAO {
 		int result = 0; 
 		//result==0 닉네임 사용가능 
 		//result==1 닉네임 사용 불가 
-		String sql ="select nickname from users where ninkname=?";
+		String sql ="select nickname from users where nickname=?";
 		
 		try {
 			conn = DBmanager.getInstance();
@@ -129,10 +129,10 @@ public class UsersDAO {
 		} 
 		
 	//닉네임 수정 
-		public void updateNickname(int id, String nickname) {
+		public int updateNickname(int id, String nickname) {
 			Connection conn = null;
 			PreparedStatement pstmt = null;
-			
+			int result = 0; //닉네임 변경 성공여부 확인용
 			String sql ="update users set nickname=? where id=?";
 			
 			try {
@@ -140,7 +140,7 @@ public class UsersDAO {
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setString(1, nickname);
 				pstmt.setInt(2, id);
-				pstmt.executeUpdate();
+				result = pstmt.executeUpdate(); //성공시 1
 				
 			}catch(Exception e) {
 				e.printStackTrace();
@@ -148,12 +148,14 @@ public class UsersDAO {
 			}finally {
 				DBmanager.close(pstmt, conn);
 			}
+			return result; 
 		}
 		
 	//비밀번호 변경(service에서 입력받은 비밀번호 일치 확인 후,BCrypt암호화해서 변경)
-		public void updatePassword(int id,String password) {
+		public int updatePassword(int id,String password) {
 			Connection conn = null;
 			PreparedStatement pstmt = null;
+			int result=0; //비밀번호 변경 성공여부 확인용
 			
 			String sql ="update users set password=? where id=?";
 			
@@ -162,7 +164,7 @@ public class UsersDAO {
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setString(1, password);
 				pstmt.setInt(2, id);
-				pstmt.executeUpdate();
+				result =pstmt.executeUpdate();
 				
 			}catch(Exception e) {
 				e.printStackTrace();
@@ -170,6 +172,7 @@ public class UsersDAO {
 			}finally {
 				DBmanager.close(pstmt, conn);
 			}
+			return result;
 		}
 		
 		//프로필 조회
