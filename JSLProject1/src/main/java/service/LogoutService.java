@@ -11,7 +11,6 @@ public class LogoutService implements Command {
 	@Override
 	public void doCommand(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		//로그아웃이란 세션을 삭제하는 것 
 		 request.setCharacterEncoding("utf-8");
 		 
 		 HttpSession session = request.getSession(false);

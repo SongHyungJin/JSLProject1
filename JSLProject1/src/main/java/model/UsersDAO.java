@@ -8,7 +8,7 @@ import util.DBmanager;
 
 public class UsersDAO {
 	//회원정보 DB등록 메서드 (회원가입)
-	public void insertUsers(UsersDTO dto) {
+	public int insertUsers(UsersDTO dto) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		
@@ -24,10 +24,11 @@ public class UsersDAO {
 			
 		}catch(Exception e) {
 			e.printStackTrace();
-			
+			return 0; //회원가입 실패
 		}finally {
-			
+			DBmanager.close(pstmt, conn);
 		}
+		return 1; //회원가입 성공
 	}
 	//이메일 중복여부 확인 메서드(유저확인용),email unique 제약조건 
 	public int checkEmail(String email) {

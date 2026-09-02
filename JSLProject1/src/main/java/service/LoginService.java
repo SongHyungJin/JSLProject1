@@ -15,26 +15,31 @@ public class LoginService implements Command {
 
 	@Override
 	public void doCommand(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		request.setCharacterEncoding("utf-8");
-		String email = request.getParameter("email");
-		String password = request.getParameter("password");
-		
-		UsersDTO dto = new UsersDTO();
-		UsersDAO dao = new UsersDAO();
-		dto =dao.loginByEmail(email);
-		
-		
-		if(dto!=null&& PasswordUtil.checkPassword(password, dto.getPassword())) {
-			//세션(서버저장)생성
-			HttpSession session = request.getSession();
-			session.setAttribute("email", email); //계속 서버에 저장
-			//request.setAttribute("userid", userid); //다른 페이지로 이동하면 속성값 사라짐
-			response.getWriter().write("success");//다시 ajax success로 돌아가는 값
-			
-		}else {
-			response.getWriter().write("fail");
-		}
+	        throws ServletException, IOException {
+
+	    request.setCharacterEncoding("utf-8");
+
+	    String email = request.getParameter("email");
+	    String password = request.getParameter("password");
+
+	    UsersDAO dao = new UsersDAO();
+	    UsersDTO dto = dao.loginByEmail(email);
+
+	    if (dto != null && PasswordUtil.checkPassword(password, dto.getPassword())) {
+
+	        // 로그인 성공 → 세션에 이메일 저장
+	        HttpSession session = request.getSession();
+	        session.setAttribute("id", dto.getId());
+	        request.setAttribute("result", 1); // 로그인 성공 시 result를 1로 설정
+	        return;
+
+	    } else {
+
+	        // 로그인 실패
+	        request.setAttribute("result", 0); // 로그인 실패 시 result를 0로 설정
+	        return;
+	       
+	    }
 	}
 
 }
