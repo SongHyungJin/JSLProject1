@@ -12,6 +12,7 @@ import service.EmailSendService;
 import service.EmailVerifyService;
 import service.LoginService;
 import service.LogoutService;
+import service.PasswordUpdateService;
 import service.ProfileUpdateService;
 import service.ProfileViewService;
 import service.SignupService;
@@ -41,7 +42,7 @@ public class UsersController extends HttpServlet {
 		String action = request.getPathInfo(); // 요청한 주소를 가져오는 메서드
 		String page = null;
 		switch (action) {
-		case "회원가입 주소":
+		case "회원가입 주소": //회원가입
 
 			new SignupService().doCommand(request, response);
 
@@ -53,11 +54,11 @@ public class UsersController extends HttpServlet {
 				page = "회원가입화면";
 			}
 			break;
-		case "이메일 인증 주소":
+		case "이메일 인증 주소": //비동기식
 			new EmailVerifyService().doCommand(request, response);
 			break;
 			
-		case "이메일 전송 주소":
+		case "이메일 전송 주소": //비동기식
 			new EmailSendService().doCommand(request, response);
 			break;
 		case "로그인 주소":
@@ -78,6 +79,10 @@ public class UsersController extends HttpServlet {
 			break;
 		case "회원정보 수정 주소":
 			new ProfileUpdateService().doCommand(request, response);
+			page = "회원정보 view 페이지";
+			break;
+		case "비밀번호 수정":
+			new PasswordUpdateService().doCommand(request, response);
 			page = "회원정보 view 페이지";
 			break;
 		}
