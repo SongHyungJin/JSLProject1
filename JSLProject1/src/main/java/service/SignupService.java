@@ -30,6 +30,12 @@ public class SignupService implements Command {
 		    request.setAttribute("message", "이미 사용 중인 이메일입니다.");
 		    return;
 		}
+		//이메일 인증 여부 확인
+		Boolean emailVerified = (Boolean) request.getSession().getAttribute("emailVerified");
+		if (emailVerified == null || !emailVerified) {
+		    request.setAttribute("message", "이메일 인증을 완료해주세요.");
+		    return;
+		}
 		dto.setEmail(email);
 		//닉네임 입력 여부 확인
 		String nickname = request.getParameter("nickname");
@@ -76,6 +82,9 @@ public class SignupService implements Command {
 			return;
 		}
 			request.setAttribute("message", "회원가입이 완료되었습니다. 로그인 해주세요.");
+			// 회원가입 INSERT 성공 후
+			request.getSession().removeAttribute("emailVerified"); // 세션에서 emailVerified 제거
+			request.setAttribute("signupSuccess", true);
 		
 	}
 
