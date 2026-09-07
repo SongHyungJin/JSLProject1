@@ -42,7 +42,7 @@ public class PlacesController extends HttpServlet {
 				new PlacesListFilter().doCommand(request, response);
 				page = "/places/placesAllList.jsp";
 				break;
-		case "/placesDetail.do": // 점포 상세정보s
+		case "/placesDetail.do": // 점포 상세정보
 				new PlacesDetailViewService().doCommand(request, response);
 				page = "/places/placesDetail.jsp";
 				break;

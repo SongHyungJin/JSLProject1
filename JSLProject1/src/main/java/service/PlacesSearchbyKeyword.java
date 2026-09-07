@@ -19,7 +19,16 @@ public class PlacesSearchbyKeyword implements Command {
 		String keyword = request.getParameter("keyword");
 		String[] categories = request.getParameterValues("category");
 		String region = request.getParameter("region");
-		List<PlacesDTO> list = dao.searchKeyword(keyword,region,categories);
+		List<PlacesDTO> list=null;
+		//글자수 2글자 이상 검사 
+		if (keyword == null || keyword.trim().length() < 2) {
+		    request.setAttribute("message", "검색어는 2글자 이상 입력해주세요.");
+		    return;
+			
+		}
+			
+		list = dao.searchKeyword(keyword,region,categories);
+		
 		request.setAttribute("keywordlist", list);
 	}
 
