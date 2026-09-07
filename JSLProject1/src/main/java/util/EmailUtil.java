@@ -17,10 +17,10 @@ public class EmailUtil {
     private static final String SMTP_PORT = "587";
 
     // 보내는 사람 Gmail
-    private static final String FROM_EMAIL = "구글계정만들어야함@gmail.com";
+    private static final String FROM_EMAIL = "triplinkproject@gmail.com";
 
     // Gmail 앱 비밀번호
-    private static final String APP_PASSWORD = "비밀번호";
+    private static final String APP_PASSWORD = "aoxv vkdr rqhb jpcr";
 
     // 이메일 보내기
     public static void sendEmail(String toEmail, String subject, String content) {
