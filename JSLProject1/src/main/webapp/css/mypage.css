@@ -1,0 +1,432 @@
+/* =========================
+   My Page
+========================= */
+
+* {
+    box-sizing: border-box;
+}
+
+.mypage-main {
+    min-height: 100vh;
+    padding: 55px 20px 90px;
+
+    /* 기존 핑크 배경 제거 */
+    background: #f7f8fa;
+}
+
+.mypage-container {
+    width: 100%;
+    max-width: 1050px;
+    margin: 0 auto;
+}
+
+
+/* =========================
+   제목
+========================= */
+
+.mypage-title {
+    margin-bottom: 32px;
+}
+
+.mypage-title h1 {
+    margin: 0 0 8px;
+
+    color: #222;
+    font-size: 32px;
+    font-weight: 800;
+}
+
+.mypage-title p {
+    margin: 0;
+
+    color: #888;
+    font-size: 14px;
+}
+
+
+/* =========================
+   공통 Section
+========================= */
+
+.mypage-section {
+    margin-bottom: 22px;
+    padding: 26px;
+
+    background: #ffffff;
+
+    border: 1px solid #ececef;
+    border-radius: 16px;
+
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 18px;
+}
+
+.section-header h2 {
+    margin: 0;
+
+    color: #222;
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.section-more {
+    color: #e85d8e;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    text-decoration: none;
+}
+
+.section-more:hover {
+    text-decoration: underline;
+}
+
+
+/* =========================
+   내 정보
+========================= */
+
+.profile-card {
+    background: transparent;
+}
+
+.profile-row {
+    min-height: 62px;
+
+    display: grid;
+    grid-template-columns: 100px 1fr auto;
+    align-items: center;
+    gap: 18px;
+
+    margin-bottom: 10px;
+}
+
+.profile-row:last-child {
+    margin-bottom: 0;
+}
+
+.profile-label {
+    color: #666;
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.profile-value {
+    padding: 13px 16px;
+
+    color: #333;
+    background: #f5f6f8;
+
+    border: 1px solid #ededf0;
+    border-radius: 9px;
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.small-btn {
+    min-width: 105px;
+    padding: 11px 14px;
+
+    color: #e85d8e;
+    background: #ffffff;
+
+    border: 1px solid #e85d8e;
+    border-radius: 9px;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+}
+
+.small-btn:hover {
+    color: #ffffff;
+    background: #e85d8e;
+}
+
+
+/* =========================
+   찜한 가게
+========================= */
+
+.favorite-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 18px;
+}
+
+.favorite-card {
+    overflow: hidden;
+
+    background: #ffffff;
+
+    border: 1px solid #e9eaed;
+    border-radius: 13px;
+
+    text-decoration: none;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.favorite-card:hover {
+    transform: translateY(-4px);
+
+    box-shadow:
+        0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.favorite-image {
+    height: 135px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /* 핑크 대신 중립적인 회색 */
+    background: #f1f2f4;
+
+    font-size: 52px;
+}
+
+.favorite-info {
+    padding: 16px;
+}
+
+.favorite-info h3 {
+    margin: 0 0 6px;
+
+    color: #222;
+    font-size: 16px;
+}
+
+.favorite-info p {
+    margin: 0 0 9px;
+
+    color: #999;
+    font-size: 12px;
+}
+
+.favorite-info span {
+    color: #e85d8e;
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+
+/* =========================
+   예약 내역
+========================= */
+
+.reservation-list {
+    display: flex;
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+.reservation-item {
+    padding: 16px 18px;
+
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    background: #ffffff;
+
+    border: 1px solid #ececef;
+    border-radius: 12px;
+}
+
+.reservation-icon {
+    width: 52px;
+    height: 52px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    background: #f1f2f4;
+
+    border-radius: 10px;
+
+    font-size: 26px;
+}
+
+.reservation-content {
+    flex: 1;
+}
+
+.reservation-content h3 {
+    margin: 0 0 6px;
+
+    color: #222;
+    font-size: 15px;
+}
+
+.reservation-content p {
+    margin: 0;
+
+    color: #8d9299;
+    font-size: 12px;
+}
+
+.reservation-status {
+    padding: 7px 12px;
+
+    border-radius: 20px;
+
+    font-size: 11px;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+/* 예약 예정만 핑크 */
+.reservation-status.upcoming {
+    color: #e85d8e;
+    background: #fff0f5;
+}
+
+/* 방문 완료는 회색 */
+.reservation-status.complete {
+    color: #777;
+    background: #f1f2f4;
+}
+
+
+/* =========================
+   하단 버튼
+========================= */
+
+.mypage-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 14px;
+
+    margin-top: 38px;
+}
+
+.main-btn,
+.withdraw-btn {
+    padding: 11px 20px;
+
+    background: #ffffff;
+
+    border-radius: 9px;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+}
+
+.main-btn {
+    color: #777;
+    border: 1px solid #cfd2d7;
+}
+
+.main-btn:hover {
+    color: #333;
+    background: #f1f2f4;
+}
+
+.withdraw-btn {
+    color: #e85d8e;
+    border: 1px solid #e85d8e;
+}
+
+.withdraw-btn:hover {
+    color: #ffffff;
+    background: #e85d8e;
+}
+
+
+/* =========================
+   Tablet
+========================= */
+
+@media (max-width: 900px) {
+
+    .favorite-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+
+/* =========================
+   Mobile
+========================= */
+
+@media (max-width: 600px) {
+
+    .mypage-main {
+        padding: 35px 14px 65px;
+    }
+
+    .mypage-title h1 {
+        font-size: 27px;
+    }
+
+    .mypage-section {
+        padding: 20px;
+    }
+
+    .profile-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+
+        padding: 10px 0;
+    }
+
+    .small-btn {
+        justify-self: start;
+    }
+
+    .favorite-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .reservation-item {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .reservation-status {
+        margin-left: 68px;
+    }
+}
+
+/* =========================
+   내 정보 - 버튼 2개(중복확인/변경확인) 한 칸에 나란히
+========================= */
+
+.profile-actions {
+    display: flex;
+    gap: 8px;
+}

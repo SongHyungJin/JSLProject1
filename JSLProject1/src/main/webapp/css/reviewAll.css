@@ -1,0 +1,465 @@
+/* =========================
+   Review All (전체보기)
+========================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #f7f8fa;
+    color: #222;
+    font-family: Arial, sans-serif;
+}
+
+button {
+    cursor: pointer;
+    font-family: inherit;
+}
+
+
+/* =========================
+   Main
+========================= */
+
+.review-all-page {
+    width: 100%;
+    max-width: 900px;
+
+    margin: 0 auto;
+    padding: 45px 24px 90px;
+}
+
+.review-all-place-name {
+    margin: 0 0 6px;
+
+    color: #999;
+
+    font-size: 14px;
+    font-weight: 700;
+}
+
+
+/* =========================
+   요약 : 평균 별점 + 분포
+========================= */
+
+.review-summary {
+    display: flex;
+    gap: 40px;
+
+    padding: 28px;
+    margin-bottom: 24px;
+
+    background: #ffffff;
+
+    border: 1px solid #ececef;
+    border-radius: 16px;
+
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+.summary-score {
+    flex-shrink: 0;
+
+    width: 140px;
+
+    text-align: center;
+
+    border-right: 1px solid #f0f0f2;
+}
+
+.score-number {
+    color: #181818;
+
+    font-size: 42px;
+    font-weight: 800;
+}
+
+.score-stars {
+    margin: 6px 0;
+
+    color: #f5a623;
+
+    font-size: 15px;
+}
+
+.score-count {
+    color: #999;
+
+    font-size: 13px;
+}
+
+.summary-bars {
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    gap: 8px;
+}
+
+.bar-row {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+}
+
+.bar-label {
+    width: 32px;
+    flex-shrink: 0;
+
+    color: #666;
+
+    font-size: 12px;
+}
+
+.bar-track {
+    flex: 1;
+
+    height: 8px;
+
+    background: #f1f2f4;
+
+    border-radius: 5px;
+
+    overflow: hidden;
+}
+
+.bar-fill {
+    height: 100%;
+
+    background: #e85d8e;
+
+    border-radius: 5px;
+}
+
+.bar-count {
+    width: 30px;
+    flex-shrink: 0;
+
+    text-align: right;
+
+    color: #999;
+
+    font-size: 12px;
+}
+
+
+/* =========================
+   정렬 / 필터
+========================= */
+
+.review-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 18px;
+
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.sort-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.sort-btn {
+    padding: 8px 14px;
+
+    color: #666;
+    background: #ffffff;
+
+    border: 1px solid #dddddd;
+    border-radius: 20px;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    transition: all 0.2s ease;
+}
+
+.sort-btn:hover {
+    border-color: #e85d8e;
+    color: #e85d8e;
+}
+
+.sort-btn.active {
+    color: #ffffff;
+    background: #e85d8e;
+    border-color: #e85d8e;
+}
+
+.photo-filter {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    color: #666;
+
+    font-size: 13px;
+
+    cursor: pointer;
+}
+
+
+/* =========================
+   리뷰 작성하기
+========================= */
+
+.write-review-bar {
+    display: flex;
+    justify-content: flex-end;
+
+    margin-bottom: 18px;
+}
+
+.write-review-btn {
+    padding: 11px 20px;
+
+    color: #ffffff;
+    background: #e85d8e;
+
+    border: none;
+    border-radius: 10px;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    transition: background 0.2s ease;
+}
+
+.write-review-btn:hover {
+    background: #d94f80;
+}
+
+
+/* =========================
+   리뷰 목록
+========================= */
+
+.review-all-list {
+    display: flex;
+    flex-direction: column;
+
+    gap: 14px;
+
+    margin-bottom: 30px;
+}
+
+.review-all-item {
+    display: flex;
+    gap: 16px;
+
+    padding: 22px;
+
+    background: #ffffff;
+
+    border: 1px solid #ececef;
+    border-radius: 16px;
+
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.03);
+}
+
+.review-all-photos {
+    display: flex;
+    flex-direction: column;
+
+    gap: 8px;
+
+    flex-shrink: 0;
+}
+
+.photo-thumb {
+    width: 72px;
+    height: 72px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #f4f5f6;
+
+    border-radius: 10px;
+
+    font-size: 28px;
+}
+
+.review-all-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.review-all-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 8px;
+}
+
+.review-all-rating {
+    color: #f5a623;
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.review-all-rating span {
+    margin-left: 4px;
+
+    color: #333;
+}
+
+.review-all-date {
+    color: #aaaaaa;
+
+    font-size: 12px;
+}
+
+.review-all-author {
+    margin: 0 0 8px;
+
+    color: #333;
+
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.review-all-text {
+    margin: 0 0 14px;
+
+    color: #555;
+
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.review-all-actions {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+}
+
+.like-toggle-btn {
+    padding: 6px 12px;
+
+    color: #999;
+    background: #f7f8fa;
+
+    border: none;
+    border-radius: 20px;
+
+    font-size: 12px;
+}
+
+.like-toggle-btn.liked {
+    color: #e85d8e;
+    background: #fff0f5;
+}
+
+.edit-btn,
+.delete-btn {
+    padding: 6px 12px;
+
+    color: #888;
+    background: #ffffff;
+
+    border: 1px solid #dddddd;
+    border-radius: 20px;
+
+    font-size: 12px;
+}
+
+.edit-btn:hover {
+    border-color: #999;
+    color: #333;
+}
+
+.delete-btn:hover {
+    border-color: #e85d8e;
+    color: #e85d8e;
+}
+
+
+/* =========================
+   페이지네이션
+========================= */
+
+.review-pagination {
+    display: flex;
+    justify-content: center;
+
+    gap: 8px;
+}
+
+.page-btn {
+    width: 36px;
+    height: 36px;
+
+    color: #666;
+    background: #ffffff;
+
+    border: 1px solid #dddddd;
+    border-radius: 8px;
+
+    font-size: 13px;
+}
+
+.page-btn:hover {
+    border-color: #e85d8e;
+    color: #e85d8e;
+}
+
+.page-btn.active {
+    color: #ffffff;
+    background: #e85d8e;
+    border-color: #e85d8e;
+}
+
+
+/* =========================
+   Mobile
+========================= */
+
+@media (max-width: 600px) {
+
+    .review-all-page {
+        padding: 30px 16px 70px;
+    }
+
+    .review-summary {
+        flex-direction: column;
+        gap: 20px;
+
+        padding: 22px;
+    }
+
+    .summary-score {
+        width: 100%;
+
+        padding-bottom: 18px;
+
+        border-right: none;
+        border-bottom: 1px solid #f0f0f2;
+    }
+
+    .review-toolbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .review-all-item {
+        flex-direction: column;
+    }
+
+    .review-all-photos {
+        flex-direction: row;
+    }
+}

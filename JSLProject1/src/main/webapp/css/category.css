@@ -1,0 +1,129 @@
+/* =========================
+   기본 화면
+========================= */
+
+body {
+    margin: 0;
+    padding: 40px;
+    font-family: Arial, sans-serif;
+}
+
+
+/* =========================
+   Main
+========================= */
+
+.main-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+
+/* =========================
+   카테고리 제목 영역
+========================= */
+
+.category-header {
+    margin-bottom: 30px;
+    padding: 35px 40px;
+    background: #f7f7f7;
+    border-radius: 16px;
+}
+
+.category-header h1 {
+    margin: 0 0 10px 0;
+    font-size: 32px;
+}
+
+.category-description {
+    margin: 0;
+    color: #666;
+    font-size: 16px;
+}
+
+
+
+/* =========================
+   카테고리 카드
+========================= */
+
+.category-container {
+    display: grid;
+
+    /* PC에서는 3열 */
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 20px;
+}
+
+.category-card {
+    display: block;
+    padding: 30px 20px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    text-align: center;
+    transition: 0.3s;
+
+    /* a 태그 기본 스타일 제거 */
+    text-decoration: none;
+    color: inherit;
+}
+
+.category-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.category-icon {
+    margin-bottom: 15px;
+    font-size: 42px;
+}
+
+.category-name {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.category-card-description {
+    margin-top: 8px;
+    color: #888;
+    font-size: 14px;
+}
+
+
+/* =========================
+   태블릿 반응형
+========================= */
+
+@media (max-width: 900px) {
+
+    .category-container {
+        /* 태블릿에서는 2열 */
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+
+/* =========================
+   모바일 반응형
+========================= */
+
+@media (max-width: 600px) {
+
+    body {
+        padding: 20px;
+    }
+
+    .category-header {
+        padding: 25px 20px;
+    }
+
+    .category-header h1 {
+        font-size: 26px;
+    }
+
+    .category-container {
+        /* 모바일에서는 1열 */
+        grid-template-columns: 1fr;
+    }
+}
