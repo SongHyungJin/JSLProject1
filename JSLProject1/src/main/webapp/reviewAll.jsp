@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
@@ -8,688 +8,657 @@
 <%@ page import="java.io.InputStreamReader"%>
 
 <%
-    String lang = request.getParameter("lang");
+String lang = request.getParameter("lang");
 
-    if (lang == null) {
-        lang = "ko";
-    }
+if (lang == null) {
+	lang = "ko";
+}
 
-    if (!lang.equals("ko")
-            && !lang.equals("en")
-            && !lang.equals("ja")) {
-        lang = "ko";
-    }
+if (!lang.equals("ko") && !lang.equals("en") && !lang.equals("ja")) {
+	lang = "ko";
+}
 
-    Properties messages = new Properties();
+Properties messages = new Properties();
 
-    String resourcePath =
-            "/i18n/messages_" + lang + ".properties";
+String resourcePath = "/i18n/messages_" + lang + ".properties";
 
-    InputStream is =
-            application.getResourceAsStream(resourcePath);
+InputStream is = application.getResourceAsStream(resourcePath);
 
-    if (is != null) {
-        messages.load(
-            new InputStreamReader(is, "UTF-8")
-        );
-        is.close();
-    }
+if (is != null) {
+	messages.load(new InputStreamReader(is, "UTF-8"));
+	is.close();
+}
 %>
 
 <!DOCTYPE html>
 
-<html lang="<%= lang %>">
+<html lang="<%=lang%>">
 
 <head>
 
 <meta charset="UTF-8">
 
-<title>
-    <%= messages.getProperty(
-        "review.all.title",
-        "TripStamp - 리뷰 전체보기"
-    ) %>
-</title>
+<title><%=messages.getProperty("review.all.title", "TripStamp - 리뷰 전체보기")%></title>
 
 <link rel="stylesheet"
-    href="${pageContext.request.contextPath}/css/reviewAll.css">
+	href="${pageContext.request.contextPath}/css/reviewAll.css">
 
 </head>
 
 <body>
 
-<%@ include file="header.jsp"%>
+	<%@ include file="header.jsp"%>
 
 
-<div class="review-all-page">
+	<div class="review-all-page">
 
 
-    <c:if test="${not empty place}">
+		<c:if test="${not empty place}">
 
-        <p class="review-all-place-name">
-            ${place.name}
-        </p>
+			<p class="review-all-place-name">${place.name}</p>
 
-    </c:if>
+		</c:if>
 
 
 
-    <!-- 리뷰 요약 -->
-    <div class="review-summary">
+		<!-- 리뷰 요약 -->
 
-        <div class="summary-score">
+		<div class="review-summary">
 
-            <div class="score-number">
-                4.7
-            </div>
+			<div class="summary-score">
 
-            <div class="score-stars">
-                ⭐⭐⭐⭐⭐
-            </div>
+				<div class="score-number">${averageRating}</div>
 
-            <div class="score-count">
+				<div class="score-stars">⭐⭐⭐⭐⭐</div>
 
-                <%= messages.getProperty(
-                    "review.all.count",
-                    "리뷰 128개"
-                ) %>
+				<div class="score-count">
+					${totalCount}<%=messages.getProperty("review.all.count", "개 리뷰")%>
+				</div>
 
-            </div>
+			</div>
 
-        </div>
 
+			<div class="summary-bars">
 
-        <div class="summary-bars">
 
+				<!-- 5점 -->
 
-            <div class="bar-row">
+				<div class="bar-row">
 
-                <span class="bar-label">
+					<span class="bar-label"> <%=messages.getProperty("review.all.score5", "5점")%>
+					</span>
 
-                    <%= messages.getProperty(
-                        "review.all.score5",
-                        "5점"
-                    ) %>
+					<div class="bar-track">
 
-                </span>
+						<div class="bar-fill"
+							style="width:${totalCount > 0 ? scoreCounts[5] * 100 / totalCount : 0}%;">
+						</div>
 
-                <div class="bar-track">
-                    <div class="bar-fill"
-                         style="width:70%;">
-                    </div>
-                </div>
+					</div>
 
-                <span class="bar-count">
-                    89
-                </span>
+					<span class="bar-count"> ${scoreCounts[5]} </span>
 
-            </div>
+				</div>
 
 
-            <div class="bar-row">
+				<!-- 4점 -->
 
-                <span class="bar-label">
+				<div class="bar-row">
 
-                    <%= messages.getProperty(
-                        "review.all.score4",
-                        "4점"
-                    ) %>
+					<span class="bar-label"> <%=messages.getProperty("review.all.score4", "4점")%>
+					</span>
 
-                </span>
+					<div class="bar-track">
 
-                <div class="bar-track">
-                    <div class="bar-fill"
-                         style="width:20%;">
-                    </div>
-                </div>
+						<div class="bar-fill"
+							style="width:${totalCount > 0 ? scoreCounts[4] * 100 / totalCount : 0}%;">
+						</div>
 
-                <span class="bar-count">
-                    25
-                </span>
+					</div>
 
-            </div>
+					<span class="bar-count"> ${scoreCounts[4]} </span>
 
+				</div>
 
-            <div class="bar-row">
 
-                <span class="bar-label">
+				<!-- 3점 -->
 
-                    <%= messages.getProperty(
-                        "review.all.score3",
-                        "3점"
-                    ) %>
+				<div class="bar-row">
 
-                </span>
+					<span class="bar-label"> <%=messages.getProperty("review.all.score3", "3점")%>
+					</span>
 
-                <div class="bar-track">
-                    <div class="bar-fill"
-                         style="width:6%;">
-                    </div>
-                </div>
+					<div class="bar-track">
 
-                <span class="bar-count">
-                    8
-                </span>
+						<div class="bar-fill"
+							style="width:${totalCount > 0 ? scoreCounts[3] * 100 / totalCount : 0}%;">
+						</div>
 
-            </div>
+					</div>
 
+					<span class="bar-count"> ${scoreCounts[3]} </span>
 
-            <div class="bar-row">
+				</div>
 
-                <span class="bar-label">
 
-                    <%= messages.getProperty(
-                        "review.all.score2",
-                        "2점"
-                    ) %>
+				<!-- 2점 -->
 
-                </span>
+				<div class="bar-row">
 
-                <div class="bar-track">
-                    <div class="bar-fill"
-                         style="width:2%;">
-                    </div>
-                </div>
+					<span class="bar-label"> <%=messages.getProperty("review.all.score2", "2점")%>
+					</span>
 
-                <span class="bar-count">
-                    3
-                </span>
+					<div class="bar-track">
 
-            </div>
+						<div class="bar-fill"
+							style="width:${totalCount > 0 ? scoreCounts[2] * 100 / totalCount : 0}%;">
+						</div>
 
+					</div>
 
-            <div class="bar-row">
+					<span class="bar-count"> ${scoreCounts[2]} </span>
 
-                <span class="bar-label">
+				</div>
 
-                    <%= messages.getProperty(
-                        "review.all.score1",
-                        "1점"
-                    ) %>
 
-                </span>
+				<!-- 1점 -->
 
-                <div class="bar-track">
-                    <div class="bar-fill"
-                         style="width:2%;">
-                    </div>
-                </div>
+				<div class="bar-row">
 
-                <span class="bar-count">
-                    3
-                </span>
+					<span class="bar-label"> <%=messages.getProperty("review.all.score1", "1점")%>
+					</span>
 
-            </div>
+					<div class="bar-track">
 
+						<div class="bar-fill"
+							style="width:${totalCount > 0 ? scoreCounts[1] * 100 / totalCount : 0}%;">
+						</div>
 
-        </div>
+					</div>
 
-    </div>
+					<span class="bar-count"> ${scoreCounts[1]} </span>
 
+				</div>
 
 
-    <!-- 정렬 / 필터 -->
-    <div class="review-toolbar">
+			</div>
 
+		</div>
 
-        <div class="sort-buttons">
 
 
-            <button type="button"
-                    class="sort-btn active"
-                    onclick="selectSort(this)">
+		<!-- 정렬 / 필터 -->
+		<div class="review-toolbar">
 
-                <%= messages.getProperty(
-                    "review.all.sort.latest",
-                    "최신순"
-                ) %>
 
-            </button>
+			<div class="sort-buttons">
 
 
-            <button type="button"
-                    class="sort-btn"
-                    onclick="selectSort(this)">
+				<button type="button" class="sort-btn active"
+					onclick="sortReviews('latest', this)">
 
-                <%= messages.getProperty(
-                    "review.all.sort.high",
-                    "평점 높은순"
-                ) %>
+					<%=messages.getProperty("review.all.sort.latest", "최신순")%>
 
-            </button>
+				</button>
 
 
-            <button type="button"
-                    class="sort-btn"
-                    onclick="selectSort(this)">
+				<button type="button" class="sort-btn"
+					onclick="sortReviews('high', this)">
 
-                <%= messages.getProperty(
-                    "review.all.sort.low",
-                    "평점 낮은순"
-                ) %>
+					<%=messages.getProperty("review.all.sort.high", "평점 높은순")%>
 
-            </button>
+				</button>
 
 
-        </div>
+				<button type="button" class="sort-btn"
+					onclick="sortReviews('low', this)">
 
+					<%=messages.getProperty("review.all.sort.low", "평점 낮은순")%>
 
-        <label class="photo-filter">
+				</button>
 
-            <input type="checkbox">
 
-            <%= messages.getProperty(
-                "review.all.photo.only",
-                "사진 있는 리뷰만"
-            ) %>
+			</div>
 
-        </label>
 
+			<label class="photo-filter"> <input type="checkbox"
+				id="photoOnly" onchange="filterPhotoReviews()"> <%=messages.getProperty("review.all.photo.only", "사진 있는 리뷰만")%>
 
-    </div>
+			</label>
 
 
+		</div>
 
-    <!-- 리뷰 작성하기 -->
-    <c:if test="${not empty sessionScope.loginUser}">
 
-        <div class="write-review-bar">
 
-            <a href="${pageContext.request.contextPath}/review/write.do?id=${place.id}&lang=<%= lang %>"
-               class="write-review-btn">
+		<!-- 리뷰 작성하기 -->
+		<c:if test="${not empty sessionScope.loginUser}">
 
-                <%= messages.getProperty(
-                    "review.all.write",
-                    "리뷰 작성하기"
-                ) %>
+			<div class="write-review-bar">
 
-            </a>
+				<a
+					href="${pageContext.request.contextPath}/review/write.do?id=${place.id}&lang=<%= lang %>"
+					class="write-review-btn"> <%=messages.getProperty("review.all.write", "리뷰 작성하기")%>
 
-        </div>
+				</a>
 
-    </c:if>
+			</div>
 
+		</c:if>
 
 
-    <!-- 리뷰 목록 -->
-    <div class="review-all-list">
 
+		<div class="review-all-list">
 
-        <!-- 리뷰 1 -->
-        <div class="review-all-item">
+			<c:choose>
 
-            <div class="review-all-photos">
+				<c:when test="${not empty reviewList}">
 
-                <div class="photo-thumb">
-                    📷
-                </div>
+					<c:forEach var="review" items="${reviewList}">
 
-                <div class="photo-thumb">
-                    📷
-                </div>
+						<div class="review-all-item" data-date="${review.createdAt}"
+							data-rating="${review.rating}"
+							data-has-photo="${not empty review.imageUrl}">
 
-            </div>
+							<div class="review-all-photos">
 
+								<c:choose>
 
-            <div class="review-all-body">
+									<c:when test="${not empty review.imageUrl}">
 
+										<div class="photo-thumb">
+											<img src="${review.imageUrl}" alt="리뷰 이미지">
+										</div>
 
-                <div class="review-all-top">
+									</c:when>
 
-                    <div class="review-all-rating">
-                        ⭐⭐⭐⭐⭐
-                        <span>5.0</span>
-                    </div>
+									<c:otherwise>
 
-                    <span class="review-all-date">
-                        2026.09.05
-                    </span>
+										<div class="photo-thumb">📷</div>
 
-                </div>
+									</c:otherwise>
 
+								</c:choose>
 
-                <p class="review-all-author">
+							</div>
 
-                    <%= messages.getProperty(
-                        "review.all.author1",
-                        "김○○"
-                    ) %>
 
-                </p>
+							<div class="review-all-body">
 
+								<div class="review-all-top">
 
-                <p class="review-all-text">
+									<div class="review-all-rating">
 
-                    <%= messages.getProperty(
-                        "review.all.text1",
-                        "음식도 맛있고 분위기도 좋아요. 직원분들도 친절하시고 재료도 신선해서 다음에 또 방문하고 싶은 곳이에요. 특히 창가 자리에서 보는 뷰가 정말 좋았습니다."
-                    ) %>
+										<c:forEach begin="1" end="5" var="star">
 
-                </p>
+											<c:choose>
 
+												<c:when test="${star <= review.rating}">
+                                            ⭐
+                                        </c:when>
 
-                <div class="review-all-actions">
+												<c:otherwise>
+                                            ☆
+                                        </c:otherwise>
 
-                    <button type="button"
-                            class="like-toggle-btn"
-                            onclick="toggleLikeBtn(this)">
+											</c:choose>
 
-                        🤍
-                        <span>24</span>
+										</c:forEach>
 
-                    </button>
+										<span> ${review.rating}.0 </span>
 
-                </div>
+									</div>
 
 
-            </div>
+									<span class="review-all-date"> ${review.createdDate} </span>
 
-        </div>
+								</div>
 
 
+								<p class="review-all-author">${review.nickname}</p>
 
-        <!-- 리뷰 2 -->
-        <div class="review-all-item">
 
+								<p class="review-all-text">${review.content}</p>
 
-            <div class="review-all-body"
-                 style="margin-left:0;">
 
+								<div class="review-all-actions">
 
-                <div class="review-all-top">
+									<button type="button" class="like-toggle-btn"
+										onclick="toggleLikeBtn(this)">
 
-                    <div class="review-all-rating">
-                        ⭐⭐⭐⭐☆
-                        <span>4.0</span>
-                    </div>
+										🤍 <span>0</span>
 
-                    <span class="review-all-date">
-                        2026.09.02
-                    </span>
+									</button>
 
-                </div>
+								</div>
 
+							</div>
 
-                <p class="review-all-author">
+						</div>
 
-                    <%= messages.getProperty(
-                        "review.all.author2",
-                        "이○○"
-                    ) %>
+					</c:forEach>
 
-                </p>
+				</c:when>
 
 
-                <p class="review-all-text">
+				<c:otherwise>
 
-                    <%= messages.getProperty(
-                        "review.all.text2",
-                        "여행 중 들렀는데 만족했습니다. 대기시간이 조금 있었지만 그만한 값어치를 하는 맛이었어요."
-                    ) %>
+					<p class="review-empty">
+						<%=messages.getProperty("review.all.empty", "아직 등록된 리뷰가 없습니다.")%>
+					</p>
 
-                </p>
+				</c:otherwise>
 
+			</c:choose>
 
-                <div class="review-all-actions">
+		</div>
 
 
-                    <button type="button"
-                            class="like-toggle-btn"
-                            onclick="toggleLikeBtn(this)">
 
-                        🤍
-                        <span>8</span>
+		<!-- 페이지네이션 -->
+		<div class="review-pagination"></div>
 
-                    </button>
 
+	</div>
 
-                    <button type="button"
-                            class="edit-btn">
 
-                        <%= messages.getProperty(
-                            "review.all.edit",
-                            "수정"
-                        ) %>
+	<%@ include file="footer.jsp"%>
 
-                    </button>
 
 
-                    <button type="button"
-                            class="delete-btn">
+	<script>
+		const REVIEWS_PER_PAGE = 5;
 
-                        <%= messages.getProperty(
-                            "review.all.delete",
-                            "삭제"
-                        ) %>
+		let currentPage = 1;
 
-                    </button>
+		let currentSort = 'latest';
 
+		/* =========================
+		   정렬
+		========================= */
 
-                </div>
+		function sortReviews(type, btn) {
 
+			currentSort = type;
 
-            </div>
+			currentPage = 1;
 
-        </div>
+			document.querySelectorAll('.sort-btn').forEach(function(button) {
 
+				button.classList.remove('active');
 
+			});
 
-        <!-- 리뷰 3 -->
-        <div class="review-all-item">
+			btn.classList.add('active');
 
+			updateReviews();
+		}
 
-            <div class="review-all-photos">
+		/* =========================
+		   사진 필터
+		========================= */
 
-                <div class="photo-thumb">
-                    📷
-                </div>
+		function filterPhotoReviews() {
 
-            </div>
+			currentPage = 1;
 
+			updateReviews();
+		}
 
-            <div class="review-all-body">
+		/* =========================
+		   리뷰 출력
+		========================= */
 
+		function updateReviews() {
 
-                <div class="review-all-top">
+			const list = document.querySelector('.review-all-list');
 
-                    <div class="review-all-rating">
-                        ⭐⭐⭐⭐⭐
-                        <span>5.0</span>
-                    </div>
+			if (!list) {
+				return;
+			}
 
-                    <span class="review-all-date">
-                        2026.08.29
-                    </span>
+			let reviews = Array.from(list.querySelectorAll('.review-all-item'));
 
-                </div>
+			/* -------------------------
+			   정렬
+			------------------------- */
 
+			reviews.sort(function(a, b) {
 
-                <p class="review-all-author">
+				if (currentSort === 'latest') {
 
-                    <%= messages.getProperty(
-                        "review.all.author3",
-                        "박○○"
-                    ) %>
+					const dateA = new Date(a.dataset.date).getTime();
 
-                </p>
+					const dateB = new Date(b.dataset.date).getTime();
 
+					return dateB - dateA;
+				}
 
-                <p class="review-all-text">
+				if (currentSort === 'high') {
 
-                    <%= messages.getProperty(
-                        "review.all.text3",
-                        "분위기가 정말 좋았습니다. 데이트 코스로 추천해요!"
-                    ) %>
+					const ratingA = parseInt(a.dataset.rating, 10);
 
-                </p>
+					const ratingB = parseInt(b.dataset.rating, 10);
 
+					return ratingB - ratingA;
+				}
 
-                <div class="review-all-actions">
+				if (currentSort === 'low') {
 
-                    <button type="button"
-                            class="like-toggle-btn"
-                            onclick="toggleLikeBtn(this)">
+					const ratingA = parseInt(a.dataset.rating, 10);
 
-                        🤍
-                        <span>17</span>
+					const ratingB = parseInt(b.dataset.rating, 10);
 
-                    </button>
+					return ratingA - ratingB;
+				}
 
-                </div>
+				return 0;
+			});
 
+			/* -------------------------
+			   사진 필터
+			------------------------- */
 
-            </div>
+			const photoOnly = document.getElementById('photoOnly');
 
-        </div>
+			if (photoOnly && photoOnly.checked) {
 
+				reviews = reviews.filter(function(review) {
 
+					return review.dataset.hasPhoto === 'true';
 
-        <!-- 리뷰 4 -->
-        <div class="review-all-item">
+				});
+			}
 
+			/* -------------------------
+			   모든 리뷰 숨기기
+			------------------------- */
 
-            <div class="review-all-body"
-                 style="margin-left:0;">
+			const allReviews = list.querySelectorAll('.review-all-item');
 
+			allReviews.forEach(function(review) {
 
-                <div class="review-all-top">
+				review.style.display = 'none';
 
-                    <div class="review-all-rating">
-                        ⭐⭐⭐⭐☆
-                        <span>4.5</span>
-                    </div>
+			});
 
-                    <span class="review-all-date">
-                        2026.08.20
-                    </span>
+			/* -------------------------
+			   페이지 계산
+			------------------------- */
 
-                </div>
+			const totalReviews = reviews.length;
 
+			const totalPages = Math.ceil(totalReviews / REVIEWS_PER_PAGE);
 
-                <p class="review-all-author">
+			if (totalPages === 0) {
 
-                    <%= messages.getProperty(
-                        "review.all.author4",
-                        "최○○"
-                    ) %>
+				currentPage = 1;
 
-                </p>
+				renderPagination(0);
 
+				return;
+			}
 
-                <p class="review-all-text">
+			if (currentPage > totalPages) {
 
-                    <%= messages.getProperty(
-                        "review.all.text4",
-                        "재방문 의사 있습니다! 가격 대비 만족스러웠어요."
-                    ) %>
+				currentPage = totalPages;
 
-                </p>
+			}
 
+			/* -------------------------
+			   현재 페이지 리뷰
+			------------------------- */
 
-                <div class="review-all-actions">
+			const start = (currentPage - 1) * REVIEWS_PER_PAGE;
 
-                    <button type="button"
-                            class="like-toggle-btn"
-                            onclick="toggleLikeBtn(this)">
+			const end = start + REVIEWS_PER_PAGE;
 
-                        🤍
-                        <span>5</span>
+			reviews.slice(start, end).forEach(function(review) {
 
-                    </button>
+				review.style.display = '';
 
-                </div>
+			});
 
+			/* -------------------------
+			   페이지 버튼
+			------------------------- */
 
-            </div>
+			renderPagination(totalPages);
+		}
 
-        </div>
+		/* =========================
+		   페이지 이동
+		========================= */
 
+		function goToPage(page) {
 
-    </div>
+			currentPage = page;
 
+			updateReviews();
+		}
 
+		/* =========================
+		   페이지네이션
+		========================= */
 
-    <!-- 페이지네이션 -->
-    <div class="review-pagination">
+		function renderPagination(totalPages) {
 
-        <button type="button"
-                class="page-btn active">
-            1
-        </button>
+			const pagination = document.querySelector('.review-pagination');
 
-        <button type="button"
-                class="page-btn">
-            2
-        </button>
+			if (!pagination) {
+				return;
+			}
 
-        <button type="button"
-                class="page-btn">
-            3
-        </button>
+			pagination.innerHTML = '';
 
-        <button type="button"
-                class="page-btn">
-            ›
-        </button>
+			if (totalPages <= 1) {
+				return;
+			}
 
-    </div>
+			/* 이전 */
 
+			if (currentPage > 1) {
 
-</div>
+				const prev = document.createElement('button');
 
+				prev.type = 'button';
 
-<%@ include file="footer.jsp"%>
+				prev.className = 'page-btn';
 
+				prev.textContent = '‹';
 
+				prev.onclick = function() {
 
-<script>
+					goToPage(currentPage - 1);
 
-function selectSort(btn) {
+				};
 
-    document
-        .querySelectorAll('.sort-btn')
-        .forEach(
-            b => b.classList.remove('active')
-        );
+				pagination.appendChild(prev);
+			}
 
-    btn.classList.add('active');
-}
+			/* 숫자 */
 
+			for (let i = 1; i <= totalPages; i++) {
 
-function toggleLikeBtn(btn) {
+				const button = document.createElement('button');
 
-    const span =
-        btn.querySelector('span');
+				button.type = 'button';
 
-    let count =
-        parseInt(
-            span.textContent,
-            10
-        );
+				button.className = 'page-btn';
 
+				if (i === currentPage) {
 
-    if (btn.classList.contains('liked')) {
+					button.classList.add('active');
 
-        btn.classList.remove('liked');
+				}
 
-        btn.innerHTML =
-            '🤍 <span>'
-            + (count - 1)
-            + '</span>';
+				button.textContent = i;
 
-    } else {
+				button.onclick = function() {
 
-        btn.classList.add('liked');
+					goToPage(i);
 
-        btn.innerHTML =
-            '❤️ <span>'
-            + (count + 1)
-            + '</span>';
+				};
 
-    }
-}
+				pagination.appendChild(button);
+			}
 
-</script>
+			/* 다음 */
+
+			if (currentPage < totalPages) {
+
+				const next = document.createElement('button');
+
+				next.type = 'button';
+
+				next.className = 'page-btn';
+
+				next.textContent = '›';
+
+				next.onclick = function() {
+
+					goToPage(currentPage + 1);
+
+				};
+
+				pagination.appendChild(next);
+			}
+		}
+
+		/* =========================
+		   좋아요
+		========================= */
+
+		function toggleLikeBtn(btn) {
+
+			const span = btn.querySelector('span');
+
+			let count = parseInt(span.textContent, 10);
+
+			if (btn.classList.contains('liked')) {
+
+				btn.classList.remove('liked');
+
+				btn.innerHTML = '🤍 <span>' + (count - 1) + '</span>';
+
+			} else {
+
+				btn.classList.add('liked');
+
+				btn.innerHTML = '❤️ <span>' + (count + 1) + '</span>';
+			}
+		}
+
+		/* =========================
+		   처음 페이지 로딩
+		========================= */
+
+		document.addEventListener('DOMContentLoaded', function() {
+
+			updateReviews();
+
+		});
+	</script>
 
 
 </body>

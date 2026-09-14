@@ -10,7 +10,6 @@ import java.util.List;
 import util.DBmanager;
 
 public class BookmarksDAO {
-	
 	// 북마크 등록
     public int insert(BookmarksDTO dto) {
     	
@@ -76,46 +75,66 @@ public class BookmarksDAO {
 
     // 특정 사용자 북마크 조회
     public List<BookmarksDTO> selectBookmarksBy(int usersId) {
-    	
-    	Connection conn=null;
-        PreparedStatement pstmt=null;
-        ResultSet rs=null;
 
-        String sql = "SELECT * FROM bookmarks "
-                   + "WHERE users_id = ? ";
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        String sql = "SELECT "
+                   + "b.id, "
+                   + "b.users_id, "
+                   + "b.places_id, "
+                   + "b.created_at, "
+                   + "p.name, "
+                   + "p.region, "
+                   + "p.rating, "
+                   + "p.image_url "
+                   + "FROM bookmarks b "
+                   + "JOIN places p ON b.places_id = p.id "
+                   + "WHERE b.users_id = ?";
 
         List<BookmarksDTO> list = new ArrayList<BookmarksDTO>();
 
         try {
-        	conn = DBmanager.getInstance();
-        	pstmt = conn.prepareStatement(sql);
+
+            conn = DBmanager.getInstance();
+            pstmt = conn.prepareStatement(sql);
+
             pstmt.setInt(1, usersId);
-            rs= pstmt.executeQuery();
-            
-                while (rs.next()) {
-                	
-                    BookmarksDTO dto = new BookmarksDTO();
 
-                    dto.setId(rs.getInt("id"));
-                    dto.setUsersId(rs.getInt("users_id"));
-                    dto.setPlacesId(rs.getInt("places_id"));
+            rs = pstmt.executeQuery();
 
-                    if (rs.getTimestamp("created_at") != null) {
-                        dto.setCreatedAt(
-                            rs.getTimestamp("created_at").toLocalDateTime()
-                        );
-                    }
-                    list.add(dto);
+            while (rs.next()) {
+
+                BookmarksDTO dto = new BookmarksDTO();
+
+                dto.setId(rs.getInt("id"));
+                dto.setUsersId(rs.getInt("users_id"));
+                dto.setPlacesId(rs.getInt("places_id"));
+
+                dto.setName(rs.getString("name"));
+                dto.setRegion(rs.getString("region"));
+                dto.setRating(rs.getDouble("rating"));
+                dto.setImageUrl(rs.getString("image_url"));
+
+                if (rs.getTimestamp("created_at") != null) {
+                    dto.setCreatedAt(
+                        rs.getTimestamp("created_at").toLocalDateTime()
+                    );
                 }
-            
+
+                list.add(dto);
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
-            
-        }finally {
-			DBmanager.close(pstmt, conn,rs);
-		}
+
+        } finally {
+            DBmanager.close(pstmt, conn, rs);
+        }
 
         return list;
     }
+    
+    
 }

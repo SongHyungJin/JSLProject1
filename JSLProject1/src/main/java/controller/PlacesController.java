@@ -13,13 +13,13 @@ import service.BookmarkListService;
 import service.PlacesDetailViewService;
 import service.PlacesListFilter;
 import service.PlacesSearchbyKeyword;
+import service.ReviewListService;
 
 
-@WebServlet("/Places/*")
+@WebServlet("/places/*")
 public class PlacesController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-  
     public PlacesController() {
         super();
     }
@@ -40,25 +40,27 @@ public class PlacesController extends HttpServlet {
 		switch (action) {
 		case "/placesAllList.do": // 점포 전체 조회
 				new PlacesListFilter().doCommand(request, response);
-				page = "/places/placesAllList.jsp";
+				page = "/placelist.jsp";
 				break;
 		case "/placesDetail.do": // 점포 상세정보
 				new PlacesDetailViewService().doCommand(request, response);
-				page = "/places/placesDetail.jsp";
+				page = "/view.jsp";
 				break;
 		case "/placesSearch.do": // 점포 검색
 				new PlacesSearchbyKeyword().doCommand(request, response);
-				page = "/places/placesKeywordList.jsp"; //검색 결과 보여주는 jsp 페이지
+				page = "/placelist.jsp"; //검색 결과 보여주는 jsp 페이지
 				break;
-		case "bookmarksadd.do":// 북마크 등록
+		case "/bookmarksadd.do":// 북마크 등록
 				new BookmarkAddService().doCommand(request, response);
 				page = "/places/bookmarksList.jsp"; //북마크 등록 후 북마크 리스트 페이지로 이동 
 				break;
-		case "bookmarkslist.do":// 북마크 리스트 조회
+		case "/bookmarkslist.do":// 북마크 리스트 조회
 				new BookmarkListService().doCommand(request, response);
 				page = "/places/bookmarksList.jsp"; //북마크 리스트 페이지로 이동 
 				break;
-			
+		case "/category.do":
+			page = "/category.jsp"; 
+			break;
 		}
 		if(page != null) {
 			request.getRequestDispatcher(page).forward(request, response);

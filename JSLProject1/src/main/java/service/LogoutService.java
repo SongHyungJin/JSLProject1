@@ -19,7 +19,11 @@ public class LogoutService implements Command {
 		 if(session!=null) {
 			 session.invalidate();//세션 삭제 
 		 }
-		 response.sendRedirect(request.getContextPath() + "/main.do"); 
+		 response.sendRedirect(
+				    request.getContextPath()
+				    + "/main.do?lang="
+				    + request.getParameter("lang")
+				); 
 		 //servlet 반환 주소 일단 main.do	
 	}
 }

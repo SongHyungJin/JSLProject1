@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
@@ -8,238 +8,178 @@
 <%@ page import="java.io.InputStreamReader"%>
 
 <%
-    String lang = request.getParameter("lang");
+String lang = request.getParameter("lang");
 
-    if (lang == null) {
-        lang = "ko";
-    }
+if (lang == null) {
+	lang = "ko";
+}
 
-    if (!lang.equals("ko")
-            && !lang.equals("en")
-            && !lang.equals("ja")) {
-        lang = "ko";
-    }
+if (!lang.equals("ko") && !lang.equals("en") && !lang.equals("ja")) {
+	lang = "ko";
+}
 
-    Properties messages = new Properties();
+Properties messages = new Properties();
 
-    String resourcePath =
-            "/i18n/messages_" + lang + ".properties";
+String resourcePath = "/i18n/messages_" + lang + ".properties";
 
-    InputStream is =
-            application.getResourceAsStream(resourcePath);
+InputStream is = application.getResourceAsStream(resourcePath);
 
-    if (is != null) {
-        messages.load(
-            new InputStreamReader(is, "UTF-8")
-        );
-        is.close();
-    }
+if (is != null) {
+	messages.load(new InputStreamReader(is, "UTF-8"));
+	is.close();
+}
 %>
 
 
 <!-- 로그인 안 된 경우 -->
-<c:if test="${empty sessionScope.loginUser}">
+<c:if test="${empty sessionScope.id}">
 
-    <c:redirect url="/log/login.do">
-        <c:param name="lang" value="<%= lang %>"/>
-    </c:redirect>
+	<c:redirect url="/users/loginview.do">
+		<c:param name="lang" value="<%=lang%>" />
+	</c:redirect>
 
 </c:if>
 
 
 <!DOCTYPE html>
 
-<html lang="<%= lang %>">
+<html lang="<%=lang%>">
 
 <head>
 
 <meta charset="UTF-8">
 
-<title>
-    <%= messages.getProperty(
-        "review.write.title",
-        "TripStamp - 리뷰 작성"
-    ) %>
-</title>
+<title><%=messages.getProperty("review.write.title", "TripStamp - 리뷰 작성")%></title>
 
 <link rel="stylesheet"
-    href="${pageContext.request.contextPath}/css/reviewWrite.css">
+	href="${pageContext.request.contextPath}/css/reviewWrite.css">
 
 </head>
 
 
 <body>
+	
+	<%@ include file="header.jsp"%>
+	<div class="review-write-page">
 
-<%@ include file="header.jsp"%>
+		<form action="${pageContext.request.contextPath}/review/writepro.do"
+			method="post" enctype="multipart/form-data">
 
+			<input type="hidden" name="placesId" value="${placesId}">
+			<h1 class="write-title">
 
-<div class="review-write-page">
+				<%=messages.getProperty("review.write.heading", "리뷰 작성")%>
 
+			</h1>
 
-    <h1 class="write-title">
 
-        <%= messages.getProperty(
-            "review.write.heading",
-            "리뷰 작성"
-        ) %>
+			<c:if test="${not empty place}">
 
-    </h1>
+				<p class="write-place-name">${place.name}</p>
 
+			</c:if>
 
-    <c:if test="${not empty place}">
 
-        <p class="write-place-name">
-            ${place.name}
-        </p>
 
-    </c:if>
+			<!-- 별점 -->
+			<div class="write-section">
 
+				<h3>
 
+					<%=messages.getProperty("review.write.rating", "별점")%>
 
-    <!-- 별점 -->
-    <div class="write-section">
+				</h3>
 
-        <h3>
 
-            <%= messages.getProperty(
-                "review.write.rating",
-                "별점"
-            ) %>
+				<div class="star-select" id="starSelect">
+					<input type="hidden" name="rating" id="ratingInput" value="0">
+					<span class="star" data-value="1">☆</span> <span class="star"
+						data-value="2">☆</span> <span class="star" data-value="3">☆</span>
+					<span class="star" data-value="4">☆</span> <span class="star"
+						data-value="5">☆</span> <span class="star-value" id="starValue">
 
-        </h3>
+						<%=messages.getProperty("review.write.rating.select", "별점을 선택해주세요")%>
 
+					</span>
 
-        <div class="star-select"
-             id="starSelect">
+				</div>
 
-            <span class="star" data-value="1">☆</span>
-            <span class="star" data-value="2">☆</span>
-            <span class="star" data-value="3">☆</span>
-            <span class="star" data-value="4">☆</span>
-            <span class="star" data-value="5">☆</span>
+			</div>
 
 
-            <span class="star-value"
-                  id="starValue">
 
-                <%= messages.getProperty(
-                    "review.write.rating.select",
-                    "별점을 선택해주세요"
-                ) %>
+			<!-- 리뷰 내용 -->
+			<div class="write-section">
 
-            </span>
+				<h3>
 
-        </div>
+					<%=messages.getProperty("review.write.content", "리뷰 내용")%>
 
-    </div>
+				</h3>
 
 
+				<textarea class="write-textarea" id="reviewText" name="content"
+					placeholder="<%=messages.getProperty("review.write.placeholder", "방문하신 곳에 대한 솔직한 후기를 남겨주세요.")%>"></textarea>
 
-    <!-- 리뷰 내용 -->
-    <div class="write-section">
+			</div>
 
-        <h3>
 
-            <%= messages.getProperty(
-                "review.write.content",
-                "리뷰 내용"
-            ) %>
 
-        </h3>
+			<!-- 사진 첨부 -->
+			<div class="write-section">
 
+				<h3>
 
-        <textarea
-            class="write-textarea"
-            id="reviewText"
-            placeholder="<%= messages.getProperty(
-                "review.write.placeholder",
-                "방문하신 곳에 대한 솔직한 후기를 남겨주세요."
-            ) %>"></textarea>
+					<%=messages.getProperty("review.write.photo", "사진 첨부")%>
 
-    </div>
+				</h3>
 
 
+				<label class="photo-add-btn" for="photoInput"> 📷 <%=messages.getProperty("review.write.photo.add", "사진 추가")%>
 
-    <!-- 사진 첨부 -->
-    <div class="write-section">
+				</label> <input type="file" id="photoInput" accept="image/*"
+					name="reviewImage" style="display: none;">
 
-        <h3>
 
-            <%= messages.getProperty(
-                "review.write.photo",
-                "사진 첨부"
-            ) %>
+				<div class="photo-preview-list" id="photoPreviewList"></div>
 
-        </h3>
+			</div>
 
 
-        <label class="photo-add-btn"
-               for="photoInput">
 
-            📷
-            <%= messages.getProperty(
-                "review.write.photo.add",
-                "사진 추가"
-            ) %>
+			<!-- 버튼 -->
+			<div class="write-actions">
 
-        </label>
 
+				<a
+					href="${pageContext.request.contextPath}/places/placesDetail.do?id=${placesId}&lang=<%= lang %>"
+					class="write-cancel-btn"> <%=messages.getProperty("review.write.cancel", "취소")%>
 
-        <input
-            type="file"
-            id="photoInput"
-            accept="image/*"
-            multiple
-            style="display:none;">
+				</a>
 
 
-        <div class="photo-preview-list"
-             id="photoPreviewList">
-        </div>
+				<button type="button" class="write-submit-btn" id="submitBtn">
 
-    </div>
+					<%=messages.getProperty("review.write.submit", "등록하기")%>
 
+				</button>
 
 
-    <!-- 버튼 -->
-    <div class="write-actions">
+			</div>
 
 
-        <a href="${pageContext.request.contextPath}/place/view.do?id=${place.id}&lang=<%= lang %>"
-           class="write-cancel-btn">
 
-            <%= messages.getProperty(
-                "review.write.cancel",
-                "취소"
-            ) %>
 
-        </a>
 
 
-        <button
-            type="button"
-            class="write-submit-btn"
-            id="submitBtn">
+		</form>
 
-            <%= messages.getProperty(
-                "review.write.submit",
-                "등록하기"
-            ) %>
+	</div>
+	<%@ include file="footer.jsp"%>
 
-        </button>
 
 
-    </div>
-
-
-</div>
-
-
-<%@ include file="footer.jsp"%>
-
-
-
-<script>
+	<script>
 
 let selectedRating = 0;
 
@@ -268,15 +208,14 @@ stars.forEach(
                         star.dataset.value,
                         10
                     );
-
+                // 선택한 별점을 form으로 전달
+                document.getElementById('ratingInput').value =
+                    selectedRating;
                 updateStars();
 
                 starValue.textContent =
                     selectedRating
-                    + '<%= messages.getProperty(
-                        "review.write.rating.unit",
-                        ".0점"
-                    ) %>';
+                    + '<%=messages.getProperty("review.write.rating.unit", ".0점")%>';
 
             }
         );
@@ -316,59 +255,41 @@ function updateStars() {
 
 /* 사진 미리보기 */
 const photoInput =
-    document.getElementById(
-        'photoInput'
-    );
+    document.getElementById('photoInput');
 
 const photoPreviewList =
-    document.getElementById(
-        'photoPreviewList'
-    );
-
+    document.getElementById('photoPreviewList');
 
 photoInput.addEventListener(
     'change',
     function() {
 
-        photoPreviewList.innerHTML =
-            '';
+        photoPreviewList.innerHTML = '';
 
-        Array
-            .from(photoInput.files)
-            .forEach(
-                function(file) {
+        const file = photoInput.files[0];
 
-                    const reader =
-                        new FileReader();
+        if (!file) {
+            return;
+        }
 
-                    reader.onload =
-                        function(e) {
+        const reader = new FileReader();
 
-                            const box =
-                                document.createElement(
-                                    'div'
-                                );
+        reader.onload =
+            function(e) {
 
-                            box.className =
-                                'photo-preview-box';
+                const box =
+                    document.createElement('div');
 
-                            box.style.backgroundImage =
-                                'url('
-                                + e.target.result
-                                + ')';
+                box.className =
+                    'photo-preview-box';
 
-                            photoPreviewList
-                                .appendChild(box);
+                box.style.backgroundImage =
+                    'url(' + e.target.result + ')';
 
-                        };
+                photoPreviewList.appendChild(box);
+            };
 
-                    reader.readAsDataURL(
-                        file
-                    );
-
-                }
-            );
-
+        reader.readAsDataURL(file);
     }
 );
 
@@ -385,10 +306,7 @@ document
             if (selectedRating === 0) {
 
                 alert(
-                    '<%= messages.getProperty(
-                        "review.write.alert.rating",
-                        "별점을 선택해주세요."
-                    ) %>'
+                    '<%=messages.getProperty("review.write.alert.rating", "별점을 선택해주세요.")%>'
                 );
 
                 return;
@@ -407,10 +325,7 @@ document
             ) {
 
                 alert(
-                    '<%= messages.getProperty(
-                        "review.write.alert.content",
-                        "리뷰 내용을 입력해주세요."
-                    ) %>'
+                    '<%=messages.getProperty("review.write.alert.content", "리뷰 내용을 입력해주세요.")%>'
                 );
 
                 return;
@@ -418,19 +333,13 @@ document
             }
 
 
-            alert(
-                '<%= messages.getProperty(
-                    "review.write.alert.preparing",
-                    "리뷰 등록 기능은 준비 중입니다."
-                ) %>'
-            );
+           
+            document.querySelector('form').submit();
 
-        }
-    );
+						});
+	</script>
 
-</script>
-
-
+	
 </body>
 
 </html>

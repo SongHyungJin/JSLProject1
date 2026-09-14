@@ -426,7 +426,236 @@
    내 정보 - 버튼 2개(중복확인/변경확인) 한 칸에 나란히
 ========================= */
 
-.profile-actions {
+.profile-edit-actions {
     display: flex;
     gap: 8px;
+    justify-content: flex-end;
+}
+
+/* ==============================
+   내 정보 - 닉네임 수정
+============================== */
+
+/* 닉네임 영역 */
+#nicknameArea {
+    min-height: 62px;
+    padding: 0;
+
+    display: flex;
+    align-items: center;
+
+    box-sizing: border-box;
+
+    color: #333;
+    background: #f5f6f8;
+    border: 1px solid #ededf0;
+    border-radius: 9px;
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* 닉네임 텍스트 */
+#nicknameText {
+    padding: 13px 16px;
+}
+
+/* 닉네임 수정 input */
+#nicknameInput {
+    width: 100%;
+    height: 100%;
+
+    padding: 13px 16px;
+
+    box-sizing: border-box;
+
+    color: #333;
+    background: transparent;
+
+    border: none;
+    border-radius: 9px;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    outline: none;
+}
+
+/* 닉네임 수정 중 */
+#nicknameArea:focus-within {
+    background: #ffffff;
+    border-color: #e85d8e;
+    box-shadow: 0 0 0 3px rgba(232, 93, 142, 0.08);
+}
+
+
+/* ==============================
+   닉네임 변경 버튼
+============================== */
+
+.profile-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#nicknameBtn {
+    min-width: 105px;
+    height: 42px;
+    padding: 0 14px;
+
+    color: #e85d8e;
+    background: #ffffff;
+
+    border: 1px solid #e85d8e;
+    border-radius: 9px;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        color 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+#nicknameBtn:hover {
+    color: #ffffff;
+    background: #e85d8e;
+}
+
+#nicknameBtn.save-mode {
+    color: #ffffff;
+    background: #e85d8e;
+    border-color: #e85d8e;
+}
+
+#nicknameBtn.save-mode:hover {
+    background: #d94f7f;
+    border-color: #d94f7f;
+}
+
+
+/* ==============================
+   비밀번호 변경
+============================== */
+
+.password-update-area {
+    margin-top: 25px;
+}
+
+/* profile-row와 동일한 구조 */
+.password-row {
+    min-height: 62px;
+    display: grid;
+    grid-template-columns: minmax(100px, 110px) minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 10px;
+}
+
+/* 비밀번호 라벨 */
+.password-row .profile-label {
+    color: #666;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+/* 비밀번호 입력 영역 */
+.password-value {
+    min-height: 62px;
+    padding: 0;
+
+    display: flex;
+    align-items: center;
+
+    box-sizing: border-box;
+
+    background: #f5f6f8;
+    border: 1px solid #ededf0;
+    border-radius: 9px;
+}
+
+/* 실제 input */
+.password-value input {
+    width: 100%;
+    height: 100%;
+
+    padding: 13px 16px;
+
+    box-sizing: border-box;
+
+    color: #333;
+    background: transparent;
+
+    border: none;
+    border-radius: 9px;
+
+    outline: none;
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* 비밀번호 입력 중 */
+.password-value:focus-within {
+    background: #ffffff;
+    border-color: #e85d8e;
+    box-shadow: 0 0 0 3px rgba(232, 93, 142, 0.08);
+}
+
+
+/* ==============================
+   비밀번호 변경 버튼
+============================== */
+
+.password-actions {
+    display: flex;
+    justify-content: flex-end;
+
+    gap: 10px;
+
+    margin-top: 20px;
+}
+
+.password-cancel-btn {
+    min-width: 105px;
+    height: 42px;
+
+    padding: 0 14px;
+
+    color: #777;
+    background: #ffffff;
+
+    border: 1px solid #cfd2d7;
+    border-radius: 9px;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        color 0.2s ease,
+        background 0.2s ease;
+}
+
+.password-cancel-btn:hover {
+    color: #333;
+    background: #f1f2f4;
+}
+
+.password-actions .small-btn {
+    min-width: 105px;
+    height: 42px;
+    padding: 0 14px;
+}
+
+.password-label {
+    white-space: normal;
+    color: #666;
+    font-size: 13px;
+    font-weight: 700;
 }

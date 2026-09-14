@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
@@ -8,37 +8,31 @@
 <%@ page import="java.io.InputStreamReader"%>
 
 <%
-    String lang = request.getParameter("lang");
+String lang = request.getParameter("lang");
 
-    if (lang == null) {
-        lang = "ko";
-    }
+if (lang == null) {
+	lang = "ko";
+}
 
-    if (!lang.equals("ko")
-            && !lang.equals("en")
-            && !lang.equals("ja")) {
-        lang = "ko";
-    }
+if (!lang.equals("ko") && !lang.equals("en") && !lang.equals("ja")) {
+	lang = "ko";
+}
 
-    Properties messages = new Properties();
+Properties messages = new Properties();
 
-    String resourcePath =
-            "/i18n/messages_" + lang + ".properties";
+String resourcePath = "/i18n/messages_" + lang + ".properties";
 
-    InputStream is =
-            application.getResourceAsStream(resourcePath);
+InputStream is = application.getResourceAsStream(resourcePath);
 
-    if (is != null) {
-        messages.load(
-            new InputStreamReader(is, "UTF-8")
-        );
-        is.close();
-    }
+if (is != null) {
+	messages.load(new InputStreamReader(is, "UTF-8"));
+	is.close();
+}
 %>
 
 <!DOCTYPE html>
 
-<html lang="<%= lang %>">
+<html lang="<%=lang%>">
 
 <head>
 
@@ -47,748 +41,659 @@
 <title>TripStamp - ${place.name}</title>
 
 <link rel="stylesheet"
-    href="${pageContext.request.contextPath}/css/view.css">
+	href="${pageContext.request.contextPath}/css/view.css">
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/css/review.css">
 
 </head>
 
 <body>
 
-<%@ include file="header.jsp"%>
+	<%@ include file="header.jsp"%>
 
 
-<div class="page-wrap">
+	<div class="page-wrap">
 
 
-    <!-- 상단 검색 -->
-    <div class="top-search">
+		<!-- 상단 검색 -->
+		<div class="top-search">
 
-        <form class="search-box"
-              action="${pageContext.request.contextPath}/place/search.do"
-              method="get">
+			<form class="search-box"
+				action="${pageContext.request.contextPath}/places/placesSearch.do"
+				method="get">
 
-            <input type="hidden"
-                   name="lang"
-                   value="<%= lang %>">
+				<input type="hidden" name="lang" value="<%=lang%>"> <input
+					type="text" name="keyword"
+					placeholder="<%=messages.getProperty("place.search.placeholder", "가게 이름이나 지역으로 검색")%>">
 
-            <input type="text"
-                   name="keyword"
-                   placeholder="<%= messages.getProperty(
-                       "place.search.placeholder",
-                       "가게 이름이나 지역으로 검색"
-                   ) %>">
+				<button type="submit">
 
-            <button type="submit">
+					<%=messages.getProperty("place.search.button", "검색")%>
 
-                <%= messages.getProperty(
-                    "place.search.button",
-                    "검색"
-                ) %>
+				</button>
 
-            </button>
+			</form>
 
-        </form>
-
-    </div>
+		</div>
 
 
 
-    <c:if test="${not empty place}">
+		<c:if test="${not empty place}">
 
 
-        <!-- 이미지 갤러리 -->
-        <div class="image-gallery">
+			<!-- 이미지 갤러리 -->
+			<div class="image-gallery">
 
-            <div class="main-image"
-                 style="
-                     background-image:url('${place.imageUrl}');
+				<div class="main-image"
+					style="
+                     background-image:url('${place.image_url}');
                      background-size:cover;
                      background-position:center;
                  ">
 
-                <span>
+					<span> <%=messages.getProperty("view.photo.none", "사진 정보 없음")%>
 
-                    <%= messages.getProperty(
-                        "view.photo.none",
-                        "사진 정보 없음"
-                    ) %>
+					</span>
 
-                </span>
-
-            </div>
+				</div>
 
 
-            <div class="side-images">
+				<div class="side-images">
 
-                <div class="side-image">
+					<div class="side-image">
 
-                    <span>
+						<span> <%=messages.getProperty("view.photo.none", "사진 정보 없음")%>
 
-                        <%= messages.getProperty(
-                            "view.photo.none",
-                            "사진 정보 없음"
-                        ) %>
+						</span>
 
-                    </span>
-
-                </div>
+					</div>
 
 
-                <div class="side-image">
+					<div class="side-image">
 
-                    <span>
+						<span> <%=messages.getProperty("view.photo.none", "사진 정보 없음")%>
 
-                        <%= messages.getProperty(
-                            "view.photo.none",
-                            "사진 정보 없음"
-                        ) %>
+						</span>
 
-                    </span>
+					</div>
 
-                </div>
+				</div>
 
-            </div>
-
-        </div>
+			</div>
 
 
 
-        <!-- 가게 정보 -->
-        <div class="place-summary">
+			<!-- 가게 정보 -->
+			<div class="place-summary">
 
-            <div class="place-summary-left">
+				<div class="place-summary-left">
 
-                <h1 class="place-title">
+					<h1 class="place-title">
 
-                    ${place.name}
+						${place.name}
 
-                    <c:if test="${not empty sessionScope.loginUser}">
+						<c:if test="${not empty sessionScope.id}">
 
-                        <button type="button"
-                                class="like-btn"
-                                onclick="toggleLike(event, this)">
-                            ☆
-                        </button>
+							<button type="button" class="like-btn"
+								onclick="toggleLike(event, this, ${place.id})">☆</button>
 
-                    </c:if>
+						</c:if>
 
-                </h1>
+					</h1>
 
 
-                <div class="rating-line">
+					<div class="rating-line">
 
-                    <span class="rating">
-                        ★ ${place.avgRating}
-                    </span>
+						<span class="rating"> ★ ${place.rating} </span> <span
+							class="review no-data"> <%=messages.getProperty("view.review.none", "리뷰 정보 없음")%>
 
-                    <span class="review no-data">
-
-                        <%= messages.getProperty(
-                            "view.review.none",
-                            "리뷰 정보 없음"
-                        ) %>
-
-                    </span>
-
-                    <span class="dot">
-                        ·
-                    </span>
+						</span> <span class="dot"> · </span>
 
 
-                    <c:choose>
+						<c:choose>
 
-                        <c:when test="${place.category == 'RESTAURANT'
+							<c:when
+								test="${place.category == 'restraunt'
                                 || place.category == 'restaurant'
                                 || place.category == '식당'}">
 
-                            <span>
+								<span> <%=messages.getProperty("category.restaurant", "식당")%>
 
-                                <%= messages.getProperty(
-                                    "category.restaurant",
-                                    "식당"
-                                ) %>
+								</span>
 
-                            </span>
+							</c:when>
 
-                        </c:when>
-
-                        <c:when test="${place.category == 'CAFE'
+							<c:when
+								test="${place.category == 'CAFE'
                                 || place.category == 'cafe'
                                 || place.category == '카페'}">
 
-                            <span>
+								<span> <%=messages.getProperty("category.cafe", "카페")%>
 
-                                <%= messages.getProperty(
-                                    "category.cafe",
-                                    "카페"
-                                ) %>
+								</span>
 
-                            </span>
+							</c:when>
 
-                        </c:when>
-
-                        <c:when test="${place.category == 'SHOP'
+							<c:when
+								test="${place.category == 'SHOP'
                                 || place.category == 'shop'
                                 || place.category == '상점'}">
 
-                            <span>
+								<span> <%=messages.getProperty("category.shop", "상점")%>
 
-                                <%= messages.getProperty(
-                                    "category.shop",
-                                    "상점"
-                                ) %>
+								</span>
 
-                            </span>
+							</c:when>
 
-                        </c:when>
-
-                        <c:when test="${place.category == 'ATTRACTION'
+							<c:when
+								test="${place.category == 'ATTRACTION'
                                 || place.category == 'attraction'
                                 || place.category == '관광지'}">
 
-                            <span>
+								<span> <%=messages.getProperty("category.attraction", "관광지")%>
 
-                                <%= messages.getProperty(
-                                    "category.attraction",
-                                    "관광지"
-                                ) %>
+								</span>
 
-                            </span>
+							</c:when>
 
-                        </c:when>
+							<c:when test="${not empty place.category}">
 
-                        <c:when test="${not empty place.category}">
+								<span> ${place.category} </span>
 
-                            <span>
-                                ${place.category}
-                            </span>
+							</c:when>
 
-                        </c:when>
+							<c:otherwise>
 
-                        <c:otherwise>
+								<span class="no-data"> <%=messages.getProperty("view.category.none", "카테고리 정보 없음")%>
 
-                            <span class="no-data">
+								</span>
 
-                                <%= messages.getProperty(
-                                    "view.category.none",
-                                    "카테고리 정보 없음"
-                                ) %>
+							</c:otherwise>
 
-                            </span>
+						</c:choose>
 
-                        </c:otherwise>
-
-                    </c:choose>
-
-                </div>
+					</div>
 
 
-                <p class="address">
+					<p class="address">
 
-                    📍
+						📍
 
-                    <c:choose>
+						<c:choose>
 
-                        <c:when test="${not empty place.region}">
+							<c:when test="${not empty place.region}">
 
                             ${place.region}
 
                         </c:when>
 
-                        <c:otherwise>
+							<c:otherwise>
 
-                            <span class="no-data">
+								<span class="no-data"> <%=messages.getProperty("view.region.none", "지역 정보 없음")%>
 
-                                <%= messages.getProperty(
-                                    "view.region.none",
-                                    "지역 정보 없음"
-                                ) %>
+								</span>
 
-                            </span>
+							</c:otherwise>
 
-                        </c:otherwise>
+						</c:choose>
 
-                    </c:choose>
+					</p>
 
-                </p>
-
-            </div>
+				</div>
 
 
 
-            <!-- 예약 / 길찾기 -->
-            <div class="action-card">
+				<!-- 예약 / 길찾기 -->
+				<div class="action-card">
 
-                <c:choose>
+					<c:choose>
 
-                    <c:when test="${place.reservable == 0}">
+						<c:when test="${not place.reservable}">
+							<button type="button" class="reserve-btn disabled" disabled>
+								<%=messages.getProperty("view.reserve.unavailable", "예약 불가 매장")%>
+							</button>
+						</c:when>
 
-                        <button type="button"
-                                class="reserve-btn disabled"
-                                disabled>
+						<c:when test="${not empty sessionScope.id}">
 
-                            <%= messages.getProperty(
-                                "view.reserve.unavailable",
-                                "예약 불가 매장"
-                            ) %>
+							<a
+								href="${pageContext.request.contextPath}/booking/bookingview.do?id=${place.id}&lang=<%= lang %>"
+								class="reserve-btn"> <%=messages.getProperty("view.reserve.button", "예약하기")%>
 
-                        </button>
+							</a>
 
-                    </c:when>
+						</c:when>
 
-                    <c:when test="${not empty sessionScope.loginUser}">
+						<c:otherwise>
 
-                        <a href="${pageContext.request.contextPath}/place/booking.do?id=${place.id}&lang=<%= lang %>"
-                           class="reserve-btn">
+							<c:url var="bookingLoginUrl" value="/users/loginview.do">
 
-                            <%= messages.getProperty(
-                                "view.reserve.button",
-                                "예약하기"
-                            ) %>
+								<c:param name="lang" value="<%=lang%>" />
 
-                        </a>
+								<c:param name="redirect"
+									value="/booking/bookingview.do?id=${place.id}" />
 
-                    </c:when>
+							</c:url>
 
-                    <c:otherwise>
+							<a href="${bookingLoginUrl}" class="reserve-btn"> <%=messages.getProperty("view.reserve.button", "예약하기")%>
 
-                        <c:url var="bookingLoginUrl"
-                               value="/log/login.do">
+							</a>
 
-                            <c:param name="lang"
-                                     value="<%= lang %>" />
+						</c:otherwise>
 
-                            <c:param name="redirect"
-                                     value="/place/booking.do?id=${place.id}" />
-
-                        </c:url>
-
-                        <a href="${bookingLoginUrl}"
-                           class="reserve-btn">
-
-                            <%= messages.getProperty(
-                                "view.reserve.button",
-                                "예약하기"
-                            ) %>
-
-                        </a>
-
-                    </c:otherwise>
-
-                </c:choose>
+					</c:choose>
 
 
-                <c:choose>
+					<c:choose>
 
-                    <c:when test="${not empty place.latitude
+						<c:when
+							test="${not empty place.latitude
                             and not empty place.longitude}">
 
-                        <a href="https://www.google.com/maps/search/?api=1&query=${place.latitude},${place.longitude}"
-                           target="_blank"
-                           class="route-btn">
+							<a
+								href="https://www.google.com/maps/search/?api=1&query=${place.latitude},${place.longitude}"
+								target="_blank" class="route-btn"> <%=messages.getProperty("place.directions", "길찾기")%>
 
-                            <%= messages.getProperty(
-                                "place.directions",
-                                "길찾기"
-                            ) %>
+							</a>
 
-                        </a>
+						</c:when>
 
-                    </c:when>
+						<c:otherwise>
 
-                    <c:otherwise>
+							<button type="button" class="route-btn disabled" disabled>
 
-                        <button type="button"
-                                class="route-btn disabled"
-                                disabled>
+								<%=messages.getProperty("view.directions.none", "길찾기 (정보 없음)")%>
 
-                            <%= messages.getProperty(
-                                "view.directions.none",
-                                "길찾기 (정보 없음)"
-                            ) %>
+							</button>
 
-                        </button>
+						</c:otherwise>
 
-                    </c:otherwise>
+					</c:choose>
 
-                </c:choose>
+				</div>
 
-            </div>
+			</div>
 
-        </div>
 
 
+			<!-- 위치 / 영업시간 / 주차 -->
+			<div class="quick-info">
 
-        <!-- 위치 / 영업시간 / 주차 -->
-        <div class="quick-info">
+				<div class="quick-item">
 
-            <div class="quick-item">
+					<div class="quick-icon">📍</div>
 
-                <div class="quick-icon">
-                    📍
-                </div>
+					<div>
 
-                <div>
+						<span class="quick-label"> <%=messages.getProperty("view.location", "위치")%>
 
-                    <span class="quick-label">
+						</span>
 
-                        <%= messages.getProperty(
-                            "view.location",
-                            "위치"
-                        ) %>
+						<c:choose>
 
-                    </span>
+							<c:when test="${not empty place.region}">
 
-                    <c:choose>
+								<span class="quick-value"> ${place.region} </span>
 
-                        <c:when test="${not empty place.region}">
+							</c:when>
 
-                            <span class="quick-value">
-                                ${place.region}
-                            </span>
+							<c:otherwise>
 
-                        </c:when>
+								<span class="quick-value no-data"> <%=messages.getProperty("view.no.info", "정보 없음")%>
 
-                        <c:otherwise>
+								</span>
 
-                            <span class="quick-value no-data">
+							</c:otherwise>
 
-                                <%= messages.getProperty(
-                                    "view.no.info",
-                                    "정보 없음"
-                                ) %>
+						</c:choose>
 
-                            </span>
+					</div>
 
-                        </c:otherwise>
+				</div>
 
-                    </c:choose>
 
-                </div>
+				<div class="quick-item">
 
-            </div>
+					<div class="quick-icon">⏰</div>
 
+					<div>
 
-            <div class="quick-item">
+						<span class="quick-label"> <%=messages.getProperty("view.business.hours", "영업시간")%>
 
-                <div class="quick-icon">
-                    ⏰
-                </div>
+						</span>
 
-                <div>
+						<c:choose>
 
-                    <span class="quick-label">
+							<c:when test="${not empty place.business_hours}">
 
-                        <%= messages.getProperty(
-                            "view.business.hours",
-                            "영업시간"
-                        ) %>
+								<span class="quick-value"> ${place.business_hours} </span>
 
-                    </span>
+							</c:when>
 
-                    <c:choose>
+							<c:otherwise>
 
-                        <c:when test="${not empty place.businessHours}">
+								<span class="quick-value no-data"> <%=messages.getProperty("view.no.info", "정보 없음")%>
 
-                            <span class="quick-value">
-                                ${place.businessHours}
-                            </span>
+								</span>
 
-                        </c:when>
+							</c:otherwise>
 
-                        <c:otherwise>
+						</c:choose>
 
-                            <span class="quick-value no-data">
+					</div>
 
-                                <%= messages.getProperty(
-                                    "view.no.info",
-                                    "정보 없음"
-                                ) %>
+				</div>
 
-                            </span>
 
-                        </c:otherwise>
+				<div class="quick-item">
 
-                    </c:choose>
+					<div class="quick-icon">🅿️</div>
 
-                </div>
+					<div>
 
-            </div>
+						<span class="quick-label"> <%=messages.getProperty("view.parking", "주차")%>
 
+						</span> <span class="quick-value no-data"> <%=messages.getProperty("view.no.info", "정보 없음")%>
 
-            <div class="quick-item">
+						</span>
 
-                <div class="quick-icon">
-                    🅿️
-                </div>
+					</div>
 
-                <div>
+				</div>
 
-                    <span class="quick-label">
+			</div>
 
-                        <%= messages.getProperty(
-                            "view.parking",
-                            "주차"
-                        ) %>
 
-                    </span>
 
-                    <span class="quick-value no-data">
+			<!-- 대표 메뉴 -->
+			<div class="detail-section">
 
-                        <%= messages.getProperty(
-                            "view.no.info",
-                            "정보 없음"
-                        ) %>
+				<h2 class="section-title">
 
-                    </span>
+					<%=messages.getProperty("view.menu.title", "대표 메뉴")%>
 
-                </div>
+				</h2>
 
-            </div>
+				<div class="menu-tags">
 
-        </div>
+					<span class="menu-tag no-data"> <%=messages.getProperty("view.menu.none", "메뉴 정보 없음")%>
 
+					</span>
 
+				</div>
 
-        <!-- 대표 메뉴 -->
-        <div class="detail-section">
+			</div>
 
-            <h2 class="section-title">
 
-                <%= messages.getProperty(
-                    "view.menu.title",
-                    "대표 메뉴"
-                ) %>
 
-            </h2>
+			<!-- 소개 -->
+			<div class="detail-section">
 
-            <div class="menu-tags">
+				<h2 class="section-title">
 
-                <span class="menu-tag no-data">
+					<%=messages.getProperty("view.description.title", "소개")%>
 
-                    <%= messages.getProperty(
-                        "view.menu.none",
-                        "메뉴 정보 없음"
-                    ) %>
+				</h2>
 
-                </span>
+				<c:choose>
 
-            </div>
+					<c:when test="${not empty place.description}">
 
-        </div>
+						<p class="description">${place.description}</p>
 
+					</c:when>
 
+					<c:otherwise>
 
-        <!-- 소개 -->
-        <div class="detail-section">
+						<p class="description no-data">
 
-            <h2 class="section-title">
+							<%=messages.getProperty("view.no.info", "정보 없음")%>
 
-                <%= messages.getProperty(
-                    "view.description.title",
-                    "소개"
-                ) %>
+						</p>
 
-            </h2>
+					</c:otherwise>
 
-            <c:choose>
+				</c:choose>
 
-                <c:when test="${not empty place.description}">
+			</div>
 
-                    <p class="description">
-                        ${place.description}
-                    </p>
 
-                </c:when>
 
-                <c:otherwise>
+			<!-- 방문자 리뷰 -->
+			<div class="detail-section">
 
-                    <p class="description no-data">
+				<div class="section-title-row">
 
-                        <%= messages.getProperty(
-                            "view.no.info",
-                            "정보 없음"
-                        ) %>
+					<h2 class="section-title">
+						<%=messages.getProperty("view.review.visitor", "방문자 리뷰")%>
+					</h2>
+					<a
+						href="${pageContext.request.contextPath}/review/all.do?id=${place.id}&lang=<%= lang %>"
+						class="review-more-btn"> <%=messages.getProperty("review.list.all", "전체보기")%>
+						&gt;
 
-                    </p>
+					</a>
+				</div>
 
-                </c:otherwise>
 
-            </c:choose>
+				<!-- 리뷰 슬라이더 -->
+				<c:choose>
 
-        </div>
 
+					<c:when test="${not empty reviewList}">
 
+						<div class="review-slider-wrapper">
 
-        <!-- 방문자 리뷰 -->
-        <div class="detail-section">
 
-            <div class="section-title-row">
+							<button type="button" class="review-nav prev"
+								onclick="moveReview(-1)">‹</button>
 
-                <h2 class="section-title">
 
-                    <%= messages.getProperty(
-                        "view.review.visitor",
-                        "방문자 리뷰"
-                    ) %>
+							<div class="review-track" id="reviewTrack">
 
-                </h2>
+								<c:forEach var="review" items="${reviewList}">
 
+									<div class="review-card">
 
-                <a href="${pageContext.request.contextPath}/review/list.do?id=${place.id}&lang=<%= lang %>"
-                   class="review-more-btn">
 
-                    <%= messages.getProperty(
-                        "view.review.all",
-                        "리뷰 전체보기"
-                    ) %>
+										<div class="review-photo">
 
-                </a>
+											<c:choose>
 
-            </div>
+												<c:when test="${not empty review.imageUrl}">
 
+													<img src="${review.imageUrl}" alt="리뷰 이미지">
 
-            <p class="description no-data">
+												</c:when>
 
-                <%= messages.getProperty(
-                    "view.review.empty",
-                    "아직 등록된 리뷰가 없습니다."
-                ) %>
+												<c:otherwise>
 
-            </p>
+                                        📷
 
+                                    </c:otherwise>
 
-            <div class="review-write-bar">
+											</c:choose>
 
-                <c:choose>
+										</div>
 
-                    <c:when test="${not empty sessionScope.loginUser}">
 
-                        <a href="${pageContext.request.contextPath}/review/write.do?id=${place.id}&lang=<%= lang %>"
-                           class="review-write-btn">
 
-                            <%= messages.getProperty(
-                                "view.review.write",
-                                "리뷰 작성"
-                            ) %>
+										<div class="review-body">
 
-                        </a>
 
-                    </c:when>
 
-                    <c:otherwise>
+											<div class="review-rating">
 
-                        <c:url var="reviewLoginUrl"
-                               value="/log/login.do">
+												<c:forEach begin="1" end="5" var="star">
 
-                            <c:param name="lang"
-                                     value="<%= lang %>" />
+													<c:choose>
 
-                            <c:param name="redirect"
-                                     value="/review/write.do?id=${place.id}" />
+														<c:when test="${star <= review.rating}">
 
-                        </c:url>
+                                                ★
 
-                        <a href="${reviewLoginUrl}"
-                           class="review-write-btn">
+                                            </c:when>
 
-                            <%= messages.getProperty(
-                                "view.review.write",
-                                "리뷰 작성"
-                            ) %>
+														<c:otherwise>
 
-                        </a>
+                                                ☆
 
-                    </c:otherwise>
+                                            </c:otherwise>
 
-                </c:choose>
+													</c:choose>
 
-            </div>
+												</c:forEach>
 
-        </div>
+												<span> ${review.rating}.0 </span>
 
+											</div>
 
 
-        <!-- 목록으로 -->
-        <div class="back-section">
 
-            <a href="${pageContext.request.contextPath}/place/list.do?lang=<%= lang %>"
-               class="back-btn">
+											<p class="review-author">${review.nickname}</p>
 
-                ←
-                <%= messages.getProperty(
-                    "view.back.list",
-                    "목록으로"
-                ) %>
 
-            </a>
 
-        </div>
+											<p class="review-text">"${review.content}"</p>
 
 
-    </c:if>
 
 
 
-    <c:if test="${empty place}">
+										</div>
 
-        <div class="detail-section"
-             style="
-                 text-align:center;
-                 color:#999;
-             ">
+									</div>
 
-            <p>
+								</c:forEach>
 
-                <%= messages.getProperty(
-                    "view.place.notfound",
-                    "가게 정보를 찾을 수 없습니다."
-                ) %>
+							</div>
 
-            </p>
 
-            <div class="back-section">
 
-                <a href="${pageContext.request.contextPath}/place/list.do?lang=<%= lang %>"
-                   class="back-btn">
+							<button type="button" class="review-nav next"
+								onclick="moveReview(1)">›</button>
 
-                    ←
-                    <%= messages.getProperty(
-                        "view.back.list",
-                        "목록으로"
-                    ) %>
+						</div>
 
-                </a>
+					</c:when>
 
-            </div>
 
-        </div>
 
-    </c:if>
+					<c:otherwise>
 
+						<p class="description no-data">
 
-</div>
+							<%=messages.getProperty("view.review.empty", "아직 등록된 리뷰가 없습니다.")%>
 
+						</p>
 
-<%@ include file="footer.jsp"%>
+					</c:otherwise>
 
+				</c:choose>
+				<div class="review-write-area">
 
-<script>
+					<a
+						href="${pageContext.request.contextPath}/review/write.do?id=${place.id}&lang=<%= lang %>"
+						class="review-write-btn"> 리뷰 작성 </a>
 
-function toggleLike(event, btn) {
+				</div>
+			</div>
 
-    event.preventDefault();
 
-    event.stopPropagation();
 
-    btn.classList.toggle('liked');
+			<!-- 목록으로 -->
+			<div class="back-section">
 
-    btn.textContent =
-        btn.classList.contains('liked')
-        ? '★'
-        : '☆';
-}
+				<a
+					href="${pageContext.request.contextPath}/places/placesAllList.do?lang=<%= lang %>"
+					class="back-btn"> ← <%=messages.getProperty("view.back.list", "목록으로")%>
 
-</script>
+				</a>
+
+			</div>
+
+
+		</c:if>
+
+
+
+		<c:if test="${empty place}">
+
+			<div class="detail-section" style="text-align: center; color: #999;">
+
+				<p>
+
+					<%=messages.getProperty("view.place.notfound", "가게 정보를 찾을 수 없습니다.")%>
+
+				</p>
+
+				<div class="back-section">
+
+					<a
+						href="${pageContext.request.contextPath}/place/list.do?lang=<%= lang %>"
+						class="back-btn"> ← <%=messages.getProperty("view.back.list", "목록으로")%>
+
+					</a>
+
+				</div>
+
+			</div>
+
+		</c:if>
+
+
+	</div>
+
+
+	<%@ include file="footer.jsp"%>
+
+
+	<script>
+	function toggleLike(event, btn, placeId) {
+
+	    event.preventDefault();
+	    event.stopPropagation();
+
+	    const isLiked = btn.classList.contains('liked');
+
+	    $.ajax({
+	        url: '${pageContext.request.contextPath}/bookmark/toggle.do',
+	        type: 'POST',
+	        data: {
+	            placeId: placeId,
+	            action: isLiked ? 'delete' : 'add'
+	        },
+
+	        success: function(result) {
+
+	            result = result.trim();
+
+	            if (result === 'add') {
+
+	                btn.classList.add('liked');
+	                btn.textContent = '★';
+
+	            } else if (result === 'delete') {
+
+	                btn.classList.remove('liked');
+	                btn.textContent = '☆';
+
+	            } else if (result === 'login') {
+
+	                alert('로그인이 필요합니다.');
+
+	            } else {
+
+	                alert('북마크 처리에 실패했습니다.');
+	            }
+	        },
+
+	        error: function() {
+	            alert('북마크 처리 중 오류가 발생했습니다.');
+	        }
+	    });
+	}
+	</script>
 
 
 </body>

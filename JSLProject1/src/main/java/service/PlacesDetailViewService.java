@@ -1,6 +1,7 @@
 package service;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -8,6 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import model.PlacesDAO;
 import model.PlacesDTO;
+import model.ReviewsDAO;
+import model.ReviewsDTO;
 
 public class PlacesDetailViewService implements Command {
 
@@ -18,8 +21,13 @@ public class PlacesDetailViewService implements Command {
 		int id = Integer.parseInt(request.getParameter("id"));
 		PlacesDAO dao = new PlacesDAO();
 		PlacesDTO dto = dao.PlacesSelectById(id);
-		
-		request.setAttribute("detaildto", dto);
+		request.setAttribute("place", dto);
+		ReviewsDAO reviewsDAO = new ReviewsDAO();
+
+		List<ReviewsDTO> reviewList =
+		        reviewsDAO.selectByPlacesId(id);
+
+		request.setAttribute("reviewList", reviewList);
 	}
 
 }

@@ -20,7 +20,6 @@ public class PlacesDAO {
 		String sql = "INSERT INTO places (" + "id, name, category, region, latitude, longitude, "
 				+ "description, business_hours, image_url, reservable" + ") VALUES ("
 				+ "PLACES_SEQ.NEXTVAL, ?, ?, ?, ?, ?, ?, ?, ?, ?" + ")";
-
 		int result = 0;
 
 		try {
@@ -91,8 +90,9 @@ public class PlacesDAO {
 		ResultSet rs = null;
 
 		List<PlacesDTO> placesList = new ArrayList<>();
-		String sql = "SELECT (id,name,category,region,latitude,longitude,description,business_hours,"
-				+ "image_url,reservable,rating,created_at,updated_at)" + " FROM places";
+		String sql = "SELECT id, name, category, region, latitude, longitude, description, "
+		        + "business_hours, image_url, reservable, rating, created_at, updated_at "
+		        + "FROM places";
 
 		try {
 			conn = DBmanager.getInstance();
@@ -154,7 +154,13 @@ public class PlacesDAO {
 				dto.setReservable(rs.getInt("reservable") == 1);
 				dto.setRating(rs.getDouble("rating"));
 				dto.setCreated_at(rs.getTimestamp("created_at").toLocalDateTime());
-				dto.setUpdated_at(rs.getTimestamp("updated_at").toLocalDateTime());
+				if (rs.getTimestamp("updated_at") != null) {
+
+	                dto.setUpdated_at(
+	                    rs.getTimestamp("updated_at")
+	                      .toLocalDateTime()
+	                );
+	            }
 			}
 
 		} catch (Exception e) {
@@ -166,149 +172,175 @@ public class PlacesDAO {
 	}
 
 	// 점포 조건 검색
-	public List<PlacesDTO> searchPlaces(String region, String[] categories) {
+	public List<PlacesDTO> searchPlaces(String region, String category) {
 
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
+	    Connection conn = null;
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
 
-		List<PlacesDTO> placesList = new ArrayList<>();
+	    List<PlacesDTO> placesList = new ArrayList<>();
 
-		StringBuilder sql = new StringBuilder();
-		sql.append("SELECT * FROM places WHERE 1=1 ");
+	    StringBuilder sql = new StringBuilder();
 
-		// 지역 조건
-		if (region != null && !region.trim().isEmpty()) {
-			sql.append("AND region = ? ");
-		}
+	    sql.append("SELECT * FROM places WHERE 1=1 ");
 
-		// 카테고리 조건
-		if (categories != null && categories.length > 0) {
-			sql.append("AND category IN (");
+	    // 지역 조건
+	    if (region != null && !region.trim().isEmpty()) {
+	        sql.append("AND region = ? ");
+	    }
 
-			for (int i = 0; i < categories.length; i++) {
-				if (i > 0) {
-					sql.append(", ");
-				}
-				sql.append("?");
-			}
+	    // 카테고리 조건
+	    if (category != null && !category.trim().isEmpty()) {
+	        sql.append("AND category = ? ");
+	    }
 
-			sql.append(") ");
-		}
+	    try {
 
-		try {
+	        conn = DBmanager.getInstance();
 
-			conn = DBmanager.getInstance();
-			pstmt = conn.prepareStatement(sql.toString());
+	        pstmt = conn.prepareStatement(sql.toString());
 
-			int index = 1;
+	        int index = 1;
 
-			// 지역 파라미터
-			if (region != null && !region.trim().isEmpty()) {
-				pstmt.setString(index++, region);
-			}
+	        // 지역 파라미터
+	        if (region != null && !region.trim().isEmpty()) {
+	            pstmt.setString(index++, region);
+	        }
 
-			// 카테고리 파라미터
-			if (categories != null && categories.length > 0) {
-				for (String category : categories) {
-					pstmt.setString(index++, category);
-				}
-			}
+	        // 카테고리 파라미터
+	        if (category != null && !category.trim().isEmpty()) {
+	            pstmt.setString(index++, category);
+	        }
 
-			rs = pstmt.executeQuery();
+	        rs = pstmt.executeQuery();
 
-			while (rs.next()) {
+	        while (rs.next()) {
 
-				PlacesDTO dto = new PlacesDTO();
+	            PlacesDTO dto = new PlacesDTO();
 
-				dto.setId(rs.getInt("id"));
-				dto.setName(rs.getString("name"));
-				dto.setCategory(rs.getString("category"));
-				dto.setRegion(rs.getString("region"));
-				dto.setLatitude(rs.getDouble("latitude"));
-				dto.setLongitude(rs.getDouble("longitude"));
-				dto.setDescription(rs.getString("description"));
-				dto.setBusiness_hours(rs.getString("business_hours"));
-				dto.setImage_url(rs.getString("image_url"));
-				dto.setReservable(rs.getInt("reservable") == 1);
-				dto.setRating(rs.getDouble("rating"));
-				dto.setCreated_at(rs.getTimestamp("created_at").toLocalDateTime());
-				dto.setUpdated_at(rs.getTimestamp("updated_at").toLocalDateTime());
+	            dto.setId(rs.getInt("id"));
+	            dto.setName(rs.getString("name"));
+	            dto.setCategory(rs.getString("category"));
+	            dto.setRegion(rs.getString("region"));
+	            dto.setLatitude(rs.getDouble("latitude"));
+	            dto.setLongitude(rs.getDouble("longitude"));
+	            dto.setDescription(rs.getString("description"));
+	            dto.setBusiness_hours(rs.getString("business_hours"));
+	            dto.setImage_url(rs.getString("image_url"));
+	            dto.setReservable(rs.getInt("reservable") == 1);
+	            dto.setRating(rs.getDouble("rating"));
+	            dto.setCreated_at(
+	                rs.getTimestamp("created_at").toLocalDateTime()
+	            );
+	            dto.setUpdated_at(
+	                rs.getTimestamp("updated_at").toLocalDateTime()
+	            );
 
-				placesList.add(dto);
-			}
+	            placesList.add(dto);
+	        }
 
-		} catch (SQLException e) {
-			e.printStackTrace();
+	    } catch (SQLException e) {
 
-		} finally {
-			DBmanager.close(pstmt, conn, rs);
-		}
+	        e.printStackTrace();
 
-		return placesList;
+	    } finally {
+
+	        DBmanager.close(pstmt, conn, rs);
+	    }
+
+	    return placesList;
 	}
 
 	// 점포 키워드 검색
-	public List<PlacesDTO> searchKeyword(String keyword, String region, String[] categories) {
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
+	public List<PlacesDTO> searchKeyword(String keyword, String region, String category) {
 
-		List<PlacesDTO> placesList = new ArrayList<>();
-		if (categories == null || categories.length == 0) {
-			return placesList;
-		}
-		StringBuilder sql = new StringBuilder();
+	    Connection conn = null;
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
 
-		sql.append("SELECT * FROM places ");
-		sql.append("WHERE region = ? ");
-		sql.append("AND category IN (");
+	    List<PlacesDTO> placesList = new ArrayList<>();
 
-		for (int i = 0; i < categories.length; i++) {
-			if (i > 0) {
-				sql.append(", ");
-			}
-			sql.append("?");
-		}
+	    StringBuilder sql = new StringBuilder();
 
-		sql.append(")");
-		sql.append(" AND (name LIKE ? OR description LIKE ?)");
+	    sql.append("SELECT * FROM places ");
+	    sql.append("WHERE 1=1 ");
 
-		try {
-			conn = DBmanager.getInstance();
-			pstmt = conn.prepareStatement(sql.toString());
-			pstmt.setString(1, region);
-			for (int i = 0; i < categories.length; i++) {
-				pstmt.setString(i + 2, categories[i]);
-			}
-			pstmt.setString(categories.length + 2, "%" + keyword + "%");
-			rs = pstmt.executeQuery();
-			while (rs.next()) {
-				PlacesDTO dto = new PlacesDTO();
-				dto.setId(rs.getInt("id"));
-				dto.setName(rs.getString("name"));
-				dto.setCategory(rs.getString("category"));
-				dto.setRegion(rs.getString("region"));
-				dto.setLatitude(rs.getDouble("latitude"));
-				dto.setLongitude(rs.getDouble("longitude"));
-				dto.setDescription(rs.getString("description"));
-				dto.setBusiness_hours(rs.getString("business_hours"));
-				dto.setImage_url(rs.getString("image_url"));
-				dto.setReservable(rs.getInt("reservable") == 1);
-				dto.setRating(rs.getDouble("rating"));
-				dto.setCreated_at(rs.getTimestamp("created_at").toLocalDateTime());
-				dto.setUpdated_at(rs.getTimestamp("updated_at").toLocalDateTime());
+	    // 지역 조건
+	    if (region != null && !region.trim().isEmpty()) {
+	        sql.append("AND region = ? ");
+	    }
 
-				placesList.add(dto);
-			}
+	    // 카테고리 조건
+	    if (category != null && !category.trim().isEmpty()) {
+	        sql.append("AND category = ? ");
+	    }
 
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			DBmanager.close(pstmt, conn, rs);
-		}
+	    // 키워드 조건
+	    sql.append("AND (name LIKE ? OR description LIKE ?) ");
 
-		return placesList;
+	    try {
+
+	        conn = DBmanager.getInstance();
+
+	        pstmt = conn.prepareStatement(sql.toString());
+
+	        int index = 1;
+
+	        // 지역
+	        if (region != null && !region.trim().isEmpty()) {
+	            pstmt.setString(index++, region);
+	        }
+
+	        // 카테고리
+	        if (category != null && !category.trim().isEmpty()) {
+	            pstmt.setString(index++, category);
+	        }
+
+	        // 키워드
+	        String searchKeyword = "%" + keyword.trim() + "%";
+
+	        pstmt.setString(index++, searchKeyword);
+	        pstmt.setString(index++, searchKeyword);
+
+	        rs = pstmt.executeQuery();
+
+	        while (rs.next()) {
+
+	            PlacesDTO dto = new PlacesDTO();
+
+	            dto.setId(rs.getInt("id"));
+	            dto.setName(rs.getString("name"));
+	            dto.setCategory(rs.getString("category"));
+	            dto.setRegion(rs.getString("region"));
+	            dto.setLatitude(rs.getDouble("latitude"));
+	            dto.setLongitude(rs.getDouble("longitude"));
+	            dto.setDescription(rs.getString("description"));
+	            dto.setBusiness_hours(rs.getString("business_hours"));
+	            dto.setImage_url(rs.getString("image_url"));
+	            dto.setReservable(rs.getInt("reservable") == 1);
+	            dto.setRating(rs.getDouble("rating"));
+
+	            dto.setCreated_at(
+	                rs.getTimestamp("created_at").toLocalDateTime()
+	            );
+
+	            dto.setUpdated_at(
+	                rs.getTimestamp("updated_at").toLocalDateTime()
+	            );
+
+	            placesList.add(dto);
+	        }
+
+	    } catch (SQLException e) {
+
+	        e.printStackTrace();
+
+	    } finally {
+
+	        DBmanager.close(pstmt, conn, rs);
+	    }
+
+	    return placesList;
 	}
 	
 	

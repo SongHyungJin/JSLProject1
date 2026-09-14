@@ -32,7 +32,6 @@ public class LoginService implements Command {
 	        session.setAttribute("id", dto.getId());
 	        request.setAttribute("result", 1); // 로그인 성공 시 result를 1로 설정
 	        return;
-
 	    } else {
 
 	        // 로그인 실패

@@ -28,22 +28,22 @@
         <p class="category-description"><%= messages.getProperty("category.description", "원하는 종류의 장소를 골라 둘러보세요") %></p>
     </section>
     <div class="category-container">
-        <a href="<%= request.getContextPath() %>/place/search.do?category=RESTAURANT&lang=<%= lang %>" class="category-card">
+        <a href="<%=request.getContextPath()%>/places/placesSearch.do?category=restaurant&lang=<%=lang%>" class="category-card">
             <div class="category-icon">🍽️</div>
             <div class="category-name"><%= messages.getProperty("category.restaurant", "식당") %></div>
             <div class="category-card-description"><%= messages.getProperty("category.restaurant.description", "맛있는 한 끼를 즐길 수 있는 곳") %></div>
         </a>
-        <a href="<%= request.getContextPath() %>/place/search.do?category=CAFE&lang=<%= lang %>" class="category-card">
+        <a href="<%=request.getContextPath()%>/places/placesSearch.do?category=cafe&lang=<%=lang%>" class="category-card">
             <div class="category-icon">☕</div>
             <div class="category-name"><%= messages.getProperty("category.cafe", "카페") %></div>
             <div class="category-card-description"><%= messages.getProperty("category.cafe.description", "여유롭게 쉬어갈 수 있는 곳") %></div>
         </a>
-        <a href="<%= request.getContextPath() %>/place/search.do?category=SHOP&lang=<%= lang %>" class="category-card">
+        <a href="<%=request.getContextPath()%>/places/placesSearch.do?category=shop&lang=<%=lang%>" class="category-card">
             <div class="category-icon">🛍️</div>
             <div class="category-name"><%= messages.getProperty("category.shop", "상점") %></div>
             <div class="category-card-description"><%= messages.getProperty("category.shop.description", "특별한 물건을 만날 수 있는 곳") %></div>
         </a>
-        <a href="<%= request.getContextPath() %>/place/search.do?category=ATTRACTION&lang=<%= lang %>" class="category-card">
+        <a href="<%=request.getContextPath()%>/places/placesSearch.do?category=attraction&lang=<%=lang%>" class="category-card">
             <div class="category-icon">🗺️</div>
             <div class="category-name"><%= messages.getProperty("category.attraction", "관광지") %></div>
             <div class="category-card-description"><%= messages.getProperty("category.attraction.description", "여행의 즐거움을 더해줄 명소") %></div>
