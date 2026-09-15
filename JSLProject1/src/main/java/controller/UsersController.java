@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import service.BookmarkListService;
 import service.EmailSendService;
 import service.EmailVerifyService;
+import service.FindEmailService;
+import service.FindPasswordService;
 import service.LoginService;
 import service.LogoutService;
 import service.PasswordUpdateService;
@@ -99,16 +101,20 @@ public class UsersController extends HttpServlet {
 			new PasswordUpdateService().doCommand(request, response);
 			break;
 		case "/findemail.do"://이메일 찾기 
-			
+			page = "/findEmail.jsp";
 			break;
 		case "/findpassword.do"://비밀번호 찾기
+			page = "/findPassword.jsp";
 			break;
-			
-		case "/withdraw.do":
-		    System.out.println("=== withdraw.do 진입 ===");
-
+		
+		case "/findEmailPro.do":
+			new FindEmailService().doCommand(request, response);
+			return;
+		case "/findPasswordPro.do":
+			new FindPasswordService().doCommand(request, response);
+			return;
+		case "/withdraw.do"://회원 탈퇴
 		    new WithdrawService().doCommand(request, response);
-
 		    return;
 		}
 		if (page != null) {

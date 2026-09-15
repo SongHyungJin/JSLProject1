@@ -42,7 +42,6 @@ public class UsersDAO {
 		// result==0 아이디 사용가능
 		// result==1 아이디 사용 불가
 		String sql = "select email from users where email=?";
-
 		try {
 			conn = DBmanager.getInstance();
 			pstmt = conn.prepareStatement(sql);
@@ -50,6 +49,7 @@ public class UsersDAO {
 			rs = pstmt.executeQuery();
 
 			if (rs.next()) {
+				
 				result = 1;
 			} else {
 				result = 0;
@@ -63,80 +63,69 @@ public class UsersDAO {
 		}
 		return result;
 	}
-	
+
 	public String checkEmailStatus(String email) {
 
-	    Connection conn = null;
-	    PreparedStatement pstmt = null;
-	    ResultSet rs = null;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
 
-	    String status = null;
+		String status = null;
 
-	    String sql = "SELECT status FROM users WHERE email = ?";
+		String sql = "SELECT status FROM users WHERE email = ?";
 
-	    try {
-	        conn = DBmanager.getInstance();
-	        pstmt = conn.prepareStatement(sql);
+		try {
+			conn = DBmanager.getInstance();
+			pstmt = conn.prepareStatement(sql);
 
-	        pstmt.setString(1, email);
+			pstmt.setString(1, email);
 
-	        rs = pstmt.executeQuery();
+			rs = pstmt.executeQuery();
 
-	        if (rs.next()) {
-	            status = rs.getString("status");
-	        }
+			if (rs.next()) {
+				status = rs.getString("status");
+			}
 
-	    } catch (Exception e) {
-	        e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
 
-	    } finally {
-	        DBmanager.close(pstmt, conn, rs);
-	    }
+		} finally {
+			DBmanager.close(pstmt, conn, rs);
+		}
 
-	    return status;
+		return status;
 	}
-	
-	
-	//재가입, 권한 복구 
-	public int restoreWithdrawnUser(
-	        String email,
-	        String password,
-	        String nickname,
-	        String language) {
 
-	    Connection conn = null;
-	    PreparedStatement pstmt = null;
+	// 재가입, 권한 복구
+	public int restoreWithdrawnUser(String email, String password, String nickname, String language) {
 
-	    int result = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
 
-	    String sql =
-	        "UPDATE users "
-	      + "SET password = ?, "
-	      + "    nickname = ?, "
-	      + "    language = ?, "
-	      + "    status = 'ACTIVE' "
-	      + "WHERE email = ? "
-	      + "AND status = 'WITHDRAWN'";
+		int result = 0;
 
-	    try {
-	        conn = DBmanager.getInstance();
-	        pstmt = conn.prepareStatement(sql);
+		String sql = "UPDATE users " + "SET password = ?, " + "    nickname = ?, " + "    language = ?, "
+				+ "    status = 'ACTIVE' " + "WHERE email = ? " + "AND status = 'WITHDRAWN'";
 
-	        pstmt.setString(1, password);
-	        pstmt.setString(2, nickname);
-	        pstmt.setString(3, language);
-	        pstmt.setString(4, email);
+		try {
+			conn = DBmanager.getInstance();
+			pstmt = conn.prepareStatement(sql);
 
-	        result = pstmt.executeUpdate();
+			pstmt.setString(1, password);
+			pstmt.setString(2, nickname);
+			pstmt.setString(3, language);
+			pstmt.setString(4, email);
 
-	    } catch (Exception e) {
-	        e.printStackTrace();
+			result = pstmt.executeUpdate();
 
-	    } finally {
-	        DBmanager.close(pstmt, conn);
-	    }
+		} catch (Exception e) {
+			e.printStackTrace();
 
-	    return result;
+		} finally {
+			DBmanager.close(pstmt, conn);
+		}
+
+		return result;
 	}
 
 	// 닉네임 중복여부 확인 메서드(유저확인용) ninkname unique 제약조건
@@ -291,36 +280,92 @@ public class UsersDAO {
 
 	public int withdrawUser(int usersId) {
 
-	    Connection conn = null;
-	    PreparedStatement pstmt = null;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
 
-	    String sql =
-	        "UPDATE users " +
-	        "SET status = 'WITHDRAWN' " +
-	        "WHERE id = ?";
+		String sql = "UPDATE users " + "SET status = 'WITHDRAWN' " + "WHERE id = ?";
 
-	    int result = 0;
+		int result = 0;
 
-	    try {
+		try {
 
-	        conn = DBmanager.getInstance();
+			conn = DBmanager.getInstance();
 
-	        pstmt = conn.prepareStatement(sql);
+			pstmt = conn.prepareStatement(sql);
 
-	        pstmt.setInt(1, usersId);
+			pstmt.setInt(1, usersId);
 
-	        result = pstmt.executeUpdate();
+			result = pstmt.executeUpdate();
+
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+
+		} finally {
+
+			DBmanager.close(pstmt, conn);
+		}
+
+		return result;
+	}
+
+	// 이메일 찾기
+
+	public UsersDTO findEmail(String nickname) {
+
+		String sql = "SELECT email " + "FROM users " + "WHERE nickname = ?";
+		UsersDTO dto = new UsersDTO();
+		try (
+			Connection conn = DBmanager.getInstance(); 
+			PreparedStatement pstmt = conn.prepareStatement(sql)){
+
+			pstmt.setString(1, nickname);
+
+			try (ResultSet rs = pstmt.executeQuery()) {
+
+				while (rs.next()) {
+					
+					dto.setEmail(rs.getString("email"));
+					return dto;
+				}
+
+			}
+
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+		return dto;
+
+	}
+	
+	public UsersDTO findByEmail(String email) {
+
+	    String sql = "SELECT id, email, password "
+	               + "FROM users "
+	               + "WHERE email = ?";
+
+	    UsersDTO dto = new UsersDTO();
+
+	    try (
+	        Connection conn = DBmanager.getInstance();
+	        PreparedStatement pstmt = conn.prepareStatement(sql)
+	    ) {
+
+	        pstmt.setString(1, email);
+
+	        try (ResultSet rs = pstmt.executeQuery()) {
+
+	            if (rs.next()) {
+	                dto.setId(rs.getInt("id"));
+	            }
+	        }
 
 	    } catch (SQLException e) {
-
 	        e.printStackTrace();
-
-	    } finally {
-
-	        DBmanager.close(pstmt, conn);
 	    }
 
-	    return result;
+	    return dto;
 	}
 
 }
