@@ -1,0 +1,409 @@
+/* =========================
+   My Route
+========================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #fff9f6;
+    color: #302b2c;
+    font-family: Arial, sans-serif;
+}
+
+/* =========================
+   Main
+========================= */
+
+.route-main {
+    min-height: 100vh;
+    padding: 55px 30px 90px;
+    background: #fff9f6;
+}
+
+.route-container {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+/* =========================
+   제목
+========================= */
+
+.route-title {
+    margin-bottom: 30px;
+}
+
+.route-title h1 {
+    margin: 0 0 8px;
+    color: #302b2c;
+    font-size: 34px;
+    font-weight: 800;
+}
+
+.route-title p {
+    margin: 0;
+    color: #8c817c;
+    font-size: 15px;
+}
+
+/* =========================
+   전체 Layout
+========================= */
+
+.route-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(340px, 1fr);
+    gap: 28px;
+    align-items: stretch;
+}
+
+/* =========================
+   지도
+========================= */
+
+.route-map {
+    min-height: 680px;
+}
+
+.map-background {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 680px;
+    overflow: hidden;
+    background:
+        linear-gradient(
+            rgba(255, 253, 251, 0.48),
+            rgba(255, 253, 251, 0.48)
+        ),
+        repeating-linear-gradient(
+            0deg,
+            #f1e9e4 0,
+            #f1e9e4 2px,
+            #f8f3ef 2px,
+            #f8f3ef 70px
+        );
+    border: 1px solid #eadfda;
+    border-radius: 18px;
+    box-shadow: 0 8px 24px rgba(108, 78, 68, 0.045);
+}
+
+/* 지도 느낌용 얇은 선 */
+.map-background::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        repeating-linear-gradient(
+            45deg,
+            transparent 0,
+            transparent 55px,
+            rgba(220, 205, 197, 0.38) 56px,
+            transparent 58px
+        );
+    pointer-events: none;
+}
+
+.map-city {
+    position: absolute;
+    top: 46%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #766d69;
+    font-size: 32px;
+    font-weight: 800;
+}
+
+/* 지도 중앙 안내 */
+.map-center-box {
+    position: absolute;
+    top: 58%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 320px;
+    padding: 30px 25px;
+    text-align: center;
+    background: rgba(255, 253, 251, 0.94);
+    border: 1px solid #f1e3df;
+    border-radius: 26px;
+    box-shadow: 0 8px 25px rgba(108, 78, 68, 0.06);
+}
+
+.map-icon {
+    margin-bottom: 10px;
+    color: #f6afc1;
+    font-size: 38px;
+}
+
+.map-center-box h2 {
+    margin: 0 0 8px;
+    font-size: 20px;
+    color: #3a3435;
+}
+
+.map-center-box p {
+    margin: 0;
+    color: #8f8580;
+    font-size: 13px;
+}
+
+/* 확대 / 축소 */
+.map-controls {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #fffdfb;
+    border: 1px solid #eadfda;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(108, 78, 68, 0.06);
+}
+
+.map-controls button {
+    width: 46px;
+    height: 46px;
+    background: #fffdfb;
+    border: none;
+    color: #494143;
+    font-size: 26px;
+    cursor: pointer;
+}
+
+.map-controls button + button {
+    border-top: 1px solid #eadfda;
+}
+
+.map-controls button:hover {
+    background: #fff6f3;
+}
+
+/* =========================
+   Timeline
+========================= */
+
+.route-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* 각 루트 */
+.route-item {
+    position: relative;
+    padding-left: 52px;
+}
+
+.route-number {
+    position: absolute;
+    top: 14px;
+    left: 0;
+    z-index: 2;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff;
+    background: #f6afc1;
+    border-radius: 50%;
+    font-size: 15px;
+    font-weight: 800;
+    box-shadow: 0 4px 12px rgba(246, 175, 193, 0.22);
+}
+
+/* 번호를 연결하는 선 */
+.route-line {
+    position: absolute;
+    top: 50px;
+    bottom: -22px;
+    left: 20px;
+    width: 2px;
+    background: #f2c8d2;
+}
+
+/* =========================
+   Route Card
+========================= */
+
+.route-card {
+    overflow: hidden;
+    background: #fffdfb;
+    border: 1px solid #f0e2dd;
+    border-radius: 16px;
+    box-shadow: 0 5px 18px rgba(108, 78, 68, 0.05);
+}
+
+.route-card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 20px;
+}
+
+.route-info {
+    flex: 1;
+}
+
+.route-step {
+    display: block;
+    margin-bottom: 6px;
+    color: #f29bb1;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.route-info h2 {
+    margin: 0 0 8px;
+    color: #302b2c;
+    font-size: 21px;
+    font-weight: 800;
+}
+
+.route-info p {
+    margin: 0;
+    color: #8c817c;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* 가게 이미지 자리 */
+.route-photo {
+    width: 88px;
+    height: 78px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    background: #f7f1ed;
+    border: 1px solid #eee2dc;
+    border-radius: 12px;
+    font-size: 42px;
+}
+
+/* =========================
+   이동 정보
+========================= */
+
+.route-move {
+    display: flex;
+    gap: 14px;
+    padding: 18px 20px;
+    background: #fff8f4;
+    border-top: 1px solid #f0e4df;
+}
+
+.move-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    background: #fff1f5;
+    border-radius: 50%;
+    font-size: 20px;
+}
+
+.move-text {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.move-text p {
+    margin: 0 0 3px;
+    color: #3a3435;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.move-text span {
+    color: #8c817c;
+    font-size: 13px;
+}
+
+.move-text strong {
+    color: #f29bb1;
+}
+
+/* =========================
+   Tablet
+========================= */
+
+@media (max-width: 1000px) {
+    .route-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .route-map,
+    .map-background {
+        min-height: 520px;
+    }
+}
+
+/* =========================
+   Mobile
+========================= */
+
+@media (max-width: 600px) {
+    .route-main {
+        padding: 38px 15px 70px;
+    }
+
+    .route-title h1 {
+        font-size: 28px;
+    }
+
+    .route-layout {
+        gap: 22px;
+    }
+
+    .route-map,
+    .map-background {
+        min-height: 420px;
+    }
+
+    .map-center-box {
+        width: calc(100% - 50px);
+    }
+
+    .map-city {
+        font-size: 25px;
+    }
+
+    .route-item {
+        padding-left: 44px;
+    }
+
+    .route-number {
+        width: 36px;
+        height: 36px;
+        font-size: 13px;
+    }
+
+    .route-line {
+        left: 17px;
+        top: 45px;
+    }
+
+    .route-card-top {
+        padding: 17px;
+    }
+
+    .route-info h2 {
+        font-size: 18px;
+    }
+
+    .route-photo {
+        width: 68px;
+        height: 65px;
+        font-size: 34px;
+    }
+}

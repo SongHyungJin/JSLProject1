@@ -1,0 +1,526 @@
+/* =========================
+   Recommended Route
+========================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #fff9f6;
+    color: #302b2c;
+    font-family: Arial, sans-serif;
+}
+
+/* =========================
+   Main
+========================= */
+
+.recommend-main {
+    min-height: 100vh;
+    padding: 55px 30px 90px;
+    background: #fff9f6;
+}
+
+.recommend-container {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+/* =========================
+   Title
+========================= */
+
+.recommend-title {
+    margin-bottom: 30px;
+}
+
+.recommend-label {
+    display: inline-block;
+    margin-bottom: 8px;
+    color: #f29bb1;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+}
+
+.recommend-title h1 {
+    margin: 0 0 9px;
+    color: #302b2c;
+    font-size: 34px;
+    font-weight: 800;
+}
+
+.recommend-title p {
+    margin: 0;
+    color: #8c817c;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* =========================
+   Layout
+========================= */
+
+.recommend-layout {
+    display: grid;
+    grid-template-columns:
+        minmax(0, 2fr)
+        minmax(350px, 1fr);
+    gap: 30px;
+    align-items: stretch;
+}
+
+/* =========================
+   Map
+========================= */
+
+.recommend-map {
+    min-height: 700px;
+}
+
+.map-area {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 700px;
+    overflow: hidden;
+    background:
+        linear-gradient(
+            rgba(255, 253, 251, 0.30),
+            rgba(255, 253, 251, 0.30)
+        ),
+        repeating-linear-gradient(
+            0deg,
+            #f1e9e4 0,
+            #f1e9e4 2px,
+            #f8f3ef 2px,
+            #f8f3ef 70px
+        );
+    border: 1px solid #eadfda;
+    border-radius: 18px;
+    box-shadow: 0 8px 24px rgba(108, 78, 68, 0.045);
+}
+
+.map-area::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        repeating-linear-gradient(
+            45deg,
+            transparent 0,
+            transparent 62px,
+            rgba(220, 205, 197, 0.38) 63px,
+            transparent 65px
+        );
+    pointer-events: none;
+}
+
+/* 지도 텍스트 */
+
+.map-city {
+    position: absolute;
+    z-index: 1;
+    color: #8c817c;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.city-seoul {
+    top: 15%;
+    left: 17%;
+}
+
+.city-jongno {
+    top: 31%;
+    left: 55%;
+}
+
+.city-jung {
+    top: 58%;
+    left: 22%;
+}
+
+.city-yongsan {
+    top: 77%;
+    left: 65%;
+}
+
+/* =========================
+   Map Pins
+========================= */
+
+.map-pin {
+    position: absolute;
+    z-index: 3;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    background: #f6afc1;
+    border: 4px solid #fffdfb;
+    border-radius: 50%;
+    font-size: 13px;
+    font-weight: 800;
+    box-shadow:
+        0 4px 12px rgba(246, 175, 193, 0.30);
+}
+
+.pin-one {
+    top: 27%;
+    left: 30%;
+}
+
+.pin-two {
+    top: 48%;
+    left: 52%;
+}
+
+.pin-three {
+    top: 68%;
+    left: 70%;
+}
+
+/* =========================
+   Map Guide
+========================= */
+
+.map-guide {
+    position: absolute;
+    z-index: 2;
+    top: 49%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 310px;
+    padding: 28px 24px;
+    text-align: center;
+    background:
+        rgba(255, 253, 251, 0.94);
+    border: 1px solid #f1e3df;
+    border-radius: 22px;
+    box-shadow:
+        0 8px 24px rgba(108, 78, 68, 0.06);
+}
+
+.map-guide-icon {
+    margin-bottom: 10px;
+    font-size: 35px;
+}
+
+.map-guide h2 {
+    margin: 0 0 7px;
+    color: #3a3435;
+    font-size: 18px;
+}
+
+.map-guide p {
+    margin: 0;
+    color: #8f8580;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+/* =========================
+   Map Control
+========================= */
+
+.map-control {
+    position: absolute;
+    z-index: 5;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #fffdfb;
+    border: 1px solid #eadfda;
+    border-radius: 11px;
+    box-shadow:
+        0 4px 12px rgba(108, 78, 68, 0.06);
+}
+
+.map-control button {
+    width: 44px;
+    height: 44px;
+    color: #494143;
+    background: #fffdfb;
+    border: none;
+    font-size: 23px;
+    cursor: pointer;
+}
+
+.map-control button + button {
+    border-top:
+        1px solid #eadfda;
+}
+
+.map-control button:hover {
+    background: #fff6f3;
+}
+
+/* =========================
+   Route List
+========================= */
+
+.recommend-route-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.recommend-item {
+    position: relative;
+    padding-left: 52px;
+}
+
+/* 번호 */
+
+.route-number {
+    position: absolute;
+    z-index: 3;
+    top: 15px;
+    left: 0;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    background: #f6afc1;
+    border-radius: 50%;
+    font-size: 14px;
+    font-weight: 800;
+    box-shadow: 0 4px 12px rgba(246, 175, 193, 0.22);
+}
+
+/* 번호 연결선 */
+
+.route-vertical-line {
+    position: absolute;
+    top: 52px;
+    bottom: -25px;
+    left: 20px;
+    width: 2px;
+    background: #f2c8d2;
+}
+
+/* =========================
+   Card
+========================= */
+
+.recommend-card {
+    overflow: hidden;
+    background: #fffdfb;
+    border: 1px solid #f0e2dd;
+    border-radius: 16px;
+    box-shadow:
+        0 5px 17px rgba(108, 78, 68, 0.045);
+}
+
+.recommend-card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 20px;
+}
+
+.recommend-info {
+    flex: 1;
+}
+
+.recommend-step {
+    display: block;
+    margin-bottom: 6px;
+    color: #f29bb1;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.recommend-info h2 {
+    margin: 0 0 7px;
+    color: #302b2c;
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.recommend-info p {
+    margin: 0;
+    color: #8c817c;
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+/* 이미지 자리 */
+
+.recommend-photo {
+    width: 82px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: #f7f1ed;
+    border: 1px solid #eee2dc;
+    border-radius: 11px;
+    font-size: 37px;
+}
+
+/* =========================
+   Move
+========================= */
+
+.move-box {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 16px 20px;
+    background: #fff8f4;
+    border-top:
+        1px solid #f0e4df;
+}
+
+.move-icon {
+    width: 39px;
+    height: 39px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: #fff1f5;
+    border-radius: 50%;
+    font-size: 19px;
+}
+
+.move-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.move-info strong {
+    color: #3a3435;
+    font-size: 13px;
+}
+
+.move-info span {
+    color: #f29bb1;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* =========================
+   Recommendation Summary
+========================= */
+
+.recommend-summary {
+    margin-left: 52px;
+    padding: 20px;
+    background: #fff8f4;
+    border: 1px solid #f0e2dd;
+    border-radius: 15px;
+}
+
+.recommend-summary h3 {
+    margin: 0 0 9px;
+    color: #3a3435;
+    font-size: 16px;
+}
+
+.recommend-summary p {
+    margin: 0 0 14px;
+    color: #8c817c;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.recommend-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+}
+
+.recommend-tags span {
+    padding: 6px 10px;
+    color: #f29bb1;
+    background: #fff1f5;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+/* =========================
+   Tablet
+========================= */
+
+@media (max-width: 1000px) {
+    .recommend-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .recommend-map,
+    .map-area {
+        min-height: 520px;
+    }
+}
+
+/* =========================
+   Mobile
+========================= */
+
+@media (max-width: 600px) {
+    .recommend-main {
+        padding: 38px 15px 70px;
+    }
+
+    .recommend-title h1 {
+        font-size: 27px;
+    }
+
+    .recommend-map,
+    .map-area {
+        min-height: 430px;
+    }
+
+    .map-guide {
+        width: calc(100% - 50px);
+    }
+
+    .recommend-item {
+        padding-left: 45px;
+    }
+
+    .route-number {
+        width: 36px;
+        height: 36px;
+        font-size: 12px;
+    }
+
+    .route-vertical-line {
+        left: 17px;
+        top: 45px;
+    }
+
+    .recommend-card-top {
+        padding: 17px;
+    }
+
+    .recommend-info h2 {
+        font-size: 18px;
+    }
+
+    .recommend-photo {
+        width: 65px;
+        height: 62px;
+        font-size: 31px;
+    }
+
+    .recommend-summary {
+        margin-left: 45px;
+    }
+}
