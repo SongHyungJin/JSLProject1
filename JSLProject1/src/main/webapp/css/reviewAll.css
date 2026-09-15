@@ -276,18 +276,22 @@ button {
 }
 
 .photo-thumb {
-    width: 72px;
-    height: 72px;
-
+    width: 64px;
+    height: 64px;
     display: flex;
     align-items: center;
     justify-content: center;
-
+    overflow: hidden;
     background: #f4f5f6;
-
     border-radius: 10px;
+    font-size: 24px;
+}
 
-    font-size: 28px;
+.photo-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 
 .review-all-body {

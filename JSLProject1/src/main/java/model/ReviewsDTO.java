@@ -11,7 +11,23 @@ public class ReviewsDTO {
 	    private int deleted;
 	    private LocalDateTime createdAt;
 	    private LocalDateTime updatedAt;
+	    private String imageUrl;
+	    private String nickname;
+
+	    public String getNickname() {
+	        return nickname;
+	    }
+
+	    public void setNickname(String nickname) {
+	        this.nickname = nickname;
+	    }
 	    
+		public String getImageUrl() {
+			return imageUrl;
+		}
+		public void setImageUrl(String imageUrl) {
+			this.imageUrl = imageUrl;
+		}
 		public int getId() {
 			return id;
 		}
@@ -59,6 +75,15 @@ public class ReviewsDTO {
 		}
 		public void setUpdatedAt(LocalDateTime updatedAt) {
 			this.updatedAt = updatedAt;
+		}
+		public String getCreatedDate() {
+		    if (createdAt == null) {
+		        return "";
+		    }
+
+		    return createdAt.format(
+		        java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd")
+		    );
 		}
 	    
 	    

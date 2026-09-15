@@ -25,15 +25,23 @@ public class EmailSendService implements Command {
 
         // 세션에 인증번호 저장
         HttpSession session = request.getSession();
+        session.setAttribute("email", email);
         session.setAttribute("emailCode", code);
-
-        // 이메일로 인증번호 보내기
-        EmailUtil.sendEmail(
-            email,
-            "회원가입 이메일 인증번호",
-            "인증번호는 [" + code + "] 입니다."
-        );
-
-        System.out.println("인증번호: " + code);
+        session.setAttribute("emailCodeTime", System.currentTimeMillis());
+        //인증번호 유효시간
+        try {
+        	// 이메일로 인증번호 보내기
+            EmailUtil.sendEmail(
+                email,
+                "회원가입 이메일 인증번호",
+                "인증번호는 [" + code + "] 입니다."
+            );
+            response.getWriter().write("signup.msg.email.send.success");
+        }catch(Exception e){
+        	e.printStackTrace();
+        	response.getWriter().write("signup.msg.email.send.fail");
+        }
+       
+//        System.out.println("인증번호: " + code);
     }
 }

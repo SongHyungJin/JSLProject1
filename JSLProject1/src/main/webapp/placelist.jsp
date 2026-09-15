@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
@@ -8,33 +8,27 @@
 <%@ page import="java.io.InputStreamReader"%>
 
 <%
-    String lang = request.getParameter("lang");
+String lang = request.getParameter("lang");
 
-    if (lang == null) {
-        lang = "ko";
-    }
+if (lang == null) {
+	lang = "ko";
+}
 
-    if (!lang.equals("ko")
-            && !lang.equals("en")
-            && !lang.equals("ja")) {
-        lang = "ko";
-    }
+if (!lang.equals("ko") && !lang.equals("en") && !lang.equals("ja")) {
+	lang = "ko";
+}
 
-    Properties messages = new Properties();
+Properties messages = new Properties();
 
-    String filePath =
-        "/i18n/messages_" + lang + ".properties";
+String filePath = "/i18n/messages_" + lang + ".properties";
 
-    InputStream input =
-        application.getResourceAsStream(filePath);
+InputStream input = application.getResourceAsStream(filePath);
 
-    if (input != null) {
-        messages.load(
-            new InputStreamReader(input, "UTF-8")
-        );
+if (input != null) {
+	messages.load(new InputStreamReader(input, "UTF-8"));
 
-        input.close();
-    }
+	input.close();
+}
 %>
 
 <%--
@@ -44,11 +38,10 @@
   ▶ PLACES 테이블 기준: country 컬럼이 없어서 국가 선택 제거, region은 텍스트 검색으로 변경
 --%>
 <!DOCTYPE html>
-<html lang="<%= lang %>">
+<html lang="<%=lang%>">
 <head>
 <meta charset="UTF-8">
-<title>
-    <%= messages.getProperty("place.list.title", "TripStamp - 여행지 추천") %>
+<title><%=messages.getProperty("place.list.title", "TripStamp - 여행지 추천")%>
 </title>
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/css/placelist.css">
@@ -70,65 +63,61 @@
 
 				<div class="search-panel">
 
-    <form action="${pageContext.request.contextPath}/place/search.do"
-          method="get"
-          class="search-form">
+					<form
+						action="${pageContext.request.contextPath}/places/placesSearch.do"
+						method="get" class="search-form">
 
-        <!-- 현재 선택한 언어 유지 -->
-        <input type="hidden" name="lang" value="<%= lang %>">
+						<!-- 현재 선택한 언어 유지 -->
+						<input type="hidden" name="lang" value="<%=lang%>">
 
-        <div class="search-box">
+						<div class="search-box">
 
-            <input type="text"
-                   name="keyword"
-                   placeholder="<%= messages.getProperty(
+							<input type="text" name="keyword"
+								placeholder="<%= messages.getProperty(
                        "place.search.placeholder",
                        "가게 이름이나 지역으로 검색"
                    ) %>"
-                   value="${param.keyword}">
+								value="${param.keyword}">
 
-            <button type="submit" class="btn btn-primary">
-                <%= messages.getProperty(
-                    "place.search.button",
-                    "검색"
-                ) %>
-            </button>
+							<button type="submit" class="btn btn-primary">
+								<%=messages.getProperty("place.search.button", "검색")%>
+							</button>
 
-        </div>
-				
+						</div>
 
-					<div class="category-buttons">
 
-    <button type="submit" name="category" value=""
-        class="chip ${empty param.category ? 'chip-active' : ''}">
-        <%= messages.getProperty("place.category.all", "전체") %>
-    </button>
+						<div class="category-buttons">
 
-    <button type="submit" name="category" value="RESTAURANT"
-        class="chip ${param.category == 'RESTAURANT' ? 'chip-active' : ''}">
-        <%= messages.getProperty("category.restaurant", "식당") %>
-    </button>
+							<button type="submit" name="category" value=""
+								class="chip ${empty param.category ? 'chip-active' : ''}">
+								<%=messages.getProperty("place.category.all", "전체")%>
+							</button>
 
-    <button type="submit" name="category" value="CAFE"
-        class="chip ${param.category == 'CAFE' ? 'chip-active' : ''}">
-        <%= messages.getProperty("category.cafe", "카페") %>
-    </button>
+							<button type="submit" name="category" value="restaurant"
+								class="chip ${param.category == 'restaurant' ? 'chip-active' : ''}">
+								<%=messages.getProperty("category.restaurant", "식당")%>
+							</button>
 
-    <button type="submit" name="category" value="SHOP"
-        class="chip ${param.category == 'SHOP' ? 'chip-active' : ''}">
-        <%= messages.getProperty("category.shop", "상점") %>
-    </button>
+							<button type="submit" name="category" value="cafe"
+								class="chip ${param.category == 'cafe' ? 'chip-active' : ''}">
+								<%=messages.getProperty("category.cafe", "카페")%>
+							</button>
 
-    <button type="submit" name="category" value="ATTRACTION"
-        class="chip ${param.category == 'ATTRACTION' ? 'chip-active' : ''}">
-        <%= messages.getProperty("category.attraction", "관광지") %>
-    </button>
+							<button type="submit" name="category" value="shop"
+								class="chip ${param.category == 'shop' ? 'chip-active' : ''}">
+								<%=messages.getProperty("category.shop", "상점")%>
+							</button>
 
-</div>
+							<button type="submit" name="category" value="attraction"
+								class="chip ${param.category == 'attraction' ? 'chip-active' : ''}">
+								<%=messages.getProperty("category.attraction", "관광지")%>
+							</button>
 
-<div class="region-select">
+						</div>
 
-    <select name="country" id="countrySelect">
+						<div class="region-select">
+
+							<%-- <select name="country" id="countrySelect">
 
         <option value="">
             <%= messages.getProperty("place.country.select", "국가 선택") %>
@@ -149,348 +138,297 @@
             <%= messages.getProperty("place.country.usa", "미국") %>
         </option>
 
-    </select>
+    </select> --%>
 
-    <select name="region" id="regionSelect">
+							<div class="region-select">
+								<select name="region" id="regionSelect">
 
-        <option value="">
-            <%= messages.getProperty("place.region.select", "지역 선택") %>
-        </option>
+									<option value="">
+										<%=messages.getProperty("place.region.select", "지역 선택")%>
+									</option>
 
-    </select>
+									<option value="서울" ${param.region == '서울' ? 'selected' : ''}>
+										<%=messages.getProperty("place.region.seoul", "서울")%>
+									</option>
 
-</div>
+									<option value="부산" ${param.region == '부산' ? 'selected' : ''}>
+										<%=messages.getProperty("place.region.busan", "부산")%>
+									</option>
 
-</form>
+									<option value="제주" ${param.region == '제주' ? 'selected' : ''}>
+										<%=messages.getProperty("place.region.jeju", "제주")%>
+									</option>
 
-<!-- 검색 결과 -->
-<div class="search-result-list">
+									<option value="인천" ${param.region == '인천' ? 'selected' : ''}>
+										<%=messages.getProperty("place.region.incheon", "인천")%>
+									</option>
 
-    <c:forEach var="place" items="${placeList}">
+								</select>
+							</div>
 
-        <div class="result-item">
+						</div>
 
-            <a href="${pageContext.request.contextPath}/place/view.do?id=${place.id}&lang=<%= lang %>"
-               class="result-link">
+					</form>
 
-                <img src="${place.imageUrl}" alt="${place.name}">
+					<!-- 검색 결과 -->
+					<div class="search-result-list">
 
-                <div class="result-info">
+						<c:forEach var="place" items="${placeList}">
 
-                    <p class="result-name">
+							<div class="result-item">
 
-                        ${place.name}
+								 <img src="${place.image_url}"
+									alt="${place.name}">
 
-                        <c:if test="${not empty sessionScope.loginUser}">
-                            <button type="button"
-                                    class="like-btn"
-                                    onclick="toggleLike(event, this)">
-                                ☆
-                            </button>
-                        </c:if>
+								<div class="result-info">
+								<a
+									href="${pageContext.request.contextPath}/places/placesDetail.do?id=${place.id}&lang=<%=lang%>">
+									 
 
-                    </p>
+									<p class="result-name">
 
-                    <p class="result-rating">
-                        ★ ${place.avgRating}
-                    </p>
+										${place.name}
 
-                    <p class="result-address">
-                        ${place.region}
-                    </p>
+										<c:if test="${not empty sessionScope.id}">
+											<button type="button" class="like-btn"
+												onclick="toggleLike(event, this)">☆</button>
+										</c:if>
 
-                </div>
+									</p>
+									</a>
 
-            </a>
+									<p class="result-rating">★ ${place.rating}</p>
 
-            <div class="result-actions">
+									<p class="result-address">${place.region}</p>
 
-                <c:choose>
+								</div>
 
-                    <c:when test="${place.reservable == 0}">
+								</a>
 
-                        <span class="mini-btn reserve disabled">
-                            <%= messages.getProperty(
-                                "place.reserve.unavailable",
-                                "예약불가"
-                            ) %>
-                        </span>
+								<div class="result-actions">
 
-                    </c:when>
+									<c:choose>
 
-                    <c:when test="${not empty sessionScope.loginUser}">
+										<c:when test="${not place.reservable}">
 
-                        <a href="${pageContext.request.contextPath}/place/booking.do?id=${place.id}&lang=<%= lang %>"
-                           class="mini-btn reserve">
+											<span class="mini-btn reserve disabled"> <%=messages.getProperty("place.reserve.unavailable", "예약불가")%>
+											</span>
 
-                            <%= messages.getProperty(
-                                "place.reserve",
-                                "예약"
-                            ) %>
+										</c:when>
 
-                        </a>
+										<c:when test="${not empty sessionScope.id}">
 
-                    </c:when>
+											<a
+												href="${pageContext.request.contextPath}/booking/bookingview.do?id=${place.id}&lang=<%= lang %>"
+												class="mini-btn reserve"> <%=messages.getProperty("place.reserve", "예약")%>
 
-                    <c:otherwise>
+											</a>
 
-                        <a href="${pageContext.request.contextPath}/log/login.do?lang=<%= lang %>"
-                           class="mini-btn reserve">
+										</c:when>
 
-                            <%= messages.getProperty(
-                                "place.reserve",
-                                "예약"
-                            ) %>
+										<c:otherwise>
 
-                        </a>
+											<a
+												href="${pageContext.request.contextPath}/users/loginview.do?lang=<%= lang %>"
+												class="mini-btn reserve"> <%=messages.getProperty("place.reserve", "예약")%>
 
-                    </c:otherwise>
+											</a>
 
-                </c:choose>
+										</c:otherwise>
 
+									</c:choose>
 
-                <c:choose>
 
-                    <c:when test="${not empty place.latitude and not empty place.longitude}">
+									<c:choose>
 
-                        <a href="https://www.google.com/maps/search/?api=1&query=${place.latitude},${place.longitude}"
-                           target="_blank"
-                           class="mini-btn map">
+										<c:when
+											test="${not empty place.latitude and not empty place.longitude}">
 
-                            <%= messages.getProperty(
-                                "place.directions",
-                                "길찾기"
-                            ) %>
+											<a
+												href="https://www.google.com/maps/search/?api=1&query=${place.latitude},${place.longitude}"
+												target="_blank" class="mini-btn map"> <%=messages.getProperty("place.directions", "길찾기")%>
 
-                        </a>
+											</a>
 
-                    </c:when>
+										</c:when>
 
-                    <c:otherwise>
+										<c:otherwise>
 
-                        <span class="mini-btn map disabled">
+											<span class="mini-btn map disabled"> <%=messages.getProperty("place.directions", "길찾기")%>
 
-                            <%= messages.getProperty(
-                                "place.directions",
-                                "길찾기"
-                            ) %>
+											</span>
 
-                        </span>
+										</c:otherwise>
 
-                    </c:otherwise>
+									</c:choose>
 
-                </c:choose>
+								</div>
 
-            </div>
+							</div>
 
-        </div>
+						</c:forEach>
 
-    </c:forEach>
 
+						<c:if test="${empty placeList}">
 
-    <c:if test="${empty placeList}">
+							<p class="empty-msg">
 
-        <p class="empty-msg">
+								<%=messages.getProperty("place.search.empty", "검색 결과가 없습니다.")%>
 
-            <%= messages.getProperty(
-                "place.search.empty",
-                "검색 결과가 없습니다."
-            ) %>
+							</p>
 
-        </p>
+						</c:if>
 
-    </c:if>
+					</div>
 
-</div>
+				</div>
+		</section>
 
-</div>
 
-</section>
+		<!-- 추천 가게 -->
+		<c:if test="${not empty topRatedList}">
 
+			<section class="place-section">
 
-<!-- 추천 가게 -->
-<c:if test="${not empty topRatedList}">
+				<h2 class="section-title">
 
-    <section class="place-section">
+					<%=messages.getProperty("place.recommended", "추천 가게")%>
 
-        <h2 class="section-title">
+				</h2>
 
-            <%= messages.getProperty(
-                "place.recommended",
-                "추천 가게"
-            ) %>
+				<div class="auto-slide-wrapper">
 
-        </h2>
+					<button type="button" class="slide-btn prev"
+						onclick="moveSlide(-1)">‹</button>
 
-        <div class="auto-slide-wrapper">
+					<div class="auto-slide-track" id="autoSlideTrack">
 
-            <button type="button"
-                    class="slide-btn prev"
-                    onclick="moveSlide(-1)">
-                ‹
-            </button>
+						<c:forEach var="loopCount" begin="1" end="2">
 
-            <div class="auto-slide-track" id="autoSlideTrack">
+							<c:forEach var="place" items="${topRatedList}">
 
-                <c:forEach var="loopCount" begin="1" end="2">
+								<div class="auto-slide-card">
 
-                    <c:forEach var="place" items="${topRatedList}">
+									<a
+										href="${pageContext.request.contextPath}/places/placesDetail.do?id=${place.id}&lang=<%= lang %>"
+										class="auto-slide-card-link">
 
-                        <div class="auto-slide-card">
+										<div class="place-photo">
 
-                            <a href="${pageContext.request.contextPath}/place/view.do?id=${place.id}&lang=<%= lang %>"
-                               class="auto-slide-card-link">
+											<img src="${place.image_url}" alt="${place.name}">
 
-                                <div class="place-photo">
+										</div>
 
-                                    <img src="${place.imageUrl}"
-                                         alt="${place.name}">
+										<div class="place-info">
 
-                                </div>
+											<h3 class="place-name">
 
-                                <div class="place-info">
+												${place.name}
 
-                                    <h3 class="place-name">
+												<c:if test="${not empty sessionScope.id}">
 
-                                        ${place.name}
+													<button type="button" class="like-btn"
+														onclick="toggleLike(event, this)">☆</button>
 
-                                        <c:if test="${not empty sessionScope.loginUser}">
+												</c:if>
 
-                                            <button type="button"
-                                                    class="like-btn"
-                                                    onclick="toggleLike(event, this)">
-                                                ☆
-                                            </button>
+											</h3>
 
-                                        </c:if>
+											<p class="place-rating">★ ${place.rating}</p>
 
-                                    </h3>
+											<p class="place-address">${place.region}</p>
 
-                                    <p class="place-rating">
-                                        ★ ${place.avgRating}
-                                    </p>
+										</div>
 
-                                    <p class="place-address">
-                                        ${place.region}
-                                    </p>
+									</a>
 
-                                </div>
+									<div class="card-actions">
 
-                            </a>
+										<c:choose>
 
-                            <div class="card-actions">
+											<c:when test="${not place.reservable}">
 
-                                <c:choose>
+												<span class="mini-btn reserve disabled"> <%=messages.getProperty("place.reserve.unavailable", "예약불가")%>
 
-                                    <c:when test="${place.reservable == 0}">
+												</span>
 
-                                        <span class="mini-btn reserve disabled">
+											</c:when>
 
-                                            <%= messages.getProperty(
-                                                "place.reserve.unavailable",
-                                                "예약불가"
-                                            ) %>
+											<c:when test="${not empty sessionScope.id}">
 
-                                        </span>
+												<a
+													href="${pageContext.request.contextPath}/booking/bookingview.do?id=${place.id}&lang=<%= lang %>"
+													class="mini-btn reserve"> <%=messages.getProperty("place.reserve", "예약")%>
 
-                                    </c:when>
+												</a>
 
-                                    <c:when test="${not empty sessionScope.loginUser}">
+											</c:when>
 
-                                        <a href="${pageContext.request.contextPath}/place/booking.do?id=${place.id}&lang=<%= lang %>"
-                                           class="mini-btn reserve">
+											<c:otherwise>
 
-                                            <%= messages.getProperty(
-                                                "place.reserve",
-                                                "예약"
-                                            ) %>
+												<a
+													href="${pageContext.request.contextPath}/users/loginview.do?lang=<%= lang %>"
+													class="mini-btn reserve"> <%=messages.getProperty("place.reserve", "예약")%>
 
-                                        </a>
+												</a>
 
-                                    </c:when>
+											</c:otherwise>
 
-                                    <c:otherwise>
+										</c:choose>
 
-                                        <a href="${pageContext.request.contextPath}/log/login.do?lang=<%= lang %>"
-                                           class="mini-btn reserve">
 
-                                            <%= messages.getProperty(
-                                                "place.reserve",
-                                                "예약"
-                                            ) %>
+										<c:choose>
 
-                                        </a>
+											<c:when
+												test="${not empty place.latitude and not empty place.longitude}">
 
-                                    </c:otherwise>
+												<a
+													href="https://www.google.com/maps/search/?api=1&query=${place.latitude},${place.longitude}"
+													target="_blank" class="mini-btn map"> <%=messages.getProperty("place.directions", "길찾기")%>
 
-                                </c:choose>
+												</a>
 
+											</c:when>
 
-                                <c:choose>
+											<c:otherwise>
 
-                                    <c:when test="${not empty place.latitude and not empty place.longitude}">
+												<span class="mini-btn map disabled"> <%=messages.getProperty("place.directions", "길찾기")%>
 
-                                        <a href="https://www.google.com/maps/search/?api=1&query=${place.latitude},${place.longitude}"
-                                           target="_blank"
-                                           class="mini-btn map">
+												</span>
 
-                                            <%= messages.getProperty(
-                                                "place.directions",
-                                                "길찾기"
-                                            ) %>
+											</c:otherwise>
 
-                                        </a>
+										</c:choose>
 
-                                    </c:when>
+									</div>
 
-                                    <c:otherwise>
+								</div>
 
-                                        <span class="mini-btn map disabled">
+							</c:forEach>
 
-                                            <%= messages.getProperty(
-                                                "place.directions",
-                                                "길찾기"
-                                            ) %>
+						</c:forEach>
 
-                                        </span>
+					</div>
 
-                                    </c:otherwise>
+					<button type="button" class="slide-btn next" onclick="moveSlide(1)">
+						›</button>
 
-                                </c:choose>
+				</div>
 
-                            </div>
+			</section>
 
-                        </div>
+		</c:if>
 
-                    </c:forEach>
+	</main>
 
-                </c:forEach>
+	<%@ include file="footer.jsp"%>
 
-            </div>
-
-            <button type="button"
-                    class="slide-btn next"
-                    onclick="moveSlide(1)">
-                ›
-            </button>
-
-        </div>
-
-    </section>
-
-</c:if>
-
-</main>
-
-<%@ include file="footer.jsp"%>
-
-<script
-    src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY_HERE&callback=initMap"
-    async defer>
+	<script
+		src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY_HERE&callback=initMap"
+		async defer>
 </script>
 
 </body>
-
 <script>
 
     // 찜하기
@@ -506,150 +444,7 @@
     }
 
 
-    /*
-     * 실제 검색에 사용하는 value는 기존 DB 값인 한글 그대로 유지.
-     * 화면에 보여주는 text만 다국어 처리.
-     */
-    const regionData = {
-
-        '일본' : [
-
-            {
-                value: '도쿄',
-                text: '<%= messages.getProperty("place.region.tokyo", "도쿄") %>'
-            },
-
-            {
-                value: '오사카',
-                text: '<%= messages.getProperty("place.region.osaka", "오사카") %>'
-            },
-
-            {
-                value: '교토',
-                text: '<%= messages.getProperty("place.region.kyoto", "교토") %>'
-            },
-
-            {
-                value: '홋카이도',
-                text: '<%= messages.getProperty("place.region.hokkaido", "홋카이도") %>'
-            },
-
-            {
-                value: '후쿠오카',
-                text: '<%= messages.getProperty("place.region.fukuoka", "후쿠오카") %>'
-            }
-
-        ],
-
-
-        '한국' : [
-
-            {
-                value: '서울',
-                text: '<%= messages.getProperty("place.region.seoul", "서울") %>'
-            },
-
-            {
-                value: '부산',
-                text: '<%= messages.getProperty("place.region.busan", "부산") %>'
-            },
-
-            {
-                value: '제주',
-                text: '<%= messages.getProperty("place.region.jeju", "제주") %>'
-            },
-
-            {
-                value: '인천',
-                text: '<%= messages.getProperty("place.region.incheon", "인천") %>'
-            }
-
-        ],
-
-
-        '미국' : [
-
-            {
-                value: '뉴욕',
-                text: '<%= messages.getProperty("place.region.newyork", "뉴욕") %>'
-            },
-
-            {
-                value: '로스앤젤레스',
-                text: '<%= messages.getProperty("place.region.losangeles", "로스앤젤레스") %>'
-            },
-
-            {
-                value: '하와이',
-                text: '<%= messages.getProperty("place.region.hawaii", "하와이") %>'
-            }
-
-        ]
-
-    };
-
-
-    const countrySelect =
-        document.getElementById('countrySelect');
-
-    const regionSelect =
-        document.getElementById('regionSelect');
-
-
-    const selectedRegionValue =
-        "${param.region}";
-
-
-    function fillRegionOptions(country, selectedValue) {
-
-        regionSelect.innerHTML =
-            '<option value=""><%= messages.getProperty(
-                "place.region.select",
-                "지역 선택"
-            ) %></option>';
-
-
-        if (country && regionData[country]) {
-
-            regionData[country].forEach(function(region) {
-
-                const option =
-                    document.createElement('option');
-
-                option.value =
-                    region.value;
-
-                option.textContent =
-                    region.text;
-
-
-                if (region.value === selectedValue) {
-
-                    option.selected = true;
-
-                }
-
-
-                regionSelect.appendChild(option);
-
-            });
-
-        }
-
-    }
-
-
-    // 페이지 로드시 기존 선택값 유지
-    if (countrySelect.value) {
-
-        fillRegionOptions(
-            countrySelect.value,
-            selectedRegionValue
-        );
-
-    }
-
-
+    // 현재 검색 조건 유지
     const currentKeyword =
         "${param.keyword}";
 
@@ -657,195 +452,110 @@
         "${param.category}";
 
     const currentLang =
-        "<%= lang %>";
+        "<%=lang%>
+	";
 
+	// 지역 선택
+	const regionSelect = document.getElementById('regionSelect');
 
-    // 국가/지역 변경 시 검색
-    function goSearchWithLocation(country, region) {
+	// 지역 변경 시 검색
+	regionSelect
+			.addEventListener(
+					'change',
+					function() {
 
-        const params =
-            new URLSearchParams();
+						const params = new URLSearchParams();
 
+						// 기존 검색어 유지
+						if (currentKeyword) {
 
-        if (currentKeyword) {
+							params.set('keyword', currentKeyword);
+						}
 
-            params.set(
-                'keyword',
-                currentKeyword
-            );
+						// 기존 카테고리 유지
+						if (currentCategory) {
 
-        }
+							params.set('category', currentCategory);
+						}
 
+						// 지역
+						if (this.value) {
 
-        if (currentCategory) {
+							params.set('region', this.value);
+						}
 
-            params.set(
-                'category',
-                currentCategory
-            );
+						// 언어 유지
+						params.set('lang', currentLang);
 
-        }
+						location.href = "${pageContext.request.contextPath}/places/placesAllList.do?"
+								+ params.toString();
 
+					});
 
-        if (country) {
+	// =========================
+	// 추천 가게 자동 슬라이드
+	// =========================
 
-            params.set(
-                'country',
-                country
-            );
+	const track = document.getElementById('autoSlideTrack');
 
-        }
+	const SCROLL_SPEED = 0.6;
 
+	let isPaused = false;
 
-        if (region) {
+	function autoScrollLoop() {
 
-            params.set(
-                'region',
-                region
-            );
+		if (track && !isPaused) {
 
-        }
+			track.scrollLeft += SCROLL_SPEED;
 
+			const halfWidth = track.scrollWidth / 2;
 
-        // 언어 유지
-        params.set(
-            'lang',
-            currentLang
-        );
+			if (track.scrollLeft >= halfWidth) {
 
+				track.scrollLeft -= halfWidth;
+			}
+		}
 
-        location.href =
-            "${pageContext.request.contextPath}/place/search.do?"
-            + params.toString();
+		requestAnimationFrame(autoScrollLoop);
+	}
 
-    }
+	if (track) {
 
+		track.addEventListener('mouseenter', function() {
 
-    countrySelect.addEventListener(
-        'change',
-        function() {
+			isPaused = true;
+		});
 
-            goSearchWithLocation(
-                this.value,
-                ''
-            );
+		track.addEventListener('mouseleave', function() {
 
-        }
-    );
+			isPaused = false;
+		});
+	}
 
+	const CARD_STEP = 272;
 
-    regionSelect.addEventListener(
-        'change',
-        function() {
+	function moveSlide(direction) {
 
-            goSearchWithLocation(
-                countrySelect.value,
-                this.value
-            );
+		if (!track) {
 
-        }
-    );
+			return;
+		}
 
+		track.scrollLeft += direction * CARD_STEP;
 
-    // 추천 가게 자동 슬라이드
-    const track =
-        document.getElementById('autoSlideTrack');
+		const halfWidth = track.scrollWidth / 2;
 
-    const SCROLL_SPEED = 0.6;
+		if (track.scrollLeft >= halfWidth) {
 
-    let isPaused = false;
+			track.scrollLeft -= halfWidth;
 
+		} else if (track.scrollLeft < 0) {
 
-    function autoScrollLoop() {
+			track.scrollLeft += halfWidth;
+		}
+	}
 
-        if (track && !isPaused) {
-
-            track.scrollLeft +=
-                SCROLL_SPEED;
-
-
-            const halfWidth =
-                track.scrollWidth / 2;
-
-
-            if (track.scrollLeft >= halfWidth) {
-
-                track.scrollLeft -=
-                    halfWidth;
-
-            }
-
-        }
-
-
-        requestAnimationFrame(
-            autoScrollLoop
-        );
-
-    }
-
-
-    if (track) {
-
-        track.addEventListener(
-            'mouseenter',
-            function() {
-
-                isPaused = true;
-
-            }
-        );
-
-
-        track.addEventListener(
-            'mouseleave',
-            function() {
-
-                isPaused = false;
-
-            }
-        );
-
-    }
-
-
-    const CARD_STEP = 272;
-
-
-    function moveSlide(direction) {
-
-        if (!track) {
-            return;
-        }
-
-
-        track.scrollLeft +=
-            direction * CARD_STEP;
-
-
-        const halfWidth =
-            track.scrollWidth / 2;
-
-
-        if (track.scrollLeft >= halfWidth) {
-
-            track.scrollLeft -=
-                halfWidth;
-
-        } else if (track.scrollLeft < 0) {
-
-            track.scrollLeft +=
-                halfWidth;
-
-        }
-
-    }
-
-
-    requestAnimationFrame(
-        autoScrollLoop
-    );
-
+	requestAnimationFrame(autoScrollLoop);
 </script>
 
 </html>

@@ -33,8 +33,7 @@
         headerIs.close();
     }
 
-    boolean isLogin =
-            (session.getAttribute("loginUser") != null);
+    boolean isLogin = (session.getAttribute("id") != null);
 %>
 
 
@@ -69,7 +68,7 @@
             </a>
 
 
-            <a href="<%= request.getContextPath() %>/place/category.do?lang=<%= headerLang %>">
+            <a href="<%= request.getContextPath() %>/places/category.do?lang=<%= headerLang %>">
 
                 <%= headerMsg.getProperty(
                     "header.category",
@@ -131,7 +130,7 @@
 
                 <!-- 로그인 전 -->
 
-                <a href="<%= request.getContextPath() %>/log/login.do?lang=<%= headerLang %>"
+                <a href="<%= request.getContextPath() %>/users/login.do?lang=<%= headerLang %>"
                    class="site-login">
 
                     <%= headerMsg.getProperty(
@@ -142,7 +141,7 @@
                 </a>
 
 
-                <a href="<%= request.getContextPath() %>/log/signup.do?lang=<%= headerLang %>"
+                <a href="<%= request.getContextPath() %>/users/signupview.do?lang=<%= headerLang %>"
                    class="site-signup">
 
                     <%= headerMsg.getProperty(
@@ -158,7 +157,7 @@
 
                 <!-- 로그인 후 -->
 
-                <a href="<%= request.getContextPath() %>/log/mypage.do?lang=<%= headerLang %>"
+                <a href="<%= request.getContextPath() %>/users/profile.do?lang=<%= headerLang %>"
                    class="site-login">
 
                     <%= headerMsg.getProperty(
@@ -169,7 +168,7 @@
                 </a>
 
 
-                <a href="<%= request.getContextPath() %>/log/logout.do?lang=<%= headerLang %>"
+                <a href="<%= request.getContextPath() %>/users/logout.do?lang=<%= headerLang %>"
                    class="site-logout">
 
                     <%= headerMsg.getProperty(
@@ -188,8 +187,7 @@
     </div>
 
 </header>
-
-
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
 
 function changeLanguage(lang) {

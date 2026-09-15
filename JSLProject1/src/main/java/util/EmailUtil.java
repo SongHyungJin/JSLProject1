@@ -39,7 +39,6 @@ public class EmailUtil {
                 return new PasswordAuthentication(FROM_EMAIL, APP_PASSWORD);
             }
         });
-
         try {
             Message message = new MimeMessage(session);
 
@@ -61,7 +60,7 @@ public class EmailUtil {
             // 메일 발송
             Transport.send(message);
 
-            System.out.println("메일 발송 성공!");
+//            System.out.println("메일 발송 성공!");
 
         } catch (Exception e) {
             e.printStackTrace();

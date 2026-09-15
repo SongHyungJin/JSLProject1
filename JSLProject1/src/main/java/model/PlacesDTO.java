@@ -12,11 +12,10 @@ public class PlacesDTO {
 	private String description; //설명글
 	private String business_hours;
 	private String image_url;
-	private boolean reservable;
+	private boolean reservable; //1:예약가능
 	private double rating; //평균평점
 	private LocalDateTime created_at;
 	private LocalDateTime updated_at;
-	
 	
 	public int getId() {
 		return id;

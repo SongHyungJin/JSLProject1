@@ -46,9 +46,9 @@
 
 
 <!-- 로그인 확인 -->
-<c:if test="${empty sessionScope.loginUser}">
+<c:if test="${empty sessionScope.id}">
 
-    <c:redirect url="/log/login.do">
+    <c:redirect url="/users/loginview.do">
         <c:param name="lang" value="<%= lang %>"/>
     </c:redirect>
 
@@ -90,7 +90,7 @@
          예약 불가능한 가게
     ================================================== -->
 
-    <c:if test="${not empty place and place.reservable == 0}">
+    <c:if test="${not empty place and !place.reservable}">
 
         <div class="reservation-page">
 
@@ -113,7 +113,7 @@
          예약 가능한 가게
     ================================================== -->
 
-    <c:if test="${not empty place and place.reservable == 1}">
+    <c:if test="${not empty place and place.reservable}">
 
 
         <div class="reservation-page">
@@ -142,12 +142,12 @@
 
 
                 <div class="store-image"
-                    style="background-image:url('${place.imageUrl}');
+                    style="background-image:url('${place.image_url}');
                            background-size:cover;
                            background-position:center;">
 
 
-                    <c:if test="${empty place.imageUrl}">
+                    <c:if test="${empty place.image_url}">
 
                         <%= messages.getProperty(
                             "view.photo.none",
@@ -173,7 +173,7 @@
 
 
                         <span class="rating">
-                            ★ ${place.avgRating}
+                            ★ ${place.rating}
                         </span>
 
 
@@ -563,7 +563,7 @@
             <div class="back-area">
 
 
-                <a href="${pageContext.request.contextPath}/place/view.do?id=${place.id}&lang=<%= lang %>"
+                <a href="${pageContext.request.contextPath}/places/placesAllList.do?id=${place.id}&lang=<%= lang %>"
                    class="back-link">
 
                     ←
@@ -1258,7 +1258,7 @@
 
 
                     url:
-                        "${pageContext.request.contextPath}/place/bookingpro.do",
+                        "${pageContext.request.contextPath}/booking/bookingpro.do",
 
 
                     type:
@@ -1300,15 +1300,12 @@
 
 
 
-                    success:
-                        function(result) {
+                        success: function(result) {
 
+                            result = result.trim();
 
-                            if (
-                                result ===
-                                "success"
-                            ) {
-
+                            // 예약 성공
+                            if (result === "success") {
 
                                 alert(
                                     '<%= messages.getProperty(
@@ -1317,18 +1314,31 @@
                                     ) %>'
                                 );
 
-
                                 /*
                                  * 예약 완료 후에도
                                  * 현재 언어 유지
                                  */
-
                                 location.href =
-                                    "${pageContext.request.contextPath}/main.do?lang=<%= lang %>";
+                                    "${pageContext.request.contextPath}/users/profile.do?lang=<%= lang %>";
 
+                            }
 
-                            } else {
+                            // 이미 같은 예약이 있는 경우
+                            else if (result === "duplicate") {
 
+                                alert(
+                                    '<%= messages.getProperty(
+                                        "booking.alert.duplicate",
+                                        "이미 같은 날짜와 시간에 예약되어 있습니다."
+                                    ) %>'
+                                );
+
+                                resetForm();
+
+                            }
+
+                            // 그 외 예약 실패
+                            else {
 
                                 alert(
                                     '<%= messages.getProperty(
@@ -1337,12 +1347,9 @@
                                     ) %>'
                                 );
 
-
                                 resetForm();
 
-
                             }
-
 
                         },
 
