@@ -1,0 +1,121 @@
+/* =========================
+   Common Footer
+========================= */
+
+.site-footer {
+    width: 100%;
+    margin-top: 70px;
+
+    background: #ffffff;
+    border-top: 1px solid #eeeeee;
+}
+
+.site-footer-inner {
+    width: 100%;
+    max-width: 1200px;
+
+    margin: 0 auto;
+    padding: 38px 30px;
+
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 40px;
+}
+
+
+/* 브랜드 */
+
+.footer-brand h3 {
+    margin: 0 0 10px;
+
+    color: #222222;
+
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.footer-brand p {
+    margin: 0;
+
+    color: #888888;
+
+    font-size: 13px;
+}
+
+
+/* 링크 */
+
+.footer-links {
+    display: flex;
+    align-items: center;
+
+    gap: 24px;
+}
+
+.footer-links a {
+    color: #666666;
+
+    text-decoration: none;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    transition: 0.2s;
+}
+
+.footer-links a:hover {
+    color: #ff6b6b;
+}
+
+
+/* 하단 Copyright */
+
+.footer-bottom {
+    width: 100%;
+
+    padding: 18px 20px;
+
+    border-top: 1px solid #f1f1f1;
+
+    text-align: center;
+}
+
+.footer-bottom p {
+    margin: 0;
+
+    color: #aaaaaa;
+
+    font-size: 12px;
+}
+
+
+/* =========================
+   Footer Mobile
+========================= */
+
+@media (max-width: 700px) {
+
+    .site-footer {
+        margin-top: 50px;
+    }
+
+    .site-footer-inner {
+        padding: 30px 18px;
+
+        flex-direction: column;
+
+        gap: 22px;
+    }
+
+    .footer-links {
+        flex-wrap: wrap;
+
+        gap: 16px;
+    }
+
+    .footer-bottom {
+        padding: 16px;
+    }
+}

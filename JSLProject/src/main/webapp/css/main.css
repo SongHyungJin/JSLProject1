@@ -1,0 +1,593 @@
+/* =========================
+   기본 설정
+========================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f6f7f9;
+    color: #222;
+}
+
+a {
+    text-decoration: none;
+}
+
+
+/* =========================
+   Header
+========================= */
+
+.header {
+    background: #ffffff;
+    border-bottom: 1px solid #e8e8e8;
+}
+
+.header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 18px 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 25px;
+}
+
+.logo {
+    margin: 0;
+    font-size: 24px;
+    white-space: nowrap;
+}
+
+
+/* =========================
+   Navigation
+========================= */
+
+.nav {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.nav a {
+    color: #333;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.nav a:hover {
+    color: #ff6b6b;
+}
+
+
+/* =========================
+   로그인 / 회원가입
+========================= */
+
+.auth-menu {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.login-btn {
+    padding: 9px 16px;
+    color: #333;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.login-btn:hover {
+    background: #f3f3f3;
+}
+
+.signup-btn {
+    padding: 9px 16px;
+    background: #ff6b6b;
+    color: #ffffff;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.signup-btn:hover {
+    background: #f65e5e;
+}
+
+
+/* =========================
+   Hero
+========================= */
+
+.hero {
+    min-height: 430px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 60px 24px;
+
+    background: linear-gradient(
+        135deg,
+        #fff1f1,
+        #f4f7ff
+    );
+}
+
+.hero-content {
+    width: 100%;
+    max-width: 850px;
+    text-align: center;
+}
+
+.hero-content h1 {
+    margin: 0 0 18px;
+    font-size: 46px;
+    line-height: 1.25;
+}
+
+.hero-content p {
+    margin: 0 0 30px;
+    color: #666;
+    font-size: 18px;
+    line-height: 1.6;
+}
+
+
+/* =========================
+   메인 검색창
+========================= */
+
+.search-box {
+    max-width: 680px;
+    margin: 0 auto;
+
+    display: flex;
+    gap: 10px;
+
+    background: #ffffff;
+    padding: 8px;
+
+    border-radius: 14px;
+
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+.search-box input {
+    flex: 1;
+    min-width: 0;
+
+    padding: 15px;
+
+    border: none;
+    outline: none;
+
+    font-size: 15px;
+    background: transparent;
+}
+
+.search-box button {
+    padding: 0 28px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: #ff6b6b;
+    color: #ffffff;
+
+    font-size: 15px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: background 0.2s;
+}
+
+.search-box button:hover {
+    background: #f65e5e;
+}
+
+
+/* =========================
+   언어 선택
+========================= */
+
+.language-section {
+    background: #ffffff;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.language-box {
+    max-width: 1200px;
+    margin: 0 auto;
+
+    padding: 18px 24px;
+
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    gap: 10px;
+}
+
+.language-box a {
+    padding: 8px 14px;
+
+    border: 1px solid #dddddd;
+    border-radius: 20px;
+
+    color: #555;
+    background: #ffffff;
+
+    font-size: 14px;
+
+    transition:
+        background 0.2s,
+        color 0.2s,
+        border-color 0.2s;
+}
+
+.language-box a:hover {
+    border-color: #ff6b6b;
+    color: #ff6b6b;
+}
+
+.language-box a.active {
+    background: #ff6b6b;
+    color: #ffffff;
+    border-color: #ff6b6b;
+}
+
+
+/* =========================
+   공통 메인 Section
+========================= */
+
+.main-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 50px 24px;
+}
+
+.section-title {
+    margin-bottom: 25px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 20px;
+}
+
+.section-title h2 {
+    margin: 0;
+    font-size: 28px;
+}
+
+.section-title > a {
+    color: #ff6b6b;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.section-title > a:hover {
+    text-decoration: underline;
+}
+
+
+/* =========================
+   카테고리
+========================= */
+
+.category-grid {
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 22px;
+}
+
+
+/*
+   중요:
+   main.jsp에서 category-card가
+   div → a 태그로 변경되었기 때문에
+   링크 기본 스타일을 제거한다.
+*/
+
+.category-card {
+    min-height: 180px;
+
+    padding: 30px 20px;
+
+    background: #ffffff;
+
+    border: 1px solid #eeeeee;
+    border-radius: 16px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+
+    /* a 태그 기본 스타일 제거 */
+    text-decoration: none;
+    color: inherit;
+
+    cursor: pointer;
+
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+
+    transition:
+        transform 0.2s,
+        box-shadow 0.2s,
+        border-color 0.2s;
+}
+
+.category-card:hover {
+    transform: translateY(-5px);
+
+    border-color: #ffb6b6;
+
+    box-shadow: 0 9px 24px rgba(0, 0, 0, 0.10);
+}
+
+.category-icon {
+    margin-bottom: 15px;
+    font-size: 50px;
+}
+
+.category-card strong {
+    color: #222;
+    font-size: 18px;
+}
+
+
+/* =========================
+   추천 여행 루트
+========================= */
+
+.route-grid {
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 22px;
+}
+
+.route-card {
+    min-height: 230px;
+
+    padding: 30px 25px;
+
+    background: #ffffff;
+
+    border: 1px solid #eeeeee;
+    border-radius: 16px;
+
+    text-align: center;
+
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+
+    /* 추천 루트 카드도 category-card처럼 a 태그로 바뀌어서 링크 기본 스타일 제거 */
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+
+    transition:
+        transform 0.2s,
+        box-shadow 0.2s;
+}
+
+.route-card:hover {
+    transform: translateY(-5px);
+
+    box-shadow: 0 9px 24px rgba(0, 0, 0, 0.10);
+}
+
+.route-icon {
+    margin-bottom: 15px;
+    font-size: 48px;
+}
+
+.route-card h3 {
+    margin: 0 0 12px;
+    font-size: 20px;
+}
+
+.route-card p {
+    margin: 0;
+
+    color: #777;
+
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+
+/* =========================
+   Footer
+========================= */
+
+.footer {
+    margin-top: 30px;
+
+    background: #222222;
+    color: #ffffff;
+}
+
+.footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+
+    padding: 30px 24px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 20px;
+}
+
+.footer-inner p {
+    margin: 0;
+    color: #cccccc;
+}
+
+.footer-links {
+    display: flex;
+    gap: 20px;
+}
+
+.footer-links a {
+    color: #ffffff;
+    font-size: 14px;
+}
+
+.footer-links a:hover {
+    text-decoration: underline;
+}
+
+
+/* =========================
+   태블릿
+========================= */
+
+@media (max-width: 900px) {
+
+    .header-inner {
+        flex-wrap: wrap;
+    }
+
+    .hero {
+        min-height: 380px;
+        padding: 50px 24px;
+    }
+
+    .hero-content h1 {
+        font-size: 38px;
+    }
+
+    .category-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .route-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+
+/* =========================
+   모바일
+========================= */
+
+@media (max-width: 600px) {
+
+    .header-inner {
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .nav {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .auth-menu {
+        justify-content: center;
+    }
+
+
+    /* Hero */
+
+    .hero {
+        min-height: 340px;
+        padding: 40px 16px;
+    }
+
+    .hero-content h1 {
+        font-size: 32px;
+    }
+
+    .hero-content p {
+        font-size: 16px;
+    }
+
+
+    /* 검색 */
+
+    .search-box {
+        flex-direction: column;
+    }
+
+    .search-box button {
+        padding: 14px;
+    }
+
+
+    /* 언어 */
+
+    .language-box {
+        justify-content: center;
+        flex-wrap: wrap;
+
+        padding: 15px 16px;
+    }
+
+
+    /* Section */
+
+    .main-section {
+        padding: 40px 16px;
+    }
+
+    .section-title {
+        align-items: flex-end;
+    }
+
+    .section-title h2 {
+        font-size: 24px;
+    }
+
+
+    /* 카테고리 */
+
+    .category-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .category-card {
+        min-height: 160px;
+    }
+
+
+    /* 추천 여행 루트 */
+
+    .route-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    /* Footer */
+
+    .footer-inner {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .footer-links {
+        justify-content: center;
+    }
+}

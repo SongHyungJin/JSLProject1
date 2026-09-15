@@ -1,0 +1,267 @@
+/* =========================
+   Review Write
+========================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #f7f8fa;
+    color: #222;
+    font-family: Arial, sans-serif;
+}
+
+
+/* =========================
+   Main
+========================= */
+
+.review-write-page {
+    width: 100%;
+    max-width: 640px;
+
+    margin: 0 auto;
+    padding: 45px 24px 90px;
+}
+
+.write-title {
+    margin: 0 0 6px;
+
+    color: #181818;
+
+    font-size: 26px;
+    font-weight: 800;
+}
+
+.write-place-name {
+    margin: 0 0 26px;
+
+    color: #999;
+
+    font-size: 14px;
+    font-weight: 700;
+}
+
+
+/* =========================
+   섹션 공통
+========================= */
+
+.write-section {
+    padding: 22px;
+    margin-bottom: 16px;
+
+    background: #ffffff;
+
+    border: 1px solid #ececef;
+    border-radius: 14px;
+
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.03);
+}
+
+.write-section h3 {
+    margin: 0 0 14px;
+
+    color: #222;
+
+    font-size: 15px;
+    font-weight: 700;
+}
+
+
+/* =========================
+   별점 선택
+========================= */
+
+.star-select {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.star-select .star {
+    color: #dddddd;
+
+    font-size: 30px;
+    line-height: 1;
+
+    cursor: pointer;
+
+    transition: transform 0.15s ease, color 0.15s ease;
+}
+
+.star-select .star:hover {
+    transform: scale(1.15);
+}
+
+.star-select .star.selected {
+    color: #f5a623;
+}
+
+.star-value {
+    margin-left: 10px;
+
+    color: #999;
+
+    font-size: 13px;
+}
+
+
+/* =========================
+   리뷰 내용
+========================= */
+
+.write-textarea {
+    width: 100%;
+    height: 140px;
+
+    padding: 14px;
+
+    resize: none;
+    outline: none;
+
+    color: #333;
+    background: #ffffff;
+
+    border: 1px solid #dddddd;
+    border-radius: 10px;
+
+    font-size: 14px;
+    line-height: 1.6;
+
+    transition: border-color 0.2s;
+}
+
+.write-textarea:focus {
+    border-color: #e85d8e;
+}
+
+.write-textarea::placeholder {
+    color: #aaaaaa;
+}
+
+
+/* =========================
+   사진 첨부
+========================= */
+
+.photo-add-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 10px 16px;
+
+    color: #e85d8e;
+    background: #fff0f5;
+
+    border: 1px solid #e85d8e;
+    border-radius: 10px;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+}
+
+.photo-add-btn:hover {
+    color: #ffffff;
+    background: #e85d8e;
+}
+
+.photo-preview-list {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 10px;
+
+    margin-top: 14px;
+}
+
+.photo-preview-box {
+    width: 88px;
+    height: 88px;
+
+    background-size: cover;
+    background-position: center;
+
+    border: 1px solid #e5e6e8;
+    border-radius: 10px;
+}
+
+
+/* =========================
+   버튼
+========================= */
+
+.write-actions {
+    display: flex;
+    gap: 10px;
+
+    margin-top: 24px;
+}
+
+.write-cancel-btn,
+.write-submit-btn {
+    flex: 1;
+
+    height: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    text-decoration: none;
+
+    border: none;
+
+    transition: background 0.2s ease;
+}
+
+.write-cancel-btn {
+    color: #666;
+    background: #ffffff;
+    border: 1px solid #dddddd;
+}
+
+.write-cancel-btn:hover {
+    background: #f1f2f4;
+}
+
+.write-submit-btn {
+    color: #ffffff;
+    background: #e85d8e;
+}
+
+.write-submit-btn:hover {
+    background: #d94f80;
+}
+
+
+/* =========================
+   Mobile
+========================= */
+
+@media (max-width: 600px) {
+
+    .review-write-page {
+        padding: 30px 16px 70px;
+    }
+
+    .write-section {
+        padding: 18px;
+    }
+
+    .star-select .star {
+        font-size: 26px;
+    }
+}
