@@ -87,38 +87,82 @@
 
                     <div class="map-background">
 
-                        <div class="map-city">
-                            MY ROUTE
-                        </div>
+                        <!-- 실제 구글맵 (찜한 점포 순회 코스) -->
+                        <div id="map"
+                             style="position:absolute; inset:0; z-index:1; border-radius:18px;"></div>
 
-                        <div class="map-center-box">
+                        <%
+                            Object _cj = request.getAttribute("courseJson");
+                            String courseJson = (_cj != null) ? _cj.toString() : "[]";
+                            String gmapKey = System.getenv("GOOGLE_MAPS_KEY");
+                            if (gmapKey == null) gmapKey = "";
+                        %>
 
-                            <div class="map-icon">
-                                📍
+                        <% if (gmapKey.isEmpty()) { %>
+
+                            <div style="position:absolute; inset:0; z-index:2; display:flex;
+                                        align-items:center; justify-content:center;
+                                        text-align:center; color:#868e96; padding:20px;">
+                                환경변수 GOOGLE_MAPS_KEY 가 설정되어 있지 않습니다.
                             </div>
 
-                            <h2>
-                                <%= messages.getProperty(
-                                    "myroute.map.title",
-                                    "지도 영역"
-                                ) %>
-                            </h2>
+                        <% } else { %>
 
-                            <p>
-                                <%= messages.getProperty(
-                                    "myroute.map.description",
-                                    "찜한 장소를 잇는 경로가 여기에 표시될 예정이에요"
-                                ) %>
-                            </p>
+                        <script>
+                            // 나의 여행루트: 찜한 점포들을 최적 동선(RouteController)으로 받아 표시
+                            var myRouteSpots = <%= courseJson %>;
 
-                        </div>
+                            function initMyRouteMap() {
+                                var el = document.getElementById("map");
+                                var map = new google.maps.Map(el, {
+                                    mapTypeControl: false,
+                                    streetViewControl: false
+                                });
 
-                        <div class="map-controls">
+                                // 찜한 곳이 없으면 기본 위치만 표시
+                                if (!myRouteSpots || myRouteSpots.length === 0) {
+                                    map.setCenter({ lat: 35.0116, lng: 135.7681 });
+                                    map.setZoom(11);
+                                    return;
+                                }
 
-                            <button type="button">+</button>
-                            <button type="button">－</button>
+                                var bounds = new google.maps.LatLngBounds();
+                                var path = [];
+                                var info = new google.maps.InfoWindow();
 
-                        </div>
+                                myRouteSpots.forEach(function (s, i) {
+                                    var pos = { lat: s.lat, lng: s.lng };
+                                    path.push(pos);
+                                    bounds.extend(pos);
+                                    var marker = new google.maps.Marker({
+                                        position: pos, map: map, label: String(i + 1)
+                                    });
+                                    marker.addListener("click", function () {
+                                        info.setContent("<strong>" + (i + 1) + ". " + s.name + "</strong>");
+                                        info.open(map, marker);
+                                    });
+                                });
+
+                                if (path.length > 1) {
+                                    new google.maps.Polyline({
+                                        path: path, geodesic: true,
+                                        strokeColor: "#4c6ef5", strokeOpacity: 0.8,
+                                        strokeWeight: 4, map: map
+                                    });
+                                }
+                                map.fitBounds(bounds);
+                            }
+
+                            window.gm_authFailure = function () {
+                                document.getElementById("map").innerHTML =
+                                    "<div style='padding:20px;color:#c92a2a'>지도 인증 실패: API 키 또는 도메인 제한을 확인하세요.</div>";
+                            };
+                        </script>
+
+                        <script async defer
+                            src="https://maps.googleapis.com/maps/api/js?key=<%= gmapKey %>&callback=initMyRouteMap"></script>
+
+                        <% } %>
 
                     </div>
 

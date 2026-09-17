@@ -1,350 +1,1513 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java"
+
+    contentType="text/html; charset=UTF-8"
+
+    pageEncoding="UTF-8"%>
 
 <%@ page import="java.util.Properties"%>
+
 <%@ page import="java.io.InputStream"%>
+
 <%@ page import="java.io.InputStreamReader"%>
 
 <%
-String lang = request.getParameter("lang");
 
-if (lang == null) {
-	lang = "ko";
-}
+    String lang = request.getParameter("lang");
 
-if (!lang.equals("ko") && !lang.equals("en") && !lang.equals("ja")) {
-	lang = "ko";
-}
+    if (lang == null) {
 
-Properties messages = new Properties();
+        lang = "ko";
 
-String filePath = "/i18n/messages_" + lang + ".properties";
+    }
 
-InputStream input = application.getResourceAsStream(filePath);
+    if (!lang.equals("ko")
 
-if (input != null) {
+            && !lang.equals("en")
 
-	messages.load(new InputStreamReader(input, "UTF-8"));
+            && !lang.equals("ja")) {
 
-	input.close();
-}
+        lang = "ko";
+
+    }
+
+    Properties messages = new Properties();
+
+    String filePath =
+
+        "/i18n/messages_" + lang + ".properties";
+
+    InputStream input =
+
+        application.getResourceAsStream(filePath);
+
+    if (input != null) {
+
+        messages.load(
+
+            new InputStreamReader(
+
+                input,
+
+                "UTF-8"
+
+            )
+
+        );
+
+        input.close();
+
+    }
+
 %>
 
 <!DOCTYPE html>
 
-<html lang="<%=lang%>">
+<html lang="<%= lang %>">
 
 <head>
 
 <meta charset="UTF-8">
 
-<title><%=messages.getProperty("main.title", "Travel Route")%></title>
+<meta
 
-<link rel="stylesheet" href="<%=request.getContextPath()%>/css/main.css">
+    name="viewport"
+
+    content="width=device-width, initial-scale=1.0">
+
+<title>
+
+    <%= messages.getProperty(
+
+        "main.title",
+
+        "Travel Route"
+
+    ) %>
+
+</title>
+
+<link
+
+    rel="stylesheet"
+
+    href="<%= request.getContextPath() %>/css/main.css?v=52">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+    href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Gowun+Dodum&display=swap"
+    rel="stylesheet">
 
 </head>
+
+
+
+
 
 <body>
 
 
-	<!-- ========================= -->
-	<!-- Header -->
-	<!-- ========================= -->
 
-	<%@ include file="header.jsp"%>
 
 
+<!-- =====================================================
 
-	<main>
+     HEADER
 
+     기존 header.jsp 절대 변경하지 않음
 
-		<!-- ========================= -->
-		<!-- Hero -->
-		<!-- ========================= -->
+====================================================== -->
 
-		<section class="hero">
+<%@ include file="header.jsp"%>
 
-			<div class="hero-content">
 
 
-				<h1>
 
-					<%=messages.getProperty("main.hero.title", "나만의 여행 루트를 만들어보세요")%>
 
-				</h1>
 
 
-				<p>
 
-					<%=messages.getProperty("main.hero.description", "가고 싶은 장소를 찾고, 나만의 여행 동선을 만들어보세요.")%>
 
-				</p>
+<main>
 
 
 
-				<form class="search-box"
-					action="<%=request.getContextPath()%>/places/placesSearch.do"
-					method="get">
 
-					<input type="hidden" name="lang" value="<%=lang%>"> <input
-						type="text" name="keyword"
-						placeholder="<%=messages.getProperty("main.search.placeholder", "가게 이름이나 지역으로 검색")%>">
 
+    <!-- =====================================================
 
-					<button type="submit">
+         HERO
 
-						<%=messages.getProperty("main.search.button", "검색")%>
+    ====================================================== -->
 
-					</button>
+    <section class="hero">
 
-				</form>
+        <div
 
+            class="hero-scene"
 
-			</div>
+            id="heroScene">
 
-		</section>
 
 
 
-		<!-- ========================= -->
-		<!-- 언어 선택 -->
-		<!-- ========================= -->
 
-		<section class="language-section">
+            <!-- ============================================
 
-			<div class="language-box">
+                 머리카락 흔들림용 SVG FILTER
 
+            ============================================= -->
 
-				<a href="<%=request.getContextPath()%>/main.do?lang=ko"
-					class="<%=lang.equals("ko") ? "active" : ""%>"> 한국어 </a> <a
-					href="<%=request.getContextPath()%>/main.do?lang=en"
-					class="<%=lang.equals("en") ? "active" : ""%>"> English </a> <a
-					href="<%=request.getContextPath()%>/main.do?lang=ja"
-					class="<%=lang.equals("ja") ? "active" : ""%>"> 日本語 </a>
+            <svg
 
+                width="0"
 
-			</div>
+                height="0"
 
-		</section>
+                style="position:absolute">
 
+                <filter
 
+                    id="hairFlowFilter"
 
-		<!-- ========================= -->
-		<!-- 카테고리 -->
-		<!-- ========================= -->
+                    x="-40%"
 
-		<section class="main-section">
+                    y="-40%"
 
+                    width="180%"
 
-			<div class="section-title">
+                    height="180%">
 
+                    <feTurbulence
 
-				<h2>
+                        type="fractalNoise"
 
-					<%=messages.getProperty("main.category.title", "카테고리")%>
+                        baseFrequency="0.018 0.075"
 
-				</h2>
+                        numOctaves="2"
 
+                        seed="7"
 
-				<!-- 전체보기는 기존대로 유지 -->
+                        result="turb">
 
-				<a
-					href="<%=request.getContextPath()%>/places/placesAllList.do?lang=<%=lang%>">
+                        <animate
 
-					<%=messages.getProperty("main.category.more", "전체보기")%>
+                            attributeName="baseFrequency"
 
-				</a>
+                            values="
 
+                                0.018 0.075;
 
-			</div>
+                                0.026 0.095;
 
+                                0.020 0.080;
 
+                                0.018 0.075
 
-			<div class="category-grid">
+                            "
 
+                            dur="3s"
 
-				<!-- ========================= -->
-				<!-- 식당 -->
-				<!-- ========================= -->
+                            repeatCount="indefinite" />
 
-				<a
-					href="<%=request.getContextPath()%>/places/placesSearch.do?category=restaurant&lang=<%=lang%>"
-					class="category-card">
+                    </feTurbulence>
 
 
-					<div class="category-icon">🍽️</div> <strong> <%=messages.getProperty("category.restaurant", "식당")%>
 
-				</strong>
 
 
-				</a>
+                    <feDisplacementMap
 
+                        in="SourceGraphic"
 
+                        in2="turb"
 
-				<!-- ========================= -->
-				<!-- 상점 -->
-				<!-- ========================= -->
+                        scale="3"
 
-				<a
-					href="<%=request.getContextPath()%>/places/placesSearch.do?category=shop&lang=<%=lang%>"
-					class="category-card">
+                        xChannelSelector="R"
 
+                        yChannelSelector="G" />
 
-					<div class="category-icon">🛍️</div> <strong> <%=messages.getProperty("category.shop", "상점")%>
+                </filter>
 
-				</strong>
+            </svg>
 
 
-				</a>
 
 
 
-				<!-- ========================= -->
-				<!-- 카페 -->
-				<!-- ========================= -->
 
-				<a
-					href="<%=request.getContextPath()%>/places/placesSearch.do?category=cafe&lang=<%=lang%>"
-					class="category-card">
 
 
-					<div class="category-icon">☕</div> <strong> <%=messages.getProperty("category.cafe", "카페")%>
 
-				</strong>
+            <!-- ============================================
 
+                 움직이는 비행기
 
-				</a>
+            ============================================= -->
 
+            <div class="plane-only"></div>
 
-			</div>
 
 
-		</section>
+            <!-- ============================================
 
+                 V9 왼쪽 벚꽃 전경 레이어
 
+            \============================================= -->
 
-		<!-- ========================= -->
-		<!-- 추천 여행 루트 -->
-		<!-- ========================= -->
+            <div class="branch-left"></div>
 
-		<section class="main-section">
 
 
-			<div class="section-title">
+            <!-- ============================================
 
+                 V9 오른쪽 전경 레이어
 
-				<h2>
+            \============================================= -->
 
-					<%=messages.getProperty("main.route.title", "추천 여행 루트")%>
+            <div class="foreground-right"></div>
 
-				</h2>
 
 
-			</div>
 
 
 
-			<div class="route-grid">
 
 
-				<!-- 도시 여행 -->
 
-				<a
-					href="<%=request.getContextPath()%>/route/bestroute.do?lang=<%=lang%>"
-					class="route-card">
+            <!-- ============================================
 
+                 머리카락 애니메이션
 
-					<div class="route-icon">🏙️</div>
+            ============================================= -->
 
+            <div class="hair-group">
 
-					<h3>
+                <div class="thread-0"></div>
 
-						<%=messages.getProperty("main.route.city", "도시 여행")%>
+                <div class="thread-1"></div>
 
-					</h3>
+                <div class="thread-2"></div>
 
+                <div class="thread-3"></div>
 
-					<p>
+                <div class="thread-4"></div>
 
-						<%=messages.getProperty("main.route.city.description", "도시의 인기 명소와 맛집을 함께 즐겨보세요.")%>
+                <div class="thread-5"></div>
 
-					</p>
+                <div class="thread-6"></div>
 
+                <div class="thread-7"></div>
 
-				</a>
+            </div>
 
 
 
-				<!-- 카페 여행 -->
 
-				<a
-					href="<%=request.getContextPath()%>/route/bestroute.do?lang=<%=lang%>"
-					class="route-card">
 
 
-					<div class="route-icon">☕</div>
 
 
-					<h3>
 
-						<%=messages.getProperty("main.route.cafe", "카페 여행")%>
+            <!-- ============================================
 
-					</h3>
+                 벚꽃
 
+            ============================================= -->
 
-					<p>
+            <div
 
-						<%=messages.getProperty("main.route.cafe.description", "감성 카페를 따라 여유로운 하루를 보내보세요.")%>
+                class="petals-layer"
 
-					</p>
+                id="heroPetals">
 
+            </div>
 
-				</a>
 
 
 
-				<!-- 자연 여행 -->
 
-				<a
-					href="<%=request.getContextPath()%>/route/bestroute.do?lang=<%=lang%>"
-					class="route-card">
 
 
-					<div class="route-icon">🌿</div>
 
 
-					<h3>
+            <!-- ============================================
 
-						<%=messages.getProperty("main.route.nature", "자연 여행")%>
+                 HERO TEXT
 
-					</h3>
+                 기존 다국어 기능 유지
 
+            ============================================= -->
 
-					<p>
+            <div class="hero-content">
 
-						<%=messages.getProperty("main.route.nature.description", "자연 속에서 힐링할 수 있는 코스를 만나보세요.")%>
+                <h1 class="hero-title">
 
-					</p>
+                    <span class="hero-title-line1">
+                        <%= messages.getProperty(
+                            "main.hero.title.line1",
+                            "en".equals(lang)
+                                ? "Choose where you want to go"
+                                : "ja".equals(lang)
+                                    ? "\u884C\u304D\u305F\u3044\u5834\u6240\u3092\u9078\u3093\u3067"
+                                    : "가고 싶은 곳을 골라"
+                        ) %>
+                    </span>
 
+                    <span class="hero-title-line2">
+                        <%= messages.getProperty(
+                            "main.hero.title.line2",
+                            "en".equals(lang)
+                                ? "Create your own journey"
+                                : "ja".equals(lang)
+                                    ? "\u81EA\u5206\u3060\u3051\u306E\u65C5\u3092\u4F5C\u3063\u3066\u307F\u307E\u3057\u3087\u3046"
+                                    : "나만의 여행을 만들어보세요"
+                        ) %>
+                    </span>
 
-				</a>
+                </h1>
 
 
-			</div>
 
 
-		</section>
 
+                <p>
 
-	</main>
+                    <%= messages.getProperty(
 
+                        "main.hero.description",
 
+                        "가고 싶은 장소를 찾고, 나만의 여행 동선을 만들어보세요."
 
-	<!-- ========================= -->
-	<!-- Footer -->
-	<!-- ========================= -->
+                    ) %>
 
-	<%@ include file="footer.jsp"%>
+                </p>
+
+
+
+
+
+
+
+
+
+                <!-- ========================================
+
+                     검색
+
+                     기존 /places/placesSearch.do 유지
+
+                ========================================= -->
+
+                <form
+
+                    class="search-box"
+
+                    action="<%= request.getContextPath() %>/places/placesSearch.do"
+
+                    method="get">
+
+
+
+
+
+                    <input
+
+                        type="hidden"
+
+                        name="lang"
+
+                        value="<%= lang %>">
+
+
+
+
+
+                    <span
+
+                        class="search-icon"
+
+                        aria-hidden="true">
+
+                        ⌕
+
+                    </span>
+
+
+
+
+
+                    <input
+
+                        type="text"
+
+                        name="keyword"
+
+                        placeholder="<%= messages.getProperty(
+
+                            "main.search.placeholder",
+
+                            "가게 이름이나 지역으로 검색"
+
+                        ) %>">
+
+
+
+
+
+                    <button type="submit">
+
+                        <%= messages.getProperty(
+
+                            "main.search.button",
+
+                            "검색"
+
+                        ) %>
+
+                    </button>
+
+
+
+
+
+                </form>
+
+
+
+
+
+
+
+
+
+                <!-- ========================================
+
+                     인기 검색어
+
+                ========================================= -->
+
+                <div class="popular-search">
+
+                    <span class="popular-title">
+                        <%= messages.getProperty(
+                            "main.popular.title",
+                            lang.equals("ja") ? "人気の検索ワード" :
+                            lang.equals("en") ? "Popular Searches" :
+                            "인기 검색어"
+                        ) %>
+                    </span>
+
+                    <a href="<%= request.getContextPath() %>/places/placesSearch.do?keyword=도쿄&lang=<%= lang %>">
+                        #<%= messages.getProperty(
+                            "main.popular.tokyo",
+                            lang.equals("ja") ? "東京" :
+                            lang.equals("en") ? "Tokyo" :
+                            "도쿄"
+                        ) %>
+                    </a>
+
+                    <a href="<%= request.getContextPath() %>/places/placesSearch.do?keyword=오사카&lang=<%= lang %>">
+                        #<%= messages.getProperty(
+                            "main.popular.osaka",
+                            lang.equals("ja") ? "大阪" :
+                            lang.equals("en") ? "Osaka" :
+                            "오사카"
+                        ) %>
+                    </a>
+
+                    <a href="<%= request.getContextPath() %>/places/placesSearch.do?keyword=후쿠오카&lang=<%= lang %>">
+                        #<%= messages.getProperty(
+                            "main.popular.fukuoka",
+                            lang.equals("ja") ? "福岡" :
+                            lang.equals("en") ? "Fukuoka" :
+                            "후쿠오카"
+                        ) %>
+                    </a>
+
+                    <a href="<%= request.getContextPath() %>/places/placesSearch.do?keyword=맛집&lang=<%= lang %>">
+                        #<%= messages.getProperty(
+                            "main.popular.food",
+                            lang.equals("ja") ? "グルメ" :
+                            lang.equals("en") ? "Food" :
+                            "맛집"
+                        ) %>
+                    </a>
+
+                    <a href="<%= request.getContextPath() %>/places/placesSearch.do?keyword=카페&lang=<%= lang %>">
+                        #<%= messages.getProperty(
+                            "main.popular.cafe",
+                            lang.equals("ja") ? "カフェ" :
+                            lang.equals("en") ? "Cafe" :
+                            "카페"
+                        ) %>
+                    </a>
+
+                    <a href="<%= request.getContextPath() %>/places/placesSearch.do?keyword=온천&lang=<%= lang %>">
+                        #<%= messages.getProperty(
+                            "main.popular.onsen",
+                            lang.equals("ja") ? "温泉" :
+                            lang.equals("en") ? "Hot Springs" :
+                            "온천"
+                        ) %>
+                    </a>
+
+                </div>
+
+
+
+
+
+            </div>
+
+
+
+
+
+
+
+
+
+            <!-- ============================================
+
+                 SCROLL
+
+            ============================================= -->
+
+            <a
+
+                href="#categorySection"
+
+                class="scroll-guide">
+
+
+
+
+
+                <span class="scroll-mouse"></span>
+
+                <span class="scroll-text">
+
+                    SCROLL
+
+                </span>
+
+                <span class="scroll-arrow">
+
+                    ↓
+
+                </span>
+
+
+
+
+
+            </a>
+
+
+
+
+
+        </div>
+
+    </section>
+
+
+
+
+
+
+
+
+
+    <!-- =====================================================
+
+         언어 선택
+
+         ★ 기존 기능 그대로 유지
+
+    ====================================================== -->
+
+    <section class="language-section">
+
+        <div class="language-box">
+
+
+
+
+
+            <a
+
+                href="<%= request.getContextPath() %>/main.do?lang=ko"
+
+                class="<%= lang.equals("ko") ? "active" : "" %>">
+
+                한국어
+
+            </a>
+
+
+
+
+
+            <a
+
+                href="<%= request.getContextPath() %>/main.do?lang=en"
+
+                class="<%= lang.equals("en") ? "active" : "" %>">
+
+                English
+
+            </a>
+
+
+
+
+
+            <a
+
+                href="<%= request.getContextPath() %>/main.do?lang=ja"
+
+                class="<%= lang.equals("ja") ? "active" : "" %>">
+
+                日本語
+
+            </a>
+
+
+
+
+
+        </div>
+
+    </section>
+
+
+
+
+
+
+
+
+
+    <!-- =====================================================
+
+         카테고리
+
+    ====================================================== -->
+
+    <section
+
+        class="main-section category-section"
+
+        id="categorySection">
+
+
+
+
+
+        <div class="section-title">
+
+
+
+
+
+            <div class="section-heading">
+
+
+
+
+
+                <h2>
+
+                    <%= messages.getProperty(
+
+                        "main.category.title",
+
+                        "카테고리"
+
+                    ) %>
+
+                </h2>
+
+
+
+
+
+                <p>
+
+                    <%= messages.getProperty(
+
+                        "main.category.subtitle",
+
+                        "가고 싶은 장소를 찾아 특별한 여행을 시작해보세요."
+
+                    ) %>
+
+                </p>
+
+
+
+
+
+            </div>
+
+
+
+
+
+
+
+
+
+            <a
+
+                href="<%= request.getContextPath() %>/places/placesAllList.do?lang=<%= lang %>">
+
+                <%= messages.getProperty(
+
+                    "main.category.more",
+
+                    "전체보기"
+
+                ) %>
+
+            </a>
+
+
+
+
+
+        </div>
+
+
+
+
+
+
+
+
+
+        <div class="category-grid">
+
+
+
+
+
+            <!-- 식당 -->
+
+            <a
+
+                href="<%= request.getContextPath() %>/places/placesSearch.do?category=restaurant&lang=<%= lang %>"
+
+                class="category-card restaurant-card">
+
+
+
+
+
+                <div class="category-visual">
+
+                    <div class="category-icon">
+
+                        🍴
+
+                    </div>
+
+                </div>
+
+
+
+
+
+                <div class="category-content">
+
+
+
+
+
+                    <strong>
+
+                        <%= messages.getProperty(
+
+                            "category.restaurant",
+
+                            "식당"
+
+                        ) %>
+
+                    </strong>
+
+
+
+
+
+                    <p>
+
+                        <%= messages.getProperty(
+
+                            "main.category.restaurant.description",
+
+                            "현지의 맛있는 요리로 특별한 한때를 즐겨보세요."
+
+                        ) %>
+
+                    </p>
+
+
+
+
+
+                    <span class="card-arrow">
+
+                        →
+
+                    </span>
+
+
+
+
+
+                </div>
+
+
+
+
+
+            </a>
+
+
+
+
+
+
+
+
+
+            <!-- 상점 -->
+
+            <a
+
+                href="<%= request.getContextPath() %>/places/placesSearch.do?category=shop&lang=<%= lang %>"
+
+                class="category-card shop-card">
+
+
+
+
+
+                <div class="category-visual">
+
+                    <div class="category-icon">
+
+                        🛍️
+
+                    </div>
+
+                </div>
+
+
+
+
+
+                <div class="category-content">
+
+
+
+
+
+                    <strong>
+
+                        <%= messages.getProperty(
+
+                            "category.shop",
+
+                            "상점"
+
+                        ) %>
+
+                    </strong>
+
+
+
+
+
+                    <p>
+
+                        <%= messages.getProperty(
+
+                            "main.category.shop.description",
+
+                            "여행지에서만 만날 수 있는 특별한 아이템을 찾아보세요."
+
+                        ) %>
+
+                    </p>
+
+
+
+
+
+                    <span class="card-arrow">
+
+                        →
+
+                    </span>
+
+
+
+
+
+                </div>
+
+
+
+
+
+            </a>
+
+
+
+
+
+
+
+
+
+            <!-- 카페 -->
+
+            <a
+
+                href="<%= request.getContextPath() %>/places/placesSearch.do?category=cafe&lang=<%= lang %>"
+
+                class="category-card cafe-card">
+
+
+
+
+
+                <div class="category-visual">
+
+                    <div class="category-icon">
+
+                        ☕
+
+                    </div>
+
+                </div>
+
+
+
+
+
+                <div class="category-content">
+
+
+
+
+
+                    <strong>
+
+                        <%= messages.getProperty(
+
+                            "category.cafe",
+
+                            "카페"
+
+                        ) %>
+
+                    </strong>
+
+
+
+
+
+                    <p>
+
+                        <%= messages.getProperty(
+
+                            "main.category.cafe.description",
+
+                            "감성적인 카페에서 여유로운 시간을 보내보세요."
+
+                        ) %>
+
+                    </p>
+
+
+
+
+
+                    <span class="card-arrow">
+
+                        →
+
+                    </span>
+
+
+
+
+
+                </div>
+
+
+
+
+
+            </a>
+
+
+
+
+
+        </div>
+
+    </section>
+
+
+
+
+
+
+
+
+
+    <!-- =====================================================
+
+         추천 여행 루트
+
+         기존 기능 그대로
+
+    ====================================================== -->
+
+    <section class="main-section route-section">
+
+
+
+
+
+        <div class="section-title">
+
+
+
+
+
+            <div class="section-heading">
+
+
+
+
+
+                <h2>
+
+                    <%= messages.getProperty(
+
+                        "main.route.title",
+
+                        "추천 여행 루트"
+
+                    ) %>
+
+                </h2>
+
+                <span class="route-style-label" aria-hidden="true">
+                    Best Route
+                    <span class="route-style-plane">✈</span>
+                </span>
+
+
+
+
+
+                <p>
+
+                    <%= messages.getProperty(
+
+                        "main.route.subtitle",
+
+                        "인기 명소와 맛집을 함께 즐겨보세요."
+
+                    ) %>
+
+                </p>
+
+
+
+
+
+            </div>
+
+
+
+
+
+
+
+
+
+            <a
+
+                href="<%= request.getContextPath() %>/route/bestroute.do?lang=<%= lang %>"
+
+                class="route-more">
+
+                <%= messages.getProperty(
+
+                    "main.route.more",
+
+                    "모든 루트 보기"
+
+                ) %>
+
+            </a>
+
+
+
+
+
+        </div>
+
+
+
+
+
+
+
+
+
+        <div class="route-grid">
+
+
+
+
+
+            <!-- 도시 여행 -->
+
+            <a
+
+                href="<%= request.getContextPath() %>/route/bestroute.do?lang=<%= lang %>"
+
+                class="route-card">
+
+
+
+
+
+                <div class="route-photo city-photo">
+
+                    <span class="route-badge">
+
+                        <%= messages.getProperty(
+
+                            "main.route.city",
+
+                            "도시 여행"
+
+                        ) %>
+
+                    </span>
+
+                </div>
+
+
+
+
+
+                <div class="route-content">
+
+
+
+
+
+                    <h3>
+
+                        <%= messages.getProperty(
+
+                            "main.route.city",
+
+                            "도시 여행"
+
+                        ) %>
+
+                    </h3>
+
+
+
+
+
+                    <p>
+
+                        <%= messages.getProperty(
+
+                            "main.route.city.description",
+
+                            "도시의 인기 명소와 맛집을 함께 즐겨보세요."
+
+                        ) %>
+
+                    </p>
+
+
+
+
+
+                    <span class="card-arrow">
+
+                        →
+
+                    </span>
+
+
+
+
+
+                </div>
+
+
+
+
+
+            </a>
+
+
+
+
+
+
+
+
+
+            <!-- 카페 여행 -->
+
+            <a
+
+                href="<%= request.getContextPath() %>/route/bestroute.do?lang=<%= lang %>"
+
+                class="route-card">
+
+
+
+
+
+                <div class="route-photo cafe-photo">
+
+                    <span class="route-badge">
+
+                        <%= messages.getProperty(
+
+                            "main.route.cafe",
+
+                            "카페 여행"
+
+                        ) %>
+
+                    </span>
+
+                </div>
+
+
+
+
+
+                <div class="route-content">
+
+
+
+
+
+                    <h3>
+
+                        <%= messages.getProperty(
+
+                            "main.route.cafe",
+
+                            "카페 여행"
+
+                        ) %>
+
+                    </h3>
+
+
+
+
+
+                    <p>
+
+                        <%= messages.getProperty(
+
+                            "main.route.cafe.description",
+
+                            "감성 카페를 따라 여유로운 하루를 보내보세요."
+
+                        ) %>
+
+                    </p>
+
+
+
+
+
+                    <span class="card-arrow">
+
+                        →
+
+                    </span>
+
+
+
+
+
+                </div>
+
+
+
+
+
+            </a>
+
+
+
+
+
+
+
+
+
+            <!-- 자연 여행 -->
+
+            <a
+
+                href="<%= request.getContextPath() %>/route/bestroute.do?lang=<%= lang %>"
+
+                class="route-card">
+
+
+
+
+
+                <div class="route-photo nature-photo">
+
+                    <span class="route-badge">
+
+                        <%= messages.getProperty(
+
+                            "main.route.nature",
+
+                            "자연 여행"
+
+                        ) %>
+
+                    </span>
+
+                </div>
+
+
+
+
+
+                <div class="route-content">
+
+
+
+
+
+                    <h3>
+
+                        <%= messages.getProperty(
+
+                            "main.route.nature",
+
+                            "자연 여행"
+
+                        ) %>
+
+                    </h3>
+
+
+
+
+
+                    <p>
+
+                        <%= messages.getProperty(
+
+                            "main.route.nature.description",
+
+                            "자연 속에서 힐링할 수 있는 코스를 만나보세요."
+
+                        ) %>
+
+                    </p>
+
+
+
+
+
+                    <span class="card-arrow">
+
+                        →
+
+                    </span>
+
+
+
+
+
+                </div>
+
+
+
+
+
+            </a>
+
+
+
+
+
+        </div>
+
+    </section>
+
+
+
+
+
+</main>
+
+
+
+
+
+
+
+
+
+<!-- =====================================================
+
+     FOOTER
+
+====================================================== -->
+
+<%@ include file="footer.jsp"%>
+
+
+
+
+
+
+
+
+
+<script
+
+    src="<%= request.getContextPath() %>/js/hero-animation.js?v=50">
+
+</script>
+
+
+
 
 
 </body>

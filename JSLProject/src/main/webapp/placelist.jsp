@@ -437,6 +437,12 @@ if (input != null) {
     // 현재 선택된 카테고리 (없으면 전체)
     var placeCategory = "${param.category}";
 
+<%
+    Object _uid = (request.getSession(false) != null) ? request.getSession(false).getAttribute("id") : null;
+%>
+    var isLoggedIn = <%= (_uid != null) %>;
+    var ctxPath = "${pageContext.request.contextPath}";
+
     // 현재 검색어(있으면 그 점포 텍스트 검색)
     var placeKeyword = "${param.keyword}";
 
@@ -474,6 +480,18 @@ if (input != null) {
         var mapsUrl = "https://www.google.com/maps/search/?api=1&query="
             + encodeURIComponent(place.name) + "&query_place_id=" + place.place_id;
 
+        var _lat = (place.geometry && place.geometry.location) ? place.geometry.location.lat() : "";
+        var _lng = (place.geometry && place.geometry.location) ? place.geometry.location.lng() : "";
+        var likeBtnHtml = isLoggedIn
+            ? '<button type="button" class="like-btn"'
+              + ' data-pid="' + escapeHtml(place.place_id) + '"'
+              + ' data-name="' + escapeHtml(place.name) + '"'
+              + ' data-lat="' + _lat + '"'
+              + ' data-lng="' + _lng + '"'
+              + ' data-rating="' + (place.rating || 0) + '"'
+              + ' onclick="toggleGoogleLike(event, this)">\u2606</button>'
+            : '';
+
         item.innerHTML =
             (photoUrl ? '<img src="' + photoUrl + '" alt="' + escapeHtml(place.name) + '">' : '')
             + '<div class="result-info">'
@@ -482,6 +500,7 @@ if (input != null) {
             +   '<p class="result-address">' + escapeHtml(addr) + '</p>'
             + '</div>'
             + '<div class="result-actions">'
+            +   likeBtnHtml
             +   '<a class="mini-btn map" target="_blank" rel="noopener" href="' + mapsUrl + '">\uae38\ucc3e\uae30</a>'
             + '</div>';
 
@@ -494,6 +513,37 @@ if (input != null) {
             }
         });
         return item;
+    }
+
+    // 구글 점포 찜하기 → 서버에서 places 저장(google_place_id) 후 bookmarks 토글
+    function toggleGoogleLike(event, btn) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        var body = "placeId=" + encodeURIComponent(btn.dataset.pid)
+            + "&name=" + encodeURIComponent(btn.dataset.name || "")
+            + "&category=" + encodeURIComponent(placeCategory || "")
+            + "&region=" + encodeURIComponent((typeof selectedRegion !== "undefined" ? selectedRegion : "") || "")
+            + "&lat=" + encodeURIComponent(btn.dataset.lat)
+            + "&lng=" + encodeURIComponent(btn.dataset.lng)
+            + "&rating=" + encodeURIComponent(btn.dataset.rating || 0);
+
+        fetch(ctxPath + "/placebookmark/toggle.do", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+            body: body
+        })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+            if (data.needLogin) { alert("\ub85c\uadf8\uc778\uc774 \ud544\uc694\ud569\ub2c8\ub2e4."); return; }
+            if (data.success) {
+                btn.classList.toggle("liked");
+                btn.textContent = data.bookmarked ? "\u2605" : "\u2606";
+            } else {
+                alert("\ucc9c \ucc98\ub9ac\uc5d0 \uc2e4\ud328\ud588\uc2b5\ub2c8\ub2e4.");
+            }
+        })
+        .catch(function () { alert("\uc694\uccad \uc911 \uc624\ub958\uac00 \ubc1c\uc0dd\ud588\uc2b5\ub2c8\ub2e4."); });
     }
 
     function initMap() {

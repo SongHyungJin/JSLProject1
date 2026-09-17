@@ -115,15 +115,14 @@
 
                         <script>
                             /*
-                             * [1단계] 실제 구글맵 표시.
-                             * 아래 recommendSpots 는 임시 샘플 좌표이며,
-                             * [2단계]에서 추천 알고리즘(RouteController)의 결과로 교체됩니다.
+                             * [2단계] 추천 알고리즘(RouteController /bestroute.do) 결과를 지도에 표시.
+                             * courseJson 이 없으면(페이지 직접 열람 등) 빈 배열.
                              */
-                            var recommendSpots = [
-                                { name: "장소 1", lat: 37.5796, lng: 126.9770 },
-                                { name: "장소 2", lat: 37.5636, lng: 126.9976 },
-                                { name: "장소 3", lat: 37.5384, lng: 126.9654 }
-                            ];
+<%
+    Object _cj = request.getAttribute("courseJson");
+    String courseJson = (_cj != null) ? _cj.toString() : "[]";
+%>
+                            var recommendSpots = <%= courseJson %>;
 
                             function initRecommendMap() {
                                 var el = document.getElementById("map");
@@ -131,6 +130,14 @@
                                     mapTypeControl: false,
                                     streetViewControl: false
                                 });
+
+                                // 추천 코스가 없으면 기본 위치만 표시
+                                if (!recommendSpots || recommendSpots.length === 0) {
+                                    map.setCenter({ lat: 35.0116, lng: 135.7681 });
+                                    map.setZoom(12);
+                                    return;
+                                }
+
                                 var bounds = new google.maps.LatLngBounds();
                                 var path = [];
                                 var info = new google.maps.InfoWindow();
