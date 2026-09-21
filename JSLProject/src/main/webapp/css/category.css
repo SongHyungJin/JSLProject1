@@ -1,11 +1,26 @@
 /* =========================
-   기본 화면
+   기본 설정
 ========================= */
 
+* {
+    box-sizing: border-box;
+}
+
+html,
 body {
     margin: 0;
-    padding: 40px;
-    font-family: Arial, sans-serif;
+    padding: 0;
+}
+
+body {
+    font-family:
+        Arial,
+        "Noto Sans KR",
+        "Noto Sans JP",
+        sans-serif;
+
+    color: #2f2f35;
+    background: #fff;
 }
 
 
@@ -14,116 +29,717 @@ body {
 ========================= */
 
 .main-content {
-    max-width: 1200px;
-    margin: 0 auto;
+    --season-main: #ef6682;
+    --season-soft: rgba(255, 233, 239, 0.92);
+    --season-border: rgba(247, 197, 209, 0.95);
+    --season-shadow: rgba(70, 50, 55, 0.18);
+
+    position: relative;
+
+    max-width: none;
+    width: 100%;
+
+    min-height: calc(100vh - 100px);
+
+    margin: 0;
+
+    padding: 65px max(32px, calc((100% - 1180px) / 2)) 90px;
+
+    overflow: hidden;
+
+    isolation: isolate;
+
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    transition: background-image 0.5s ease;
 }
 
 
 /* =========================
-   카테고리 제목 영역
+   배경 가독성 오버레이
+========================= */
+
+.main-content::before {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    z-index: 0;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.12) 0%,
+            rgba(255, 255, 255, 0.05) 38%,
+            rgba(255, 255, 255, 0.02) 100%
+        );
+
+    pointer-events: none;
+}
+
+
+/* =========================
+   봄
+========================= */
+
+.main-content.season-spring {
+    --season-main: #ed6387;
+    --season-soft: rgba(255, 231, 239, 0.94);
+    --season-border: rgba(244, 166, 187, 0.90);
+    --season-shadow: rgba(161, 77, 101, 0.20);
+
+    background-image:
+        url("../images/category-season/category-spring.png");
+}
+
+
+/* =========================
+   여름
+========================= */
+
+.main-content.season-summer {
+    --season-main: #3d9c65;
+    --season-soft: rgba(228, 248, 234, 0.94);
+    --season-border: rgba(137, 202, 157, 0.92);
+    --season-shadow: rgba(44, 111, 68, 0.20);
+
+    background-image:
+        url("../images/category-season/category-summer.png");
+}
+
+
+/* =========================
+   가을
+========================= */
+
+.main-content.season-autumn {
+    --season-main: #dc7135;
+    --season-soft: rgba(255, 235, 218, 0.94);
+    --season-border: rgba(231, 154, 105, 0.92);
+    --season-shadow: rgba(132, 72, 37, 0.22);
+
+    background-image:
+        url("../images/category-season/category-autumn.png");
+}
+
+
+/* =========================
+   겨울
+========================= */
+
+.main-content.season-winter {
+    --season-main: #568fc9;
+    --season-soft: rgba(229, 242, 255, 0.95);
+    --season-border: rgba(151, 193, 230, 0.92);
+    --season-shadow: rgba(51, 91, 130, 0.20);
+
+    background-image:
+        url("../images/category-season/category-winter.png");
+}
+
+
+/* =========================
+   제목 영역
 ========================= */
 
 .category-header {
-    margin-bottom: 30px;
-    padding: 35px 40px;
-    background: #f7f7f7;
-    border-radius: 16px;
+    position: relative;
+    z-index: 3;
+
+    max-width: 760px;
+
+    margin: 0 auto 40px;
+
+    padding: 25px 35px 28px;
+
+    text-align: center;
+
+    background: rgba(255, 255, 255, 0.78);
+
+    border: 1px solid rgba(255, 255, 255, 0.90);
+
+    border-radius: 24px;
+
+    box-shadow:
+        0 10px 32px
+        rgba(0, 0, 0, 0.09);
+
+    backdrop-filter: blur(7px);
+    -webkit-backdrop-filter: blur(7px);
 }
+
+
+.category-eyebrow {
+    margin-bottom: 8px;
+
+    color: var(--season-main);
+
+    font-size: 17px;
+    font-weight: 700;
+
+    letter-spacing: 1px;
+
+    font-style: italic;
+}
+
 
 .category-header h1 {
-    margin: 0 0 10px 0;
-    font-size: 32px;
+    position: relative;
+
+    display: inline-block;
+
+    margin: 0 0 16px;
+
+    color: #29292f;
+
+    font-size: 42px;
+    font-weight: 800;
+
+    line-height: 1.25;
 }
+
+
+.category-header h1::after {
+    content: "";
+
+    position: absolute;
+
+    left: 15%;
+    bottom: -9px;
+
+    width: 70%;
+    height: 4px;
+
+    border-radius: 999px;
+
+    background: var(--season-main);
+
+    opacity: 0.80;
+}
+
 
 .category-description {
-    margin: 0;
-    color: #666;
-    font-size: 16px;
+    margin: 10px 0 0;
+
+    color: #5e5e65;
+
+    font-size: 17px;
+
+    line-height: 1.7;
 }
 
+
+/* =========================
+   카테고리 컨테이너
+========================= */
+
+.category-container {
+    position: relative;
+    z-index: 3;
+
+    max-width: 1180px;
+
+    margin: 0 auto;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 24px;
+}
 
 
 /* =========================
    카테고리 카드
 ========================= */
 
-.category-container {
-    display: grid;
-
-    /* PC에서는 3열 */
-    grid-template-columns: repeat(3, 1fr);
-
-    gap: 20px;
-}
-
 .category-card {
-    display: block;
-    padding: 30px 20px;
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    text-align: center;
-    transition: 0.3s;
+    position: relative;
 
-    /* a 태그 기본 스타일 제거 */
+    min-height: 230px;
+
+    padding: 30px 28px 26px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+
+    text-align: center;
+
     text-decoration: none;
+
     color: inherit;
+
+    background:
+        rgba(255, 255, 255, 0.76);
+
+    border:
+        1.5px solid
+        rgba(255, 255, 255, 0.92);
+
+    border-radius: 24px;
+
+    box-shadow:
+        0 12px 32px
+        var(--season-shadow);
+
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease,
+        border-color 0.3s ease,
+        background 0.3s ease;
 }
+
 
 .category-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-}
+    transform: translateY(-7px);
 
-.category-icon {
-    margin-bottom: 15px;
-    font-size: 42px;
-}
+    background:
+        rgba(255, 255, 255, 0.54);
 
-.category-name {
-    font-size: 24px;
-    font-weight: bold;
-}
+    border-color:
+        var(--season-border);
 
-.category-card-description {
-    margin-top: 8px;
-    color: #888;
-    font-size: 14px;
+    box-shadow:
+        0 20px 45px
+        var(--season-shadow);
 }
 
 
 /* =========================
-   태블릿 반응형
+   카드 장식
+========================= */
+
+.card-decoration {
+    position: absolute;
+
+    width: 135px;
+    height: 135px;
+
+    top: -55px;
+    left: -50px;
+
+    border-radius: 50%;
+
+    background:
+        var(--season-soft);
+
+    opacity: 0.70;
+
+    pointer-events: none;
+}
+
+
+.category-card::after {
+    content: "";
+
+    position: absolute;
+
+    width: 100px;
+    height: 100px;
+
+    right: -35px;
+    bottom: -40px;
+
+    border-radius: 50%;
+
+    background:
+        var(--season-soft);
+
+    opacity: 0.55;
+
+    pointer-events: none;
+}
+
+
+/* =========================
+   아이콘
+========================= */
+
+.category-icon {
+    position: relative;
+    z-index: 2;
+
+    width: 72px;
+    height: 72px;
+
+    margin-bottom: 14px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        var(--season-soft);
+
+    font-size: 37px;
+
+    box-shadow:
+        0 7px 18px
+        var(--season-shadow);
+
+    transition:
+        transform 0.3s ease;
+}
+
+
+.category-card:hover .category-icon {
+    transform:
+        scale(1.08)
+        rotate(-3deg);
+}
+
+
+/* =========================
+   카테고리 이름
+========================= */
+
+.category-name {
+    position: relative;
+    z-index: 2;
+
+    margin-bottom: 7px;
+
+    color: #29292f;
+
+    font-size: 24px;
+    font-weight: 800;
+}
+
+
+/* =========================
+   설명
+========================= */
+
+.category-card-description {
+    position: relative;
+    z-index: 2;
+
+    color: #6f6f77;
+
+    font-size: 15px;
+
+    line-height: 1.6;
+}
+
+
+/* =========================
+   둘러보기
+========================= */
+
+.category-more {
+    position: relative;
+    z-index: 2;
+
+    min-width: 140px;
+
+    margin-top: 17px;
+
+    padding: 9px 18px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
+    color:
+        var(--season-main);
+
+    background:
+        rgba(255, 255, 255, 0.72);
+
+    border:
+        1.5px solid
+        var(--season-main);
+
+    border-radius: 999px;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    transition:
+        color 0.25s ease,
+        background 0.25s ease,
+        transform 0.25s ease;
+}
+
+
+.category-card:hover .category-more {
+    color: #fff;
+
+    background:
+        var(--season-main);
+}
+
+
+.category-arrow {
+    transition:
+        transform 0.25s ease;
+}
+
+
+.category-card:hover .category-arrow {
+    transform:
+        translateX(4px);
+}
+
+
+/* =========================
+   계절 파티클 영역
+========================= */
+
+.season-decoration {
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 2;
+
+    overflow: hidden;
+
+    pointer-events: none;
+}
+
+
+.season-particle {
+    position: absolute;
+
+    display: block;
+
+    opacity: 0.65;
+
+    animation:
+        seasonalFloat
+        12s
+        linear
+        infinite;
+}
+
+
+/* =========================
+   봄 - 벚꽃잎
+========================= */
+
+.season-spring .season-particle {
+    width: 15px;
+    height: 10px;
+
+    background: #f5a3bb;
+
+    border-radius:
+        80% 20%
+        70% 30%;
+
+    box-shadow:
+        0 2px 4px
+        rgba(156, 75, 99, 0.15);
+}
+
+
+/* =========================
+   여름 - 초록잎
+========================= */
+
+.season-summer .season-particle {
+    width: 16px;
+    height: 9px;
+
+    background: #64b978;
+
+    border-radius:
+        100% 0
+        100% 0;
+
+    box-shadow:
+        0 2px 4px
+        rgba(39, 103, 58, 0.16);
+}
+
+
+/* =========================
+   가을 - 단풍잎 느낌
+========================= */
+
+.season-autumn .season-particle {
+    width: 15px;
+    height: 15px;
+
+    background: #e36f32;
+
+    border-radius:
+        70% 20%
+        70% 20%;
+
+    box-shadow:
+        0 2px 5px
+        rgba(118, 55, 26, 0.18);
+}
+
+
+/* =========================
+   겨울 - 눈
+========================= */
+
+.season-winter .season-particle {
+    width: 9px;
+    height: 9px;
+
+    background: #ffffff;
+
+    border-radius: 50%;
+
+    box-shadow:
+        0 0 8px
+        rgba(255, 255, 255, 0.85);
+}
+
+
+/* =========================
+   파티클 움직임
+========================= */
+
+@keyframes seasonalFloat {
+
+    0% {
+        transform:
+            translate3d(-30px, -40px, 0)
+            rotate(0deg);
+    }
+
+    50% {
+        transform:
+            translate3d(35px, 50px, 0)
+            rotate(180deg);
+    }
+
+    100% {
+        transform:
+            translate3d(-10px, 130px, 0)
+            rotate(360deg);
+    }
+
+}
+
+
+/* =========================
+   태블릿
 ========================= */
 
 @media (max-width: 900px) {
 
-    .category-container {
-        /* 태블릿에서는 2열 */
-        grid-template-columns: repeat(2, 1fr);
+    .main-content {
+        padding:
+            50px
+            24px
+            75px;
+
+        background-position:
+            center center;
     }
+
+    .category-header {
+        max-width: 680px;
+    }
+
+    .category-header h1 {
+        font-size: 36px;
+    }
+
+    .category-container {
+        gap: 18px;
+    }
+
+    .category-card {
+        min-height: 220px;
+
+        padding:
+            27px
+            22px;
+    }
+
 }
 
 
 /* =========================
-   모바일 반응형
+   모바일
 ========================= */
 
 @media (max-width: 600px) {
 
-    body {
-        padding: 20px;
+    .main-content {
+        padding:
+            38px
+            17px
+            60px;
+
+        background-position:
+            center top;
     }
 
     .category-header {
-        padding: 25px 20px;
+        margin-bottom: 26px;
+
+        padding:
+            22px
+            18px
+            25px;
+
+        border-radius: 20px;
+    }
+
+    .category-eyebrow {
+        font-size: 14px;
     }
 
     .category-header h1 {
-        font-size: 26px;
+        font-size: 30px;
+    }
+
+    .category-description {
+        font-size: 15px;
     }
 
     .category-container {
-        /* 모바일에서는 1열 */
-        grid-template-columns: 1fr;
+        grid-template-columns:
+            1fr;
     }
+
+    .category-card {
+        min-height: 210px;
+
+        padding:
+            26px
+            20px;
+
+        border-radius: 20px;
+    }
+
+    .category-icon {
+        width: 65px;
+        height: 65px;
+
+        font-size: 33px;
+    }
+
+    .category-name {
+        font-size: 22px;
+    }
+
 }

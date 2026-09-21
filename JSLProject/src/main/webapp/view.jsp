@@ -630,7 +630,7 @@ if (is != null) {
 				<div class="back-section">
 
 					<a
-						href="${pageContext.request.contextPath}/place/list.do?lang=<%= lang %>"
+						href="${pageContext.request.contextPath}/places/placesAllList.do?lang=<%= lang %>"
 						class="back-btn"> ← <%=messages.getProperty("view.back.list", "목록으로")%>
 
 					</a>

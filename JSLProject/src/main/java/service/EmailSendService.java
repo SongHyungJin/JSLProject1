@@ -42,6 +42,5 @@ public class EmailSendService implements Command {
         	response.getWriter().write("signup.msg.email.send.fail");
         }
        
-//        System.out.println("인증번호: " + code);
     }
 }

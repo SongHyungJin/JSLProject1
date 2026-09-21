@@ -18,8 +18,8 @@ public class PlacesDAO {
 		PreparedStatement pstmt = null;
 
 		String sql = "INSERT INTO places (" + "id, name, category, region, latitude, longitude, "
-				+ "description, business_hours, image_url, reservable" + ") VALUES ("
-				+ "PLACES_SEQ.NEXTVAL, ?, ?, ?, ?, ?, ?, ?, ?, ?" + ")";
+				+ "description, business_hours, image_url, reservable, rating" + ") VALUES ("
+				+ "PLACES_SEQ.NEXTVAL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?" + ")";
 		int result = 0;
 
 		try {
@@ -34,6 +34,7 @@ public class PlacesDAO {
 			pstmt.setString(7, dto.getBusiness_hours());
 			pstmt.setString(8, dto.getImage_url());
 			pstmt.setInt(9, dto.isReservable() ? 1 : 0);
+			pstmt.setDouble(10, dto.getRating());
 
 			result = pstmt.executeUpdate();
 

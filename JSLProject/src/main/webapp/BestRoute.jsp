@@ -5,6 +5,7 @@
 <%@ page import="java.io.InputStream"%>
 <%@ page import="java.io.InputStreamReader"%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%
     String lang = request.getParameter("lang");
 
@@ -85,6 +86,40 @@
             </div>
 
 
+            <!-- 지역 선택: 선택한 한 지역 안에서만 추천 (지역 혼합 방지) -->
+            <div class="recommend-region" style="margin:14px 0 6px; text-align:center;">
+                <label style="font-weight:600; margin-right:8px;">지역</label>
+                <select id="bestRegion" onchange="changeBestRegion(this.value)"
+                        style="padding:8px 14px; border:1px solid #ccd2e0; border-radius:8px; font-size:14px;">
+                    <option value="seoul">한국 - 서울</option>
+                    <option value="busan">한국 - 부산</option>
+                    <option value="tokyo">일본 - 도쿄</option>
+                    <option value="osaka">일본 - 오사카</option>
+                    <option value="kyoto">일본 - 교토</option>
+                    <option value="newyork">미국 - 뉴욕</option>
+                    <option value="sanfrancisco">미국 - 샌프란시스코</option>
+                    <option value="la">미국 - LA</option>
+                </select>
+            </div>
+
+            <script>
+                (function () {
+                    var cur = "${param.region}";
+                    if (cur) {
+                        var el = document.getElementById("bestRegion");
+                        if (el) { el.value = cur; }
+                    }
+                })();
+                function changeBestRegion(region) {
+                    var theme = "${param.theme}";
+                    var lang = "<%= lang %>";
+                    var url = "<%= request.getContextPath() %>/route/bestroute.do?region=" + encodeURIComponent(region);
+                    if (theme) { url += "&theme=" + encodeURIComponent(theme); }
+                    if (lang)  { url += "&lang=" + encodeURIComponent(lang); }
+                    location.href = url;
+                }
+            </script>
+
             <div class="recommend-layout">
 
 
@@ -94,7 +129,7 @@
                     <div class="map-area">
 
 
-                        <!-- 실제 구글맵 (기존 목업 지도를 대체) -->
+                        <!-- 구글맵 -->
                         <div id="map"
                              style="position:absolute; inset:0; z-index:1; border-radius:18px;"></div>
 
@@ -115,7 +150,7 @@
 
                         <script>
                             /*
-                             * [2단계] 추천 알고리즘(RouteController /bestroute.do) 결과를 지도에 표시.
+                             * 추천 알고리즘(RouteController /bestroute.do) 결과를 지도에 표시.
                              * courseJson 이 없으면(페이지 직접 열람 등) 빈 배열.
                              */
 <%
@@ -185,214 +220,72 @@
                 <div class="recommend-route-list">
 
 
-                    <!-- 1번 -->
-                    <div class="recommend-item">
+                    <c:choose>
+                        <c:when test="${empty course}">
+                            <p style="padding:20px; color:#868e96;">
+                                추천할 점포가 없습니다. (DB의 places 데이터가 필요합니다)
+                            </p>
+                        </c:when>
+                        <c:otherwise>
+                            <c:forEach var="p" items="${course}" varStatus="st">
+                                <div class="recommend-item">
 
-                        <div class="route-number">
-                            1
-                        </div>
+                                    <div class="route-number">${st.count}</div>
+                                    <div class="route-vertical-line"></div>
 
-                        <div class="route-vertical-line"></div>
+                                    <div class="recommend-card">
+                                        <div class="recommend-card-top">
+                                            <div class="recommend-info">
+                                                <span class="recommend-step">
+                                                    <c:choose>
+                                                        <c:when test="${st.first}">출발</c:when>
+                                                        <c:when test="${st.last}">도착</c:when>
+                                                        <c:otherwise>경유</c:otherwise>
+                                                    </c:choose>
+                                                </span>
+                                                <h2>${p.name}</h2>
+                                                <p>
+                                                    <c:choose>
+                                                        <c:when test="${not empty p.description}">${p.description}</c:when>
+                                                        <c:otherwise>${p.category} · ${p.region}</c:otherwise>
+                                                    </c:choose>
+                                                    <c:if test="${p.rating > 0}"> · ★ ${p.rating}</c:if>
+                                                </p>
+                                            </div>
+                                            <div class="recommend-photo">
+                                                <c:choose>
+                                                    <c:when test="${not empty p.image_url}">
+                                                        <img src="${p.image_url}" alt="${p.name}"
+                                                             style="width:100%;height:100%;object-fit:cover;border-radius:12px;">
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <c:choose>
+                                                            <c:when test="${p.category eq 'restaurant'}">🍜</c:when>
+                                                            <c:when test="${p.category eq 'cafe'}">☕</c:when>
+                                                            <c:when test="${p.category eq 'shop'}">🛍️</c:when>
+                                                            <c:when test="${p.category eq 'attraction'}">🏛️</c:when>
+                                                            <c:otherwise>📍</c:otherwise>
+                                                        </c:choose>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </div>
+                                        </div>
 
-                        <div class="recommend-card">
-
-                            <div class="recommend-card-top">
-
-                                <div class="recommend-info">
-
-                                    <span class="recommend-step">
-                                        <%= messages.getProperty(
-                                            "bestroute.step.start",
-                                            "출발"
-                                        ) %>
-                                    </span>
-
-                                    <h2>
-                                        <%= messages.getProperty(
-                                            "bestroute.place1.name",
-                                            "교토 라멘집"
-                                        ) %>
-                                    </h2>
-
-                                    <p>
-                                        <%= messages.getProperty(
-                                            "bestroute.place1.description",
-                                            "진한 돈코츠 육수로 유명한 라멘 맛집"
-                                        ) %>
-                                    </p>
-
-                                </div>
-
-                                <div class="recommend-photo">
-                                    🍜
-                                </div>
-
-                            </div>
-
-
-                            <div class="move-box">
-
-                                <div class="move-icon">
-                                    🚶
-                                </div>
-
-                                <div class="move-info">
-
-                                    <strong>
-                                        <%= messages.getProperty(
-                                            "bestroute.move1",
-                                            "도보 12분"
-                                        ) %>
-                                    </strong>
-
-                                    <span>
-                                        <%= messages.getProperty(
-                                            "bestroute.next",
-                                            "다음 장소"
-                                        ) %>
-                                        ·
-                                        <%= messages.getProperty(
-                                            "bestroute.place2.name",
-                                            "도쿄 스시야"
-                                        ) %>
-                                    </span>
+                                        <c:if test="${not st.last}">
+                                            <div class="move-box">
+                                                <div class="move-icon">🚶</div>
+                                                <div class="move-info">
+                                                    <strong>${moves[st.index]}</strong>
+                                                    <span>다음 · ${course[st.index + 1].name}</span>
+                                                </div>
+                                            </div>
+                                        </c:if>
+                                    </div>
 
                                 </div>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- 2번 -->
-                    <div class="recommend-item">
-
-                        <div class="route-number">
-                            2
-                        </div>
-
-                        <div class="route-vertical-line"></div>
-
-                        <div class="recommend-card">
-
-                            <div class="recommend-card-top">
-
-                                <div class="recommend-info">
-
-                                    <span class="recommend-step">
-                                        <%= messages.getProperty(
-                                            "bestroute.step.second",
-                                            "두 번째"
-                                        ) %>
-                                    </span>
-
-                                    <h2>
-                                        <%= messages.getProperty(
-                                            "bestroute.place2.name",
-                                            "도쿄 스시야"
-                                        ) %>
-                                    </h2>
-
-                                    <p>
-                                        <%= messages.getProperty(
-                                            "bestroute.place2.description",
-                                            "신선한 초밥을 맛볼 수 있는 곳"
-                                        ) %>
-                                    </p>
-
-                                </div>
-
-                                <div class="recommend-photo">
-                                    🍣
-                                </div>
-
-                            </div>
-
-
-                            <div class="move-box">
-
-                                <div class="move-icon">
-                                    🚌
-                                </div>
-
-                                <div class="move-info">
-
-                                    <strong>
-                                        <%= messages.getProperty(
-                                            "bestroute.move2",
-                                            "버스 25분"
-                                        ) %>
-                                    </strong>
-
-                                    <span>
-                                        <%= messages.getProperty(
-                                            "bestroute.next",
-                                            "다음 장소"
-                                        ) %>
-                                        ·
-                                        <%= messages.getProperty(
-                                            "bestroute.place3.name",
-                                            "서울 카페"
-                                        ) %>
-                                    </span>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- 3번 -->
-                    <div class="recommend-item">
-
-                        <div class="route-number">
-                            3
-                        </div>
-
-                        <div class="recommend-card">
-
-                            <div class="recommend-card-top">
-
-                                <div class="recommend-info">
-
-                                    <span class="recommend-step">
-                                        <%= messages.getProperty(
-                                            "bestroute.step.arrival",
-                                            "도착"
-                                        ) %>
-                                    </span>
-
-                                    <h2>
-                                        <%= messages.getProperty(
-                                            "bestroute.place3.name",
-                                            "서울 카페"
-                                        ) %>
-                                    </h2>
-
-                                    <p>
-                                        <%= messages.getProperty(
-                                            "bestroute.place3.description",
-                                            "분위기 좋은 감성 카페"
-                                        ) %>
-                                    </p>
-
-                                </div>
-
-                                <div class="recommend-photo">
-                                    ☕
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
+                            </c:forEach>
+                        </c:otherwise>
+                    </c:choose>
 
                     <!-- 전체 루트 요약 -->
                     <div class="recommend-summary">

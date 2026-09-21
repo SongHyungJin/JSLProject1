@@ -236,7 +236,7 @@ if (is != null) {
 
 								<a
 									href="${pageContext.request.contextPath}/places/placesDetail.do?id=${bookmark.placesId}&lang=<%= lang %>"
-									class="favorite-card">
+									class="favorite-card" style="position:relative;">
 
 									<div class="favorite-image">
 
@@ -267,6 +267,7 @@ if (is != null) {
 
 									</div>
 
+								<button type="button" class="favorite-delete" data-pid="${bookmark.placesId}" onclick="deleteBookmark(event, this)" title="찜 삭제" style="position:absolute; top:8px; right:8px; z-index:3; border:none; background:rgba(0,0,0,0.55); color:#fff; border-radius:50%; width:26px; height:26px; cursor:pointer; font-size:15px; line-height:24px; padding:0;">&times;</button>
 								</a>
 
 							</c:forEach>
@@ -746,6 +747,28 @@ $('#passwordSaveBtn').on('click', function() {
  
 	</script>
 	
+<script>
+function deleteBookmark(event, btn) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (!confirm("찜을 삭제할까요?")) return;
+    var pid = btn.getAttribute("data-pid");
+    fetch("${pageContext.request.contextPath}/bookmark/toggle.do?action=delete&placeId=" + encodeURIComponent(pid), { method: "POST" })
+        .then(function (r) { return r.text(); })
+        .then(function (t) {
+            t = (t || "").trim();
+            if (t === "delete") {
+                var card = btn.closest(".favorite-card");
+                if (card && card.parentNode) card.parentNode.removeChild(card);
+            } else if (t === "login") {
+                alert("로그인이 필요합니다.");
+            } else {
+                alert("삭제에 실패했습니다.");
+            }
+        })
+        .catch(function () { alert("요청 중 오류가 발생했습니다."); });
+}
+</script>
 </body>
 
 

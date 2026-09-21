@@ -4,77 +4,59 @@
 
 body {
     margin: 0;
-
     font-family: Arial, sans-serif;
-
-    color: #222;
-
+    color: #302b2c;
     background:
         linear-gradient(
             135deg,
-            #f8fafc 0%,
-            #eef6f4 50%,
-            #f6f3ff 100%
+            #fffaf7 0%,
+            #fff7f3 50%,
+            #fff4f7 100%
         );
-
     min-height: 100vh;
 }
-
 
 /* ========================= */
 /* Header */
 /* ========================= */
 
 .header {
-    background: rgba(255, 255, 255, 0.96);
-
-    border-bottom: 1px solid #eeeeee;
+    background: rgba(255, 253, 251, 0.96);
+    border-bottom: 1px solid #f1e3df;
 }
 
 .header-inner {
     max-width: 1200px;
-
     margin: 0 auto;
-
     padding: 18px 24px;
-
     display: flex;
-
     align-items: center;
-
     justify-content: space-between;
-
     box-sizing: border-box;
 }
 
 .logo {
     margin: 0;
-
     font-size: 24px;
     font-weight: 700;
 }
 
 .logo a {
-    color: #222;
-
+    color: #302b2c;
     text-decoration: none;
 }
 
 .back-home {
-    color: #555;
-
+    color: #766d69;
     font-size: 14px;
     font-weight: 600;
-
     text-decoration: none;
-
     transition: 0.2s;
 }
 
 .back-home:hover {
-    color: #ff6b6b;
+    color: #f29bb1;
 }
-
 
 /* ========================= */
 /* 로그인 영역 */
@@ -82,18 +64,12 @@ body {
 
 .login-main {
     min-height: calc(100vh - 170px);
-
     padding: 65px 20px;
-
     display: flex;
-
     align-items: center;
-
     justify-content: center;
-
     box-sizing: border-box;
 }
-
 
 /* ========================= */
 /* 로그인 카드 */
@@ -101,23 +77,15 @@ body {
 
 .login-card {
     width: 100%;
-
     max-width: 430px;
-
     padding: 42px 40px;
-
-    background: rgba(255, 255, 255, 0.97);
-
-    border: 1px solid #e5e5e5;
-
+    background: rgba(255, 253, 251, 0.97);
+    border: 1px solid #f0e2dd;
     border-radius: 20px;
-
     box-shadow:
-        0 15px 40px rgba(0, 0, 0, 0.08);
-
+        0 15px 40px rgba(108, 78, 68, 0.08);
     box-sizing: border-box;
 }
-
 
 /* ========================= */
 /* 제목 */
@@ -125,30 +93,23 @@ body {
 
 .login-header {
     margin-bottom: 30px;
-
     text-align: center;
 }
 
 .login-header h1 {
     margin: 0 0 12px;
-
+    color: #302b2c;
     font-size: 30px;
 }
 
 .login-header p {
     margin: 0;
-
-    color: #777;
-
+    color: #8c817c;
     font-size: 14px;
-
     line-height: 1.6;
-
     word-break: keep-all;
-
     overflow-wrap: break-word;
 }
-
 
 /* ========================= */
 /* Form */
@@ -156,57 +117,44 @@ body {
 
 .login-form {
     display: flex;
-
     flex-direction: column;
-
     gap: 20px;
 }
 
 .form-group {
     display: flex;
-
     flex-direction: column;
-
     gap: 8px;
 }
 
 .form-group label {
+    color: #3a3435;
     font-size: 14px;
-
     font-weight: 600;
 }
 
 .form-group input {
     width: 100%;
-
     padding: 14px 15px;
-
-    border: 1px solid #ccc;
-
+    border: 1px solid #eadfda;
     border-radius: 10px;
-
-    background: #fff;
-
+    background: #fffdfb;
+    color: #302b2c;
     font-size: 15px;
-
     outline: none;
-
     box-sizing: border-box;
-
     transition: 0.2s;
 }
 
 .form-group input:hover {
-    border-color: #aaa;
+    border-color: #f2c8d2;
 }
 
 .form-group input:focus {
-    border-color: #333;
-
+    border-color: #f6afc1;
     box-shadow:
-        0 0 0 3px rgba(0, 0, 0, 0.05);
+        0 0 0 3px rgba(246, 175, 193, 0.12);
 }
-
 
 /* ========================= */
 /* 아이디 저장 */
@@ -216,25 +164,21 @@ body {
     display: flex;
     align-items: center;
     gap: 7px;
-
     margin-top: -6px;
 }
 
 .remember-row input[type="checkbox"] {
     width: 15px;
     height: 15px;
-
     cursor: pointer;
+    accent-color: #f6afc1;
 }
 
 .remember-row label {
-    color: #666;
-
+    color: #766d69;
     font-size: 13px;
-
     cursor: pointer;
 }
-
 
 /* ========================= */
 /* 로그인 버튼 */
@@ -242,32 +186,21 @@ body {
 
 .login-submit {
     margin-top: 5px;
-
     padding: 15px;
-
     border: none;
-
     border-radius: 10px;
-
-    background: #222;
-
+    background: #f6afc1;
     color: #ffffff;
-
     font-size: 16px;
-
     font-weight: 600;
-
     cursor: pointer;
-
     transition: 0.2s;
 }
 
 .login-submit:hover {
-    background: #444;
-
+    background: #f29bb1;
     transform: translateY(-1px);
 }
-
 
 /* ========================= */
 /* 이메일 / 비밀번호 찾기 */
@@ -275,36 +208,27 @@ body {
 
 .find-guide {
     margin-top: 20px;
-
     display: flex;
-
     align-items: center;
-
     justify-content: center;
-
     gap: 10px;
-
     font-size: 13px;
 }
 
 .find-guide a {
-    color: #666;
-
+    color: #766d69;
     text-decoration: none;
-
     transition: 0.2s;
 }
 
 .find-guide a:hover {
-    color: #222;
-
+    color: #f29bb1;
     text-decoration: underline;
 }
 
 .find-guide .divider {
-    color: #ccc;
+    color: #d6c8c2;
 }
-
 
 /* ========================= */
 /* 회원가입 안내 */
@@ -312,25 +236,17 @@ body {
 
 .signup-guide {
     margin-top: 25px;
-
     padding-top: 22px;
-
-    border-top: 1px solid #eeeeee;
-
-    color: #666;
-
+    border-top: 1px solid #f1e3df;
+    color: #766d69;
     font-size: 14px;
-
     text-align: center;
 }
 
 .signup-guide a {
     margin-left: 5px;
-
-    color: #222;
-
+    color: #f29bb1;
     font-weight: 600;
-
     text-decoration: none;
 }
 
@@ -338,55 +254,39 @@ body {
     text-decoration: underline;
 }
 
-
 /* ========================= */
 /* 언어 선택 */
 /* ========================= */
 
 .language-box {
     margin-top: 25px;
-
     padding-top: 20px;
-
-    border-top: 1px solid #eeeeee;
-
+    border-top: 1px solid #f1e3df;
     display: flex;
-
     justify-content: center;
-
     gap: 8px;
 }
 
 .language-box a {
     padding: 7px 10px;
-
     border-radius: 7px;
-
-    color: #777;
-
+    color: #8c817c;
     font-size: 12px;
-
     font-weight: 600;
-
     text-decoration: none;
-
     transition: 0.2s;
-
     white-space: nowrap;
 }
 
 .language-box a:hover {
-    background: #f3f4f6;
-
-    color: #222;
+    background: #fff6f3;
+    color: #3a3435;
 }
 
 .language-box a.active {
-    background: #222;
-
+    background: #f6afc1;
     color: #ffffff;
 }
-
 
 /* ========================= */
 /* Footer */
@@ -394,22 +294,16 @@ body {
 
 .footer {
     padding: 25px 20px;
-
-    background: rgba(255, 255, 255, 0.9);
-
-    border-top: 1px solid #e5e5e5;
-
+    background: rgba(255, 253, 251, 0.90);
+    border-top: 1px solid #f1e3df;
     text-align: center;
 }
 
 .footer p {
     margin: 0;
-
-    color: #888;
-
+    color: #8c817c;
     font-size: 13px;
 }
-
 
 /* ========================= */
 /* 모바일 */
@@ -435,11 +329,11 @@ body {
 
     .find-guide {
         gap: 7px;
-
         font-size: 12px;
     }
 
     .language-box {
         flex-wrap: wrap;
     }
+
 }

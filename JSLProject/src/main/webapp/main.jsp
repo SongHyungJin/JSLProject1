@@ -58,6 +58,33 @@
 
     }
 
+    /* =========================================
+       메인 카드 계절 자동 선택
+       봄 3~5 / 여름 6~8 / 가을 9~11 / 겨울 12~2
+       heroSeason 파라미터가 있으면 테스트 계절 우선
+    ========================================= */
+    java.util.Calendar cal = java.util.Calendar.getInstance();
+    int currentMonth = cal.get(java.util.Calendar.MONTH) + 1;
+    String season;
+
+    if (currentMonth >= 3 && currentMonth <= 5) {
+        season = "spring";
+    } else if (currentMonth >= 6 && currentMonth <= 8) {
+        season = "summer";
+    } else if (currentMonth >= 9 && currentMonth <= 11) {
+        season = "autumn";
+    } else {
+        season = "winter";
+    }
+
+    String testSeason = request.getParameter("heroSeason");
+    if ("spring".equals(testSeason)
+            || "summer".equals(testSeason)
+            || "autumn".equals(testSeason)
+            || "winter".equals(testSeason)) {
+        season = testSeason;
+    }
+
 %>
 
 <!DOCTYPE html>
@@ -90,13 +117,60 @@
 
     rel="stylesheet"
 
-    href="<%= request.getContextPath() %>/css/main.css?v=52">
+    href="<%= request.getContextPath() %>/css/main.css?v=53">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+    rel="stylesheet"
+    href="<%= request.getContextPath() %>/css/hero-animation.css">
+
+<link rel="preconnect" href="https\://fonts.googleapis.com">
+
+<link rel="preconnect" href="https\://fonts.gstatic.com" crossorigin>
+
 <link
-    href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Gowun+Dodum&display=swap"
+
+    href="https\://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Gowun+Dodum&display=swap"
+
     rel="stylesheet">
+
+
+    <!-- 메인 하단 계절 배경 : Hero는 기존 디자인 유지 -->
+    <style>
+        /* 봄 - 기존 핑크 톤 유지 */
+        <% if ("spring".equals(season)) { %>
+        body { background: #fffaf9; }
+        .language-section {
+            background: linear-gradient(180deg, rgba(255,250,249,0) 0%, #fffaf9 42%) !important;
+        }
+        <% } else if ("summer".equals(season)) { %>
+        body {
+            background: linear-gradient(180deg, #f8fbf5 0%, #edf6e9 55%, #f7faf4 100%);
+        }
+        .language-section {
+            background: linear-gradient(180deg, rgba(248,251,245,0) 0%, #f3f8f0 42%, #edf6e9 100%) !important;
+        }
+        <% } else if ("autumn".equals(season)) { %>
+        body {
+            background: linear-gradient(180deg, #fffaf3 0%, #fbe9d6 55%, #fff6eb 100%);
+        }
+        .language-section {
+            background: linear-gradient(180deg, rgba(255,250,243,0) 0%, #fff6eb 42%, #fbe9d6 100%) !important;
+        }
+        <% } else { %>
+        body {
+            background: linear-gradient(180deg, #f8fbfd 0%, #e5f1f8 55%, #f3f8fb 100%);
+        }
+        .language-section {
+            background: linear-gradient(180deg, rgba(248,251,253,0) 0%, #f1f7fb 42%, #e5f1f8 100%) !important;
+        }
+        <% } %>
+
+        /* 카드 자체는 기존 흰색 디자인 유지 */
+        .category-section,
+        .route-section {
+            background: transparent;
+        }
+    </style>
 
 </head>
 
@@ -104,7 +178,15 @@
 
 
 
-<body>
+
+
+
+
+<body class="main-season-<%= season %>">
+
+
+
+
 
 
 
@@ -116,9 +198,17 @@
 
      기존 header.jsp 절대 변경하지 않음
 
-====================================================== -->
+\====================================================== -->
 
 <%@ include file="header.jsp"%>
+
+
+
+
+
+
+
+
 
 
 
@@ -134,11 +224,15 @@
 
 
 
+
+
+
+
     <!-- =====================================================
 
          HERO
 
-    ====================================================== -->
+    \====================================================== -->
 
     <section class="hero">
 
@@ -152,11 +246,15 @@
 
 
 
+
+
+
+
             <!-- ============================================
 
                  머리카락 흔들림용 SVG FILTER
 
-            ============================================= -->
+            \============================================= -->
 
             <svg
 
@@ -216,6 +314,10 @@
 
 
 
+
+
+
+
                     <feDisplacementMap
 
                         in="SourceGraphic"
@@ -240,13 +342,23 @@
 
 
 
+
+
+
+
+
+
+
+
             <!-- ============================================
 
                  움직이는 비행기
 
-            ============================================= -->
+            \============================================= -->
 
             <div class="plane-only"></div>
+
+
 
 
 
@@ -254,9 +366,11 @@
 
                  V9 왼쪽 벚꽃 전경 레이어
 
-            \============================================= -->
+            \\============================================= -->
 
             <div class="branch-left"></div>
+
+
 
 
 
@@ -264,9 +378,17 @@
 
                  V9 오른쪽 전경 레이어
 
-            \============================================= -->
+            \\============================================= -->
 
             <div class="foreground-right"></div>
+
+
+
+
+
+
+
+
 
 
 
@@ -280,7 +402,7 @@
 
                  머리카락 애니메이션
 
-            ============================================= -->
+            \============================================= -->
 
             <div class="hair-group">
 
@@ -310,11 +432,19 @@
 
 
 
+
+
+
+
+
+
+
+
             <!-- ============================================
 
                  벚꽃
 
-            ============================================= -->
+            \============================================= -->
 
             <div
 
@@ -332,41 +462,71 @@
 
 
 
+
+
+
+
+
+
+
+
             <!-- ============================================
 
                  HERO TEXT
 
                  기존 다국어 기능 유지
 
-            ============================================= -->
+            \============================================= -->
 
             <div class="hero-content">
 
                 <h1 class="hero-title">
 
                     <span class="hero-title-line1">
+
                         <%= messages.getProperty(
+
                             "main.hero.title.line1",
+
                             "en".equals(lang)
+
                                 ? "Choose where you want to go"
+
                                 : "ja".equals(lang)
+
                                     ? "\u884C\u304D\u305F\u3044\u5834\u6240\u3092\u9078\u3093\u3067"
+
                                     : "가고 싶은 곳을 골라"
+
                         ) %>
+
                     </span>
 
                     <span class="hero-title-line2">
+
                         <%= messages.getProperty(
+
                             "main.hero.title.line2",
+
                             "en".equals(lang)
+
                                 ? "Create your own journey"
+
                                 : "ja".equals(lang)
+
                                     ? "\u81EA\u5206\u3060\u3051\u306E\u65C5\u3092\u4F5C\u3063\u3066\u307F\u307E\u3057\u3087\u3046"
+
                                     : "나만의 여행을 만들어보세요"
+
                         ) %>
+
                     </span>
 
                 </h1>
+
+
+
+
 
 
 
@@ -392,13 +552,21 @@
 
 
 
+
+
+
+
+
+
+
+
                 <!-- ========================================
 
                      검색
 
                      기존 /places/placesSearch.do 유지
 
-                ========================================= -->
+                \========================================= -->
 
                 <form
 
@@ -407,6 +575,10 @@
                     action="<%= request.getContextPath() %>/places/placesSearch.do"
 
                     method="get">
+
+
+
+
 
 
 
@@ -424,6 +596,10 @@
 
 
 
+
+
+
+
                     <span
 
                         class="search-icon"
@@ -433,6 +609,10 @@
                         ⌕
 
                     </span>
+
+
+
+
 
 
 
@@ -456,6 +636,10 @@
 
 
 
+
+
+
+
                     <button type="submit">
 
                         <%= messages.getProperty(
@@ -472,7 +656,19 @@
 
 
 
+
+
+
+
                 </form>
+
+
+
+
+
+
+
+
 
 
 
@@ -486,74 +682,127 @@
 
                      인기 검색어
 
-                ========================================= -->
+                \========================================= -->
 
                 <div class="popular-search">
 
                     <span class="popular-title">
+
                         <%= messages.getProperty(
+
                             "main.popular.title",
+
                             lang.equals("ja") ? "人気の検索ワード" :
+
                             lang.equals("en") ? "Popular Searches" :
+
                             "인기 검색어"
+
                         ) %>
+
                     </span>
 
                     <a href="<%= request.getContextPath() %>/places/placesSearch.do?keyword=도쿄&lang=<%= lang %>">
-                        #<%= messages.getProperty(
+
+                        \#<%= messages.getProperty(
+
                             "main.popular.tokyo",
+
                             lang.equals("ja") ? "東京" :
+
                             lang.equals("en") ? "Tokyo" :
+
                             "도쿄"
+
                         ) %>
+
                     </a>
 
                     <a href="<%= request.getContextPath() %>/places/placesSearch.do?keyword=오사카&lang=<%= lang %>">
-                        #<%= messages.getProperty(
+
+                        \#<%= messages.getProperty(
+
                             "main.popular.osaka",
+
                             lang.equals("ja") ? "大阪" :
+
                             lang.equals("en") ? "Osaka" :
+
                             "오사카"
+
                         ) %>
+
                     </a>
 
                     <a href="<%= request.getContextPath() %>/places/placesSearch.do?keyword=후쿠오카&lang=<%= lang %>">
-                        #<%= messages.getProperty(
+
+                        \#<%= messages.getProperty(
+
                             "main.popular.fukuoka",
+
                             lang.equals("ja") ? "福岡" :
+
                             lang.equals("en") ? "Fukuoka" :
+
                             "후쿠오카"
+
                         ) %>
+
                     </a>
 
                     <a href="<%= request.getContextPath() %>/places/placesSearch.do?keyword=맛집&lang=<%= lang %>">
-                        #<%= messages.getProperty(
+
+                        \#<%= messages.getProperty(
+
                             "main.popular.food",
+
                             lang.equals("ja") ? "グルメ" :
+
                             lang.equals("en") ? "Food" :
+
                             "맛집"
+
                         ) %>
+
                     </a>
 
                     <a href="<%= request.getContextPath() %>/places/placesSearch.do?keyword=카페&lang=<%= lang %>">
-                        #<%= messages.getProperty(
+
+                        \#<%= messages.getProperty(
+
                             "main.popular.cafe",
+
                             lang.equals("ja") ? "カフェ" :
+
                             lang.equals("en") ? "Cafe" :
+
                             "카페"
+
                         ) %>
+
                     </a>
 
                     <a href="<%= request.getContextPath() %>/places/placesSearch.do?keyword=온천&lang=<%= lang %>">
-                        #<%= messages.getProperty(
+
+                        \#<%= messages.getProperty(
+
                             "main.popular.onsen",
+
                             lang.equals("ja") ? "温泉" :
+
                             lang.equals("en") ? "Hot Springs" :
+
                             "온천"
+
                         ) %>
+
                     </a>
 
                 </div>
+
+
+
+
 
 
 
@@ -569,17 +818,29 @@
 
 
 
+
+
+
+
+
+
+
+
             <!-- ============================================
 
                  SCROLL
 
-            ============================================= -->
+            \============================================= -->
 
             <a
 
                 href="#categorySection"
 
                 class="scroll-guide">
+
+
+
+
 
 
 
@@ -603,7 +864,15 @@
 
 
 
+
+
+
+
             </a>
+
+
+
+
 
 
 
@@ -621,17 +890,29 @@
 
 
 
+
+
+
+
+
+
+
+
     <!-- =====================================================
 
          언어 선택
 
          ★ 기존 기능 그대로 유지
 
-    ====================================================== -->
+    \====================================================== -->
 
     <section class="language-section">
 
         <div class="language-box">
+
+
+
+
 
 
 
@@ -651,6 +932,10 @@
 
 
 
+
+
+
+
             <a
 
                 href="<%= request.getContextPath() %>/main.do?lang=en"
@@ -660,6 +945,10 @@
                 English
 
             </a>
+
+
+
+
 
 
 
@@ -679,9 +968,21 @@
 
 
 
+
+
+
+
         </div>
 
     </section>
+
+
+
+
+
+
+
+
 
 
 
@@ -695,7 +996,7 @@
 
          카테고리
 
-    ====================================================== -->
+    \====================================================== -->
 
     <section
 
@@ -707,13 +1008,25 @@
 
 
 
+
+
+
+
         <div class="section-title">
 
 
 
 
 
+
+
+
+
             <div class="section-heading">
+
+
+
+
 
 
 
@@ -735,6 +1048,10 @@
 
 
 
+
+
+
+
                 <p>
 
                     <%= messages.getProperty(
@@ -751,7 +1068,19 @@
 
 
 
+
+
+
+
             </div>
+
+
+
+
+
+
+
+
 
 
 
@@ -763,7 +1092,7 @@
 
             <a
 
-                href="<%= request.getContextPath() %>/places/placesAllList.do?lang=<%= lang %>">
+                href="<%= request.getContextPath() %>/places/category.do?lang=<%= lang %>">
 
                 <%= messages.getProperty(
 
@@ -779,6 +1108,10 @@
 
 
 
+
+
+
+
         </div>
 
 
@@ -789,7 +1122,19 @@
 
 
 
+
+
+
+
+
+
+
+
         <div class="category-grid">
+
+
+
+
 
 
 
@@ -807,7 +1152,12 @@
 
 
 
-                <div class="category-visual">
+
+
+
+
+                <div class="category-visual"
+                     style="background-image: url('<%= request.getContextPath() %>/images/main-season/restaurant-<%= season %>.png'); background-size: cover; background-position: center; background-repeat: no-repeat;">
 
                     <div class="category-icon">
 
@@ -821,7 +1171,15 @@
 
 
 
+
+
+
+
                 <div class="category-content">
+
+
+
+
 
 
 
@@ -843,6 +1201,10 @@
 
 
 
+
+
+
+
                     <p>
 
                         <%= messages.getProperty(
@@ -859,11 +1221,19 @@
 
 
 
+
+
+
+
                     <span class="card-arrow">
 
                         →
 
                     </span>
+
+
+
+
 
 
 
@@ -875,7 +1245,19 @@
 
 
 
+
+
+
+
             </a>
+
+
+
+
+
+
+
+
 
 
 
@@ -897,7 +1279,12 @@
 
 
 
-                <div class="category-visual">
+
+
+
+
+                <div class="category-visual"
+                     style="background-image: url('<%= request.getContextPath() %>/images/main-season/shop-<%= season %>.png'); background-size: cover; background-position: center; background-repeat: no-repeat;">
 
                     <div class="category-icon">
 
@@ -911,7 +1298,15 @@
 
 
 
+
+
+
+
                 <div class="category-content">
+
+
+
+
 
 
 
@@ -933,6 +1328,10 @@
 
 
 
+
+
+
+
                     <p>
 
                         <%= messages.getProperty(
@@ -949,11 +1348,19 @@
 
 
 
+
+
+
+
                     <span class="card-arrow">
 
                         →
 
                     </span>
+
+
+
+
 
 
 
@@ -965,7 +1372,19 @@
 
 
 
+
+
+
+
             </a>
+
+
+
+
+
+
+
+
 
 
 
@@ -987,7 +1406,12 @@
 
 
 
-                <div class="category-visual">
+
+
+
+
+                <div class="category-visual"
+                     style="background-image: url('<%= request.getContextPath() %>/images/main-season/cafe-<%= season %>.png'); background-size: cover; background-position: center; background-repeat: no-repeat;">
 
                     <div class="category-icon">
 
@@ -1001,7 +1425,15 @@
 
 
 
+
+
+
+
                 <div class="category-content">
+
+
+
+
 
 
 
@@ -1023,6 +1455,10 @@
 
 
 
+
+
+
+
                     <p>
 
                         <%= messages.getProperty(
@@ -1039,11 +1475,19 @@
 
 
 
+
+
+
+
                     <span class="card-arrow">
 
                         →
 
                     </span>
+
+
+
+
 
 
 
@@ -1055,7 +1499,15 @@
 
 
 
+
+
+
+
             </a>
+
+
+
+
 
 
 
@@ -1073,15 +1525,27 @@
 
 
 
+
+
+
+
+
+
+
+
     <!-- =====================================================
 
          추천 여행 루트
 
          기존 기능 그대로
 
-    ====================================================== -->
+    \====================================================== -->
 
     <section class="main-section route-section">
+
+
+
+
 
 
 
@@ -1093,7 +1557,15 @@
 
 
 
+
+
+
+
             <div class="section-heading">
+
+
+
+
 
 
 
@@ -1112,9 +1584,16 @@
                 </h2>
 
                 <span class="route-style-label" aria-hidden="true">
+
                     Best Route
+
                     <span class="route-style-plane">✈</span>
+
                 </span>
+
+
+
+
 
 
 
@@ -1136,7 +1615,19 @@
 
 
 
+
+
+
+
             </div>
+
+
+
+
+
+
+
+
 
 
 
@@ -1166,7 +1657,19 @@
 
 
 
+
+
+
+
         </div>
+
+
+
+
+
+
+
+
 
 
 
@@ -1182,11 +1685,15 @@
 
 
 
+
+
+
+
             <!-- 도시 여행 -->
 
             <a
 
-                href="<%= request.getContextPath() %>/route/bestroute.do?lang=<%= lang %>"
+                href="<%= request.getContextPath() %>/route/bestroute.do?lang=<%= lang %>&theme=city"
 
                 class="route-card">
 
@@ -1194,7 +1701,12 @@
 
 
 
-                <div class="route-photo city-photo">
+
+
+
+
+                <div class="route-photo city-photo"
+                     style="background-image: url('<%= request.getContextPath() %>/images/main-season/city-<%= season %>.png');">
 
                     <span class="route-badge">
 
@@ -1214,7 +1726,15 @@
 
 
 
+
+
+
+
                 <div class="route-content">
+
+
+
+
 
 
 
@@ -1231,6 +1751,10 @@
                         ) %>
 
                     </h3>
+
+
+
+
 
 
 
@@ -1252,6 +1776,10 @@
 
 
 
+
+
+
+
                     <span class="card-arrow">
 
                         →
@@ -1262,7 +1790,15 @@
 
 
 
+
+
+
+
                 </div>
+
+
+
+
 
 
 
@@ -1278,11 +1814,19 @@
 
 
 
+
+
+
+
+
+
+
+
             <!-- 카페 여행 -->
 
             <a
 
-                href="<%= request.getContextPath() %>/route/bestroute.do?lang=<%= lang %>"
+                href="<%= request.getContextPath() %>/route/bestroute.do?lang=<%= lang %>&theme=cafe"
 
                 class="route-card">
 
@@ -1290,7 +1834,12 @@
 
 
 
-                <div class="route-photo cafe-photo">
+
+
+
+
+                <div class="route-photo cafe-photo"
+                     style="background-image: url('<%= request.getContextPath() %>/images/main-season/cafe-<%= season %>.png');">
 
                     <span class="route-badge">
 
@@ -1310,7 +1859,15 @@
 
 
 
+
+
+
+
                 <div class="route-content">
+
+
+
+
 
 
 
@@ -1327,6 +1884,10 @@
                         ) %>
 
                     </h3>
+
+
+
+
 
 
 
@@ -1348,6 +1909,10 @@
 
 
 
+
+
+
+
                     <span class="card-arrow">
 
                         →
@@ -1358,7 +1923,15 @@
 
 
 
+
+
+
+
                 </div>
+
+
+
+
 
 
 
@@ -1374,11 +1947,19 @@
 
 
 
+
+
+
+
+
+
+
+
             <!-- 자연 여행 -->
 
             <a
 
-                href="<%= request.getContextPath() %>/route/bestroute.do?lang=<%= lang %>"
+                href="<%= request.getContextPath() %>/route/bestroute.do?lang=<%= lang %>&theme=nature"
 
                 class="route-card">
 
@@ -1386,7 +1967,12 @@
 
 
 
-                <div class="route-photo nature-photo">
+
+
+
+
+                <div class="route-photo nature-photo"
+                     style="background-image: url('<%= request.getContextPath() %>/images/main-season/nature-<%= season %>.pn.png');">
 
                     <span class="route-badge">
 
@@ -1406,7 +1992,15 @@
 
 
 
+
+
+
+
                 <div class="route-content">
+
+
+
+
 
 
 
@@ -1428,6 +2022,10 @@
 
 
 
+
+
+
+
                     <p>
 
                         <%= messages.getProperty(
@@ -1444,11 +2042,19 @@
 
 
 
+
+
+
+
                     <span class="card-arrow">
 
                         →
 
                     </span>
+
+
+
+
 
 
 
@@ -1460,7 +2066,15 @@
 
 
 
+
+
+
+
             </a>
+
+
+
+
 
 
 
@@ -1469,6 +2083,10 @@
         </div>
 
     </section>
+
+
+
+
 
 
 
@@ -1484,11 +2102,19 @@
 
 
 
+
+
+
+
+
+
+
+
 <!-- =====================================================
 
      FOOTER
 
-====================================================== -->
+\====================================================== -->
 
 <%@ include file="footer.jsp"%>
 
@@ -1500,11 +2126,21 @@
 
 
 
+
+
+
+
+
+
+
+
 <script
 
-    src="<%= request.getContextPath() %>/js/hero-animation.js?v=50">
+    src="<%= request.getContextPath() %>/js/hero-animation.js?v=52">
 
 </script>
+
+
 
 
 

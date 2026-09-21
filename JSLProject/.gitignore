@@ -1,1 +1,12 @@
+# 빌드 산출물
 /build/
+target/
+*.class
+
+# 이클립스
+.settings/
+.classpath
+.project
+
+# 로컬 설정/비밀
+*.env

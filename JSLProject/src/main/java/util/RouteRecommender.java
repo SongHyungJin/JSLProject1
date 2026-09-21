@@ -10,7 +10,7 @@ import java.util.List;
 import model.PlacesDTO;
 
 /**
- * 코스(루트) 추천 알고리즘 - 방법 A(우리 DB 기반). (FR-102)
+ * 코스(루트) 추천 알고리즘 (우리 DB 기반). (FR-102)
  *
  *  (A) 선정: 카테고리 다양성(라운드로빈) + 카테고리 내 평점 내림차순으로 상위 N개
  *  (B) 정렬: 최근접 이웃 + 2-opt 로 동선(방문 순서) 최적화 — 거리는 기존 util.DistanceUtil 재사용
@@ -24,7 +24,23 @@ public class RouteRecommender {
         if (candidates == null || candidates.isEmpty()) {
             return new ArrayList<>();
         }
-        return orderRoute(selectTopN(candidates, limit));
+        return orderRoute(selectTopN(dedup(candidates), limit)); // 중복 점포 제거 후 선정
+    }
+
+    /**
+     * 같은 장소 중복 제거. (시드 데이터 + 구글 찜으로 같은 점포가 두 번 들어간 경우 등)
+     * 키: 이름(공백/대소문자 무시). 같은 이름이면 하나만 남긴다.
+     */
+    static List<PlacesDTO> dedup(List<PlacesDTO> places) {
+        List<PlacesDTO> result = new ArrayList<>();
+        java.util.Set<String> seen = new java.util.HashSet<>();
+        for (PlacesDTO p : places) {
+            String key = (p.getName() == null) ? "" : p.getName().trim().toLowerCase();
+            if (seen.add(key)) {
+                result.add(p);
+            }
+        }
+        return result;
     }
 
     // ===== (A) 선정: 다양성 + 평점 =====
@@ -58,7 +74,7 @@ public class RouteRecommender {
 
     // ===== (B) 정렬: 최근접 이웃 + 2-opt =====
     public static List<PlacesDTO> orderRoute(List<PlacesDTO> places) {
-        return twoOpt(nearestNeighbor(places));
+        return twoOpt(nearestNeighbor(dedup(places))); // 중복 제거 후 동선 정렬
     }
 
     static List<PlacesDTO> nearestNeighbor(List<PlacesDTO> places) {
@@ -126,6 +142,35 @@ public class RouteRecommender {
         return DistanceUtil.calculateDistance(
                 a.getLatitude(), a.getLongitude(),
                 b.getLatitude(), b.getLongitude());
+    }
+
+    /**
+     * 코스의 구간별 이동 정보(거리 + 추정 시간) 문자열 목록. 크기 = 코스 수 - 1.
+     * 예: "약 1.2km · 도보 18분". 실제 도로 시간이 아니라 직선거리 기반 추정치.
+     *  - 1.5km 이하: 도보(4km/h), 그 이상: 차로(도심 30km/h)
+     */
+    public static List<String> moveInfoList(List<PlacesDTO> course) {
+        List<String> moves = new ArrayList<>();
+        if (course == null) return moves;
+        for (int i = 0; i < course.size() - 1; i++) {
+            moves.add(formatMove(dist(course.get(i), course.get(i + 1))));
+        }
+        return moves;
+    }
+
+    private static String formatMove(double km) {
+        String d = String.format("약 %.1fkm", km);
+        String mode;
+        int min;
+        if (km <= 1.5) {
+            mode = "도보";
+            min = (int) Math.round(km / 4.0 * 60.0);
+        } else {
+            mode = "차로";
+            min = (int) Math.round(km / 30.0 * 60.0);
+        }
+        if (min < 1) min = 1;
+        return d + " · " + mode + " 약 " + min + "분";
     }
 
     // ===== 지도 표시용 JSON =====

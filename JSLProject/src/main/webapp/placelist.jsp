@@ -468,7 +468,7 @@ if (input != null) {
         });
     }
 
-    // Places 결과 1건 → 목록 카드 (기존 .result-item 클래스 재사용 → CSS 그대로 적용)
+    // Places 결과 1건 → 목록 카드
     function buildResultCard(place, map, openInfo) {
         var item = document.createElement("div");
         item.className = "result-item";

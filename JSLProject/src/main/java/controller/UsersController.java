@@ -19,6 +19,8 @@ import service.ProfileViewService;
 import service.ReservationListService;
 import service.SignupService;
 import service.WithdrawService;
+import service.FindEmailService;
+import service.FindPasswordService;
 
 @WebServlet("/users/*")
 public class UsersController extends HttpServlet {
@@ -98,11 +100,18 @@ public class UsersController extends HttpServlet {
 		case "/passwordupdate.do": //비밀번호 수정
 			new PasswordUpdateService().doCommand(request, response);
 			break;
-		case "/findemail.do"://이메일 찾기 
-			
+		case "/findemail.do"://이메일 찾기 (화면)
+			page = "/findEmail.jsp";
 			break;
-		case "/findpassword.do"://비밀번호 찾기
+		case "/findpassword.do"://비밀번호 찾기 (화면)
+			page = "/findPassword.jsp";
 			break;
+		case "/findemailpro.do"://이메일 찾기 처리 (AJAX)
+			new FindEmailService().doCommand(request, response);
+			return;
+		case "/findpasswordpro.do"://비밀번호 찾기/재설정 처리 (AJAX)
+			new FindPasswordService().doCommand(request, response);
+			return;
 			
 		case "/withdraw.do":
 		    System.out.println("=== withdraw.do 진입 ===");

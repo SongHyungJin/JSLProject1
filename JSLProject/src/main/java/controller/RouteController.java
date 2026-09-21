@@ -54,25 +54,40 @@ public class RouteController extends HttpServlet {
 						util.RouteRecommender.orderRoute(bookmarked);
 
 				request.setAttribute("course", myCourse);                          // 목록용
+				request.setAttribute("moves", util.RouteRecommender.moveInfoList(myCourse)); // 구간 이동정보
 				request.setAttribute("courseJson", util.RouteRecommender.toJson(myCourse)); // 지도용
 				page = "/MyRoute.jsp";
 				break;
 		}
 
-		case "/bestroute.do": { // 추천 코스 화면 (방법 A: 우리 DB 후보 + 추천 알고리즘)
+		case "/bestroute.do": { // 추천 코스 화면 (우리 DB 후보 + 추천 알고리즘)
 				String region = request.getParameter("region");
+				String theme = request.getParameter("theme"); // city / cafe / nature
+
+				// 지역 미지정 시 기본 지역(서울). 여러 지역이 섞이지 않도록 항상 단일 지역으로.
+				if (region == null || region.trim().isEmpty()) {
+					region = "seoul";
+				}
+
+				// 테마 → 대상 카테고리 (도시=섞임 / 카페=cafe / 자연=attraction)
+				String themeCategory = null;
+				if ("cafe".equals(theme)) {
+					themeCategory = "cafe";
+				} else if ("nature".equals(theme)) {
+					themeCategory = "attraction";
+				}
 
 				model.PlacesDAO placesDAO = new model.PlacesDAO();
-				// 지역의 전체 카테고리를 후보로 (섞인 코스). 지역 값이 없거나 결과가 없으면 전체에서.
-				java.util.List<model.PlacesDTO> candidates = placesDAO.searchPlaces(region, null);
-				if (candidates == null || candidates.isEmpty()) {
-					candidates = placesDAO.PlacesSelectAll();
-				}
+				// 지정된 "한 지역" 안에서만 후보를 뽑는다 (국가/도시를 넘나들지 않음)
+				java.util.List<model.PlacesDTO> candidates = placesDAO.searchPlaces(region, themeCategory);
 
 				java.util.List<model.PlacesDTO> course =
 						util.RouteRecommender.recommend(candidates, 6);
 
+				request.setAttribute("theme", theme);
+				request.setAttribute("region", region);
 				request.setAttribute("course", course);                          // 목록용
+				request.setAttribute("moves", util.RouteRecommender.moveInfoList(course)); // 구간 이동정보
 				request.setAttribute("courseJson", util.RouteRecommender.toJson(course)); // 지도용
 				page = "/BestRoute.jsp";
 				break;
