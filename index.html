@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TripLink 旅行ルート推薦プロジェクト発表</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+    body {
+        font-family: 'Noto Sans KR', sans-serif;
+        margin: 0;
+        padding: 24px 0;
+        background: #eef2f3;
+    }
+    .slide-container {
+        width: 1280px;
+        height: 720px;
+        position: relative;
+        background-color: white;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        margin: 0 auto 32px;
+        border-radius: 22px;
+        box-shadow: 0 18px 40px -18px rgba(15,118,110,0.30);
+    }
+    .bg-pattern {
+        background-image: radial-gradient(#99f6e4 1px, transparent 1px);
+        background-size: 24px 24px;
+    }
+    .card-shadow { box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03); }
+    .tech-icon-bg {
+        background-color: #eff6ff; display: flex; align-items: center; justify-content: center;
+        border-radius: 50%; width: 48px; height: 48px;
+    }
+    .table-header { background-color: #eff6ff; border-bottom: 2px solid #bfdbfe; }
+    .table-row { border-bottom: 1px solid #f1f5f9; transition: background-color 0.2s; }
+    .table-row:hover { background-color: #f8fafc; }
+    .table-row:last-child { border-bottom: none; }
+    .badge { display: inline-flex; align-items: center; padding: 0.125rem 0.5rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; }
+    .flow-card {
+        background: white; border-radius: 12px;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+        border: 1px solid #e2e8f0; position: relative; transition: all 0.3s ease; z-index: 10;
+    }
+    .flow-card:hover { transform: translateY(-2px); border-color: #3b82f6; }
+    .layer-label { writing-mode: vertical-rl; text-orientation: mixed; transform: rotate(180deg); }
+    .server-container { background-image: repeating-linear-gradient(45deg, #f8fafc 0, #f8fafc 10px, #f1f5f9 10px, #f1f5f9 20px); }
+    .process-step { position: relative; padding-left: 24px; margin-bottom: 20px; }
+    .process-step::before { content: ''; position: absolute; left: 0; top: 0; bottom: -20px; width: 2px; background-color: #e2e8f0; }
+    .process-step:last-child::before { display: none; }
+    .step-indicator { position: absolute; left: -9px; top: 0; width: 20px; height: 20px; border-radius: 50%; border: 4px solid white; z-index: 10; }
+    .code-box { font-family: 'Consolas','Monaco',monospace; background-color: #1e293b; color: #e2e8f0; padding: 8px 12px; border-radius: 6px; font-size: 11px; margin-top: 8px; border-left: 3px solid #3b82f6; }
+    .keyword-chip { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; margin-right: 4px; margin-bottom: 4px; }
+    .video-wrapper { position: relative; width: 800px; height: 450px; background-color: #0f172a; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); border: 4px solid #1e293b; }
+    .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+    .erd-table { border: 1px solid #cbd5e1; border-radius: 8px; overflow: hidden; background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.06); }
+    .erd-title { background: #1d4ed8; color: white; font-weight: 700; font-size: 12px; padding: 5px 10px; }
+    .erd-row { font-size: 11px; padding: 3px 10px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; }
+    .erd-row:last-child { border-bottom: none; }
+    .erd-pk { color: #b45309; font-weight: 700; }
+    .erd-fk { color: #2563eb; font-weight: 700; }
+
+    .wordmark { font-family: 'Poppins', sans-serif; letter-spacing: -0.02em; }
+    .brand-grad { background: linear-gradient(135deg, #0d9488 0%, #0f766e 55%, #155e75 100%); }
+    .brand-grad-soft { background: linear-gradient(135deg, #f0fdfa 0%, #ecfeff 100%); }
+    .accent-bar { background: linear-gradient(90deg, #0d9488, #14b8a6, #22d3ee); }
+    .glass { background: rgba(255,255,255,0.12); backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,0.20); }
+    .route-dash { stroke: #5eead4; stroke-width: 3; stroke-dasharray: 2 10; stroke-linecap: round; fill: none; opacity: 0.9; }
+    .sec-kicker { display:inline-flex; align-items:center; gap:6px; }
+    .sec-kicker::before { content:''; width:22px; height:3px; border-radius:2px; background:#14b8a6; display:inline-block; }
+
+    .page-indicator { position:absolute; bottom:18px; right:22px; z-index:30; font-size:12px; font-weight:700; color:#0f766e; background:rgba(255,255,255,0.75); padding:4px 11px; border-radius:999px; letter-spacing:0.06em; }
+    .slide-container.brand-grad .page-indicator { color:#fff; background:rgba(255,255,255,0.18); }
+    .reveal { opacity:0; transform:translateY(26px); transition:opacity .6s ease, transform .6s ease; }
+    .reveal.in { opacity:1; transform:none; }
+    #scrollbar { position:fixed; top:0; left:0; height:4px; width:0; z-index:100; background:linear-gradient(90deg,#0d9488,#22d3ee); transition:width .1s linear; }
+</style>
+</head>
+<body>
+
+<!-- ============================= SLIDE 1 : TITLE ============================= -->
+<div class="slide-container brand-grad text-white">
+    <div class="absolute inset-0 bg-pattern opacity-20 z-0"></div>
+    <div class="absolute -top-32 -right-24 w-96 h-96 bg-cyan-300 rounded-full opacity-20 blur-2xl z-0"></div>
+    <div class="absolute -bottom-40 -left-24 w-96 h-96 bg-teal-300 rounded-full opacity-20 blur-2xl z-0"></div>
+    <svg class="absolute top-0 right-0 w-2/3 h-full z-0" viewBox="0 0 800 720" preserveAspectRatio="none">
+        <path class="route-dash" d="M60,600 C250,520 200,300 420,300 S650,180 760,90"/>
+        <circle cx="60" cy="600" r="8" fill="#5eead4"/><circle cx="420" cy="300" r="8" fill="#a7f3d0"/><circle cx="760" cy="90" r="9" fill="#fde68a"/>
+    </svg>
+    <div class="absolute top-12 right-14 z-10"><p class="text-teal-100 font-medium tracking-widest text-sm uppercase opacity-80">Java Web Developer Portfolio</p></div>
+    <div class="flex-1 flex flex-col justify-center px-24 z-10 relative">
+        <div class="mb-6"><span class="inline-flex items-center gap-2 py-2 px-4 rounded-full glass text-white text-sm font-bold tracking-wider uppercase"><i class="fa-solid fa-route"></i> Team Project Presentation</span></div>
+        <div class="mb-10">
+            <div class="flex items-end gap-4 mb-3">
+                <span class="w-16 h-16 rounded-2xl bg-white/15 flex items-center justify-center text-3xl shrink-0"><i class="fa-solid fa-map-location-dot text-white"></i></span>
+                <h1 class="wordmark text-8xl font-extrabold leading-none">TripLink</h1>
+            </div>
+            <h2 class="text-2xl font-light text-teal-50 pl-1"><span class="font-medium">旅行ルート推薦</span> · 統合Webサービス</h2>
+        </div>
+        <div class="grid grid-cols-12 gap-5 w-full max-w-5xl">
+            <div class="col-span-4 glass rounded-2xl p-5">
+                <p class="text-xs text-teal-100 font-bold uppercase tracking-wider mb-1 opacity-80"><i class="fa-solid fa-user mr-1"></i> リーダー / Lead</p>
+                <p class="text-2xl font-bold">ソンヒョンジン</p>
+            </div>
+            <div class="col-span-4 glass rounded-2xl p-5">
+                <p class="text-xs text-teal-100 font-bold uppercase tracking-wider mb-1 opacity-80"><i class="fa-solid fa-users mr-1"></i> メンバー / Members</p>
+                <p class="text-base font-bold leading-snug">キムミンジュ / イジウォン / パクテイン</p>
+            </div>
+            <div class="col-span-4 glass rounded-2xl p-5">
+                <p class="text-xs text-teal-100 font-bold uppercase tracking-wider mb-1 opacity-80"><i class="fa-solid fa-calendar-check mr-1"></i> 開発期間 / Period</p>
+                <p class="text-2xl font-bold">14日間 <span class="text-sm font-normal text-teal-100 ml-1">(14 Days)</span></p>
+            </div>
+            <div class="col-span-12 mt-1"><div class="flex flex-wrap gap-2.5">
+                <span class="px-4 py-2 rounded-full glass text-white font-bold text-sm"><i class="fa-brands fa-java mr-2"></i>Servlet / JSP</span>
+                <span class="px-4 py-2 rounded-full glass text-white font-bold text-sm"><i class="fa-solid fa-database mr-2"></i>Oracle DB</span>
+                <span class="px-4 py-2 rounded-full glass text-white font-bold text-sm"><i class="fa-solid fa-sitemap mr-2"></i>MVC (Command)</span>
+                <span class="px-4 py-2 rounded-full glass text-white font-bold text-sm"><i class="fa-solid fa-map-location-dot mr-2"></i>Google Maps</span>
+            </div></div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================= SLIDE 2 : AGENDA ============================= -->
+<div class="slide-container bg-white text-slate-800">
+    <div class="px-12 pt-12 pb-6 flex justify-between items-end border-b border-slate-100 relative z-10 bg-white">
+        <div>
+            <span class="text-teal-600 font-bold tracking-wider uppercase text-sm mb-1 block">Overview</span>
+            <h1 class="text-4xl font-black text-slate-900">目次 <span class="text-2xl font-light text-slate-400 ml-2">Agenda</span></h1>
+        </div>
+        <div class="text-slate-400 text-sm font-medium">TripLink プロジェクト発表</div>
+    </div>
+    <div class="absolute bottom-0 right-0 w-64 h-64 bg-slate-50 rounded-tl-full z-0"></div>
+    <div class="flex-1 px-12 py-8 z-10 relative overflow-hidden flex flex-col justify-center">
+        <div class="grid grid-cols-2 gap-x-20 gap-y-4 h-full content-center">
+            <div class="space-y-3">
+                <!-- 01~06 -->
+                <div class="flex items-center p-3 bg-white rounded-lg shadow-sm border-l-4 border-teal-700"><div class="w-10 h-10 rounded-full bg-teal-50 flex items-center justify-center text-teal-700 font-bold text-lg mr-4 shrink-0">01</div><div><h3 class="text-lg font-bold text-slate-800">プロジェクト概要</h3><p class="text-xs text-slate-500 font-medium">Project Overview (プロジェクト概要)</p></div></div>
+                <div class="flex items-center p-3 bg-white rounded-lg shadow-sm border-l-4 border-teal-600"><div class="w-10 h-10 rounded-full bg-teal-50 flex items-center justify-center text-teal-600 font-bold text-lg mr-4 shrink-0">02</div><div><h3 class="text-lg font-bold text-slate-800">技術スタック</h3><p class="text-xs text-slate-500 font-medium">Tech Stack (技術スタック)</p></div></div>
+                <div class="flex items-center p-3 bg-white rounded-lg shadow-sm border-l-4 border-teal-500"><div class="w-10 h-10 rounded-full bg-teal-50 flex items-center justify-center text-teal-500 font-bold text-lg mr-4 shrink-0">03</div><div><h3 class="text-lg font-bold text-slate-800">要件定義</h3><p class="text-xs text-slate-500 font-medium">Requirements (要件定義)</p></div></div>
+                <div class="flex items-center p-3 bg-white rounded-lg shadow-sm border-l-4 border-teal-400"><div class="w-10 h-10 rounded-full bg-teal-50 flex items-center justify-center text-teal-500 font-bold text-lg mr-4 shrink-0">04</div><div><h3 class="text-lg font-bold text-slate-800">システムアーキテクチャ</h3><p class="text-xs text-slate-500 font-medium">Architecture (MVC / Command)</p></div></div>
+                <div class="flex items-center p-3 bg-white rounded-lg shadow-sm border-l-4 border-teal-300"><div class="w-10 h-10 rounded-full bg-teal-50 flex items-center justify-center text-teal-400 font-bold text-lg mr-4 shrink-0">05</div><div><h3 class="text-lg font-bold text-slate-800">データベース設計</h3><p class="text-xs text-slate-500 font-medium">Database Design (ER図)</p></div></div>
+                <div class="flex items-center p-3 bg-white rounded-lg shadow-sm border-l-4 border-teal-200"><div class="w-10 h-10 rounded-full bg-teal-50 flex items-center justify-center text-teal-400 font-bold text-lg mr-4 shrink-0">06</div><div><h3 class="text-lg font-bold text-slate-800">主要機能1: おすすめルート</h3><p class="text-xs text-slate-500 font-medium">Core Feature 1 (ルート推薦)</p></div></div>
+            </div>
+            <div class="space-y-3">
+                <!-- 07~12 -->
+                <div class="flex items-center p-3 bg-white rounded-lg shadow-sm border-l-4 border-teal-200"><div class="w-10 h-10 rounded-full bg-teal-50 flex items-center justify-center text-teal-400 font-bold text-lg mr-4 shrink-0">07</div><div><h3 class="text-lg font-bold text-slate-800">おすすめルート デモ動画</h3><p class="text-xs text-slate-500 font-medium">Demo Video 1 (デモ動画)</p></div></div>
+                <div class="flex items-center p-3 bg-white rounded-lg shadow-sm border-l-4 border-teal-300"><div class="w-10 h-10 rounded-full bg-teal-50 flex items-center justify-center text-teal-400 font-bold text-lg mr-4 shrink-0">08</div><div><h3 class="text-lg font-bold text-slate-800">主要機能2: 地図・お気に入り・マイルート</h3><p class="text-xs text-slate-500 font-medium">Core Feature 2 (地図・お気に入り)</p></div></div>
+                <div class="flex items-center p-3 bg-white rounded-lg shadow-sm border-l-4 border-teal-400"><div class="w-10 h-10 rounded-full bg-teal-50 flex items-center justify-center text-teal-500 font-bold text-lg mr-4 shrink-0">09</div><div><h3 class="text-lg font-bold text-slate-800">地図・お気に入り デモ動画</h3><p class="text-xs text-slate-500 font-medium">Demo Video 2 (デモ動画)</p></div></div>
+                <div class="flex items-center p-3 bg-white rounded-lg shadow-sm border-l-4 border-teal-500"><div class="w-10 h-10 rounded-full bg-teal-50 flex items-center justify-center text-teal-500 font-bold text-lg mr-4 shrink-0">10</div><div><h3 class="text-lg font-bold text-slate-800">会員・認証機能</h3><p class="text-xs text-slate-500 font-medium">Auth & Security (認証機能)</p></div></div>
+                <div class="flex items-center p-3 bg-white rounded-lg shadow-sm border-l-4 border-teal-600"><div class="w-10 h-10 rounded-full bg-teal-50 flex items-center justify-center text-teal-600 font-bold text-lg mr-4 shrink-0">11</div><div><h3 class="text-lg font-bold text-slate-800">トラブルシューティング＆改善</h3><p class="text-xs text-slate-500 font-medium">Troubleshooting (トラブルシューティング)</p></div></div>
+                <div class="flex items-center p-3 bg-white rounded-lg shadow-sm border-l-4 border-teal-700"><div class="w-10 h-10 rounded-full bg-teal-50 flex items-center justify-center text-teal-700 font-bold text-lg mr-4 shrink-0">12</div><div><h3 class="text-lg font-bold text-slate-800">まとめ</h3><p class="text-xs text-slate-500 font-medium">Conclusion (まとめ)</p></div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================= SLIDE 3 : OVERVIEW ============================= -->
+<div class="slide-container bg-white text-slate-800">
+    <div class="absolute top-0 left-0 w-full h-1.5 accent-bar z-20"></div>
+    <div class="px-12 pt-10 pb-4 flex justify-between items-end border-b border-slate-100 bg-white relative z-10">
+        <div>
+            <span class="text-teal-600 font-bold tracking-wider uppercase text-sm mb-1 block">01. Overview</span>
+            <h1 class="text-4xl font-black text-slate-900">プロジェクト概要 <span class="text-2xl font-light text-slate-400 ml-2">Overview</span></h1>
+        </div>
+    </div>
+    <div class="flex-1 px-12 py-8 bg-slate-50 relative flex flex-col gap-5">
+        <div class="grid grid-cols-2 gap-6">
+            <div class="bg-white p-6 rounded-xl card-shadow border border-slate-200">
+                <h3 class="text-xl font-bold text-slate-800 flex items-center mb-3"><i class="fa-solid fa-lightbulb text-teal-500 mr-3"></i>開発背景 <span class="text-sm font-normal text-slate-400 ml-2">Background</span></h3>
+                <p class="text-sm text-slate-600 leading-relaxed">旅行の計画時、点在するグルメ・カフェ・観光地の情報を一つずつ調べ、動線を組む手間を解決したいと考えました。<b class="text-slate-800">地図での店舗検索から、最適な動線の旅行ルート推薦、予約までを一箇所で</b>行える統合サービスを目標に企画しました。</p>
+            </div>
+            <div class="bg-white p-6 rounded-xl card-shadow border border-slate-200">
+                <h3 class="text-xl font-bold text-slate-800 flex items-center mb-3"><i class="fa-solid fa-bullseye text-teal-500 mr-3"></i>開発目的 <span class="text-sm font-normal text-slate-400 ml-2">Purpose</span></h3>
+                <ul class="text-sm text-slate-600 leading-relaxed space-y-1.5">
+                    <li><i class="fa-solid fa-check text-emerald-500 mr-2"></i>Servlet/JSP + Oracle による <b>MVC Webアプリ</b> の設計・実装力を証明</li>
+                    <li><i class="fa-solid fa-check text-emerald-500 mr-2"></i>外部API(Google Maps/Places)連携と <b>推薦アルゴリズム</b> の設計経験</li>
+                    <li><i class="fa-solid fa-check text-emerald-500 mr-2"></i>4人チームでの <b>協業(Git)</b> と機能統合の経験</li>
+                </ul>
+            </div>
+        </div>
+        <div class="grid grid-cols-3 gap-6 flex-1">
+            <div class="col-span-2 bg-white p-6 rounded-xl card-shadow border border-slate-200">
+                <h3 class="text-xl font-bold text-slate-800 flex items-center mb-3"><i class="fa-solid fa-layer-group text-teal-500 mr-3"></i>プロジェクト範囲 <span class="text-sm font-normal text-slate-400 ml-2">Scope</span></h3>
+                <div class="grid grid-cols-2 gap-x-6 gap-y-2 text-sm text-slate-600">
+                    <span><i class="fa-solid fa-user-shield text-teal-400 mr-2"></i>会員登録・メール認証・ログイン</span>
+                    <span><i class="fa-solid fa-key text-teal-400 mr-2"></i>ID／パスワード検索</span>
+                    <span><i class="fa-solid fa-map-location-dot text-teal-400 mr-2"></i>カテゴリ別の地図店舗検索</span>
+                    <span><i class="fa-solid fa-heart text-teal-400 mr-2"></i>お気に入りの追加・削除</span>
+                    <span><i class="fa-solid fa-route text-teal-400 mr-2"></i>テーマ別のおすすめルート</span>
+                    <span><i class="fa-solid fa-map-pin text-teal-400 mr-2"></i>マイ旅行ルート(お気に入り巡回)</span>
+                    <span><i class="fa-solid fa-calendar-check text-teal-400 mr-2"></i>店舗予約＆レビュー</span>
+                    <span><i class="fa-solid fa-language text-teal-400 mr-2"></i>多言語(韓/英/日)</span>
+                </div>
+            </div>
+            <div class="bg-teal-800 text-white p-6 rounded-xl card-shadow flex flex-col justify-center">
+                <h3 class="text-lg font-bold flex items-center mb-4"><i class="fa-solid fa-star text-amber-300 mr-2"></i>担当役割 <span class="text-xs font-normal text-teal-200 ml-2">Role</span></h3>
+                <ul class="text-sm space-y-2 text-teal-50">
+                    <li><i class="fa-solid fa-angle-right mr-2 text-teal-300"></i>認証・権限 (jBCrypt・セッション)</li>
+                    <li><i class="fa-solid fa-angle-right mr-2 text-teal-300"></i><b>推薦ルートアルゴリズム</b></li>
+                    <li><i class="fa-solid fa-angle-right mr-2 text-teal-300"></i>地図/Places 連携・お気に入り</li>
+                    <li><i class="fa-solid fa-angle-right mr-2 text-teal-300"></i>管理者の店舗登録</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================= SLIDE 4 : TECH STACK ============================= -->
+<div class="slide-container bg-white text-slate-800">
+    <div class="absolute top-0 left-0 w-full h-1.5 accent-bar z-20"></div>
+    <div class="px-12 pt-10 pb-4 flex justify-between items-end border-b border-slate-100 bg-white relative z-10">
+        <div>
+            <span class="text-teal-600 font-bold tracking-wider uppercase text-sm mb-1 block">02. Tech Stack</span>
+            <h1 class="text-4xl font-black text-slate-900">技術スタック <span class="text-2xl font-light text-slate-400 ml-2">Tech Stack</span></h1>
+        </div>
+    </div>
+    <div class="flex-1 px-12 py-8 bg-slate-50 grid grid-cols-2 gap-6">
+        <!-- Frontend -->
+        <div class="bg-white p-6 rounded-xl card-shadow border border-slate-200">
+            <h3 class="text-xl font-bold text-slate-800 flex items-center mb-4"><span class="tech-icon-bg mr-3"><i class="fa-solid fa-desktop text-teal-600"></i></span>Frontend</h3>
+            <div class="flex flex-wrap gap-2">
+                <span class="keyword-chip bg-teal-100 text-teal-700">JSP / JSTL</span>
+                <span class="keyword-chip bg-teal-100 text-teal-700">HTML5 / CSS3</span>
+                <span class="keyword-chip bg-teal-100 text-teal-700">JavaScript (ES6)</span>
+                <span class="keyword-chip bg-teal-100 text-teal-700">jQuery / Fetch API</span>
+                <span class="keyword-chip bg-teal-100 text-teal-700">Google Maps JS</span>
+            </div>
+            <p class="text-xs text-slate-500 mt-3">EL/JSTLでサーバーデータをビューにバインド、AJAX(fetch/jQuery)でお気に入り・検索を非同期処理</p>
+        </div>
+        <!-- Backend -->
+        <div class="bg-white p-6 rounded-xl card-shadow border border-slate-200">
+            <h3 class="text-xl font-bold text-slate-800 flex items-center mb-4"><span class="tech-icon-bg mr-3"><i class="fa-brands fa-java text-orange-600"></i></span>Backend</h3>
+            <div class="flex flex-wrap gap-2">
+                <span class="keyword-chip bg-orange-100 text-orange-700">Java 17</span>
+                <span class="keyword-chip bg-orange-100 text-orange-700">Servlet</span>
+                <span class="keyword-chip bg-orange-100 text-orange-700">JDBC (DAO)</span>
+                <span class="keyword-chip bg-orange-100 text-orange-700">Command パターン MVC</span>
+                <span class="keyword-chip bg-orange-100 text-orange-700">jBCrypt</span>
+                <span class="keyword-chip bg-orange-100 text-orange-700">JavaMail</span>
+            </div>
+            <p class="text-xs text-slate-500 mt-3">Command パターンでリクエスト(*.do)→Service→DAO の流れを分離、jBCrypt でパスワードをハッシュ化、JavaMail でメール認証</p>
+        </div>
+        <!-- Database -->
+        <div class="bg-white p-6 rounded-xl card-shadow border border-slate-200">
+            <h3 class="text-xl font-bold text-slate-800 flex items-center mb-4"><span class="tech-icon-bg mr-3"><i class="fa-solid fa-database text-red-600"></i></span>Database</h3>
+            <div class="flex flex-wrap gap-2">
+                <span class="keyword-chip bg-red-100 text-red-700">Oracle 11g XE</span>
+                <span class="keyword-chip bg-red-100 text-red-700">SQL Developer</span>
+                <span class="keyword-chip bg-red-100 text-red-700">Sequence / PK・FK</span>
+            </div>
+            <p class="text-xs text-slate-500 mt-3">シーケンスによるPK、外部キーで会員・店舗・お気に入り・予約・レビューの関係を設計。Google店舗は place_id のみ保存(規約遵守)</p>
+        </div>
+        <!-- Server & Tools -->
+        <div class="bg-white p-6 rounded-xl card-shadow border border-slate-200">
+            <h3 class="text-xl font-bold text-slate-800 flex items-center mb-4"><span class="tech-icon-bg mr-3"><i class="fa-solid fa-screwdriver-wrench text-slate-600"></i></span>Server &amp; Tools</h3>
+            <div class="flex flex-wrap gap-2">
+                <span class="keyword-chip bg-slate-200 text-slate-700">Apache Tomcat 9</span>
+                <span class="keyword-chip bg-slate-200 text-slate-700">Eclipse</span>
+                <span class="keyword-chip bg-slate-200 text-slate-700">Git / GitHub</span>
+                <span class="keyword-chip bg-slate-200 text-slate-700">Google Maps / Places API</span>
+            </div>
+            <p class="text-xs text-slate-500 mt-3">APIキー・DB・メールの認証情報は <b>環境変数</b> に分離し、ソースへの露出を防止</p>
+        </div>
+    </div>
+</div>
+
+<!-- ============================= SLIDE 5 : REQUIREMENTS ============================= -->
+<div class="slide-container bg-white text-slate-800">
+    <div class="absolute top-0 left-0 w-full h-1.5 accent-bar z-20"></div>
+    <div class="px-12 pt-10 pb-4 flex justify-between items-end border-b border-slate-100 bg-white relative z-10">
+        <div>
+            <span class="text-teal-600 font-bold tracking-wider uppercase text-sm mb-1 block">03. Requirements</span>
+            <h1 class="text-4xl font-black text-slate-900">要件定義 <span class="text-2xl font-light text-slate-400 ml-2">Requirements</span></h1>
+        </div>
+    </div>
+    <div class="flex-1 px-12 py-8 bg-slate-50 grid grid-cols-2 gap-6">
+        <div class="bg-white rounded-xl card-shadow border border-slate-200 overflow-hidden flex flex-col">
+            <div class="bg-teal-700 text-white px-5 py-3 font-bold flex items-center"><i class="fa-solid fa-list-check mr-2"></i>機能要件 <span class="text-xs font-normal text-teal-200 ml-2">Functional</span></div>
+            <div class="p-1 text-sm">
+                <div class="table-row px-4 py-2 flex justify-between"><span><b>FR-01</b> 会員登録 / メール認証</span><span class="badge bg-emerald-100 text-emerald-700">完了</span></div>
+                <div class="table-row px-4 py-2 flex justify-between"><span><b>FR-02</b> ログイン / セッション / ログアウト</span><span class="badge bg-emerald-100 text-emerald-700">完了</span></div>
+                <div class="table-row px-4 py-2 flex justify-between"><span><b>FR-03</b> ID / パスワード検索</span><span class="badge bg-emerald-100 text-emerald-700">完了</span></div>
+                <div class="table-row px-4 py-2 flex justify-between"><span><b>FR-04</b> カテゴリ別の地図店舗検索</span><span class="badge bg-emerald-100 text-emerald-700">完了</span></div>
+                <div class="table-row px-4 py-2 flex justify-between"><span><b>FR-05</b> お気に入りの追加 / 削除</span><span class="badge bg-emerald-100 text-emerald-700">完了</span></div>
+                <div class="table-row px-4 py-2 flex justify-between"><span><b>FR-06</b> テーマ別のおすすめルート</span><span class="badge bg-emerald-100 text-emerald-700">完了</span></div>
+                <div class="table-row px-4 py-2 flex justify-between"><span><b>FR-07</b> マイ旅行ルート(お気に入り巡回)</span><span class="badge bg-emerald-100 text-emerald-700">完了</span></div>
+                <div class="table-row px-4 py-2 flex justify-between"><span><b>FR-08</b> 予約 / レビュー / 多言語</span><span class="badge bg-emerald-100 text-emerald-700">完了</span></div>
+            </div>
+        </div>
+        <div class="bg-white rounded-xl card-shadow border border-slate-200 overflow-hidden flex flex-col">
+            <div class="bg-slate-700 text-white px-5 py-3 font-bold flex items-center"><i class="fa-solid fa-shield-halved mr-2"></i>非機能要件 <span class="text-xs font-normal text-slate-300 ml-2">Non-functional</span></div>
+            <div class="p-5 space-y-4 text-sm text-slate-600">
+                <div><b class="text-slate-800"><i class="fa-solid fa-lock text-teal-500 mr-2"></i>セキュリティ</b><p class="ml-6 mt-1">パスワードは jBCrypt 一方向ハッシュ、セッション認証、管理者権限(role)の分離、認証情報の環境変数化</p></div>
+                <div><b class="text-slate-800"><i class="fa-solid fa-gauge-high text-teal-500 mr-2"></i>性能・コスト</b><p class="ml-6 mt-1">Google店舗は place_id のみ保存し重複・コストを最小化、推薦はコース生成時に1回のみ計算</p></div>
+                <div><b class="text-slate-800"><i class="fa-solid fa-language text-teal-500 mr-2"></i>国際化</b><p class="ml-6 mt-1">properties ベースの i18n(ko/en/ja) で多言語画面を提供 — 日本ユーザー対応</p></div>
+                <div><b class="text-slate-800"><i class="fa-solid fa-code-branch text-teal-500 mr-2"></i>保守性</b><p class="ml-6 mt-1">Command パターンで機能ごとにクラスを分離、メンバー間の役割分担と Git 協業</p></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================= SLIDE 6 : ARCHITECTURE ============================= -->
+<div class="slide-container bg-white text-slate-800">
+    <div class="absolute top-0 left-0 w-full h-1.5 accent-bar z-20"></div>
+    <div class="px-12 pt-10 pb-4 flex justify-between items-end border-b border-slate-100 bg-white relative z-10">
+        <div>
+            <span class="text-teal-600 font-bold tracking-wider uppercase text-sm mb-1 block">04. Architecture</span>
+            <h1 class="text-4xl font-black text-slate-900">システムアーキテクチャ <span class="text-2xl font-light text-slate-400 ml-2">MVC · Command</span></h1>
+        </div>
+    </div>
+    <div class="flex-1 px-12 py-10 bg-slate-50 relative flex flex-col justify-center">
+        <div class="w-full max-w-6xl mx-auto grid grid-cols-9 gap-3 items-center">
+            <!-- Client -->
+            <div class="col-span-2 flow-card p-5 text-center">
+                <div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-2"><i class="fa-solid fa-user-large text-slate-600 text-xl"></i></div>
+                <h3 class="font-bold text-slate-800">Client (JSP)</h3>
+                <p class="text-xs text-slate-500 mt-1">View / リクエスト</p>
+            </div>
+            <div class="col-span-1 text-center text-slate-400"><i class="fa-solid fa-arrow-right-long text-2xl"></i><p class="text-[10px] mt-1">*.do</p></div>
+            <!-- Controller -->
+            <div class="col-span-2 flow-card p-5 text-center border-teal-200">
+                <div class="w-12 h-12 rounded-full bg-teal-100 flex items-center justify-center mx-auto mb-2"><i class="fa-solid fa-diagram-project text-teal-600 text-xl"></i></div>
+                <h3 class="font-bold text-slate-800">Controller</h3>
+                <p class="text-xs text-slate-500 mt-1">FrontController<br/>(Servlet)</p>
+            </div>
+            <div class="col-span-1 text-center text-slate-400"><i class="fa-solid fa-arrow-right-long text-2xl"></i><p class="text-[10px] mt-1">Command</p></div>
+            <!-- Service -->
+            <div class="col-span-2 flow-card p-5 text-center border-teal-200">
+                <div class="w-12 h-12 rounded-full bg-teal-100 flex items-center justify-center mx-auto mb-2"><i class="fa-solid fa-gears text-teal-600 text-xl"></i></div>
+                <h3 class="font-bold text-slate-800">Service</h3>
+                <p class="text-xs text-slate-500 mt-1">ビジネスロジック<br/>(Command 実装)</p>
+            </div>
+        </div>
+        <div class="w-full max-w-6xl mx-auto grid grid-cols-9 gap-3 items-center mt-4">
+            <div class="col-span-6"></div>
+            <div class="col-span-1 text-center text-slate-400"><i class="fa-solid fa-arrow-down-long text-2xl"></i></div>
+            <div class="col-span-2"></div>
+        </div>
+        <div class="w-full max-w-6xl mx-auto grid grid-cols-9 gap-3 items-center">
+            <div class="col-span-2 flow-card p-5 text-center">
+                <div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-2"><i class="fa-solid fa-server text-slate-600 text-xl"></i></div>
+                <h3 class="font-bold text-slate-800">Util / API</h3>
+                <p class="text-xs text-slate-500 mt-1">推薦アルゴリズム<br/>Maps・Places</p>
+            </div>
+            <div class="col-span-1 text-center text-slate-400"><i class="fa-solid fa-arrow-left-long text-2xl"></i></div>
+            <div class="col-span-2 flow-card p-5 text-center border-teal-200">
+                <div class="w-12 h-12 rounded-full bg-teal-100 flex items-center justify-center mx-auto mb-2"><i class="fa-solid fa-cube text-teal-600 text-xl"></i></div>
+                <h3 class="font-bold text-slate-800">DAO</h3>
+                <p class="text-xs text-slate-500 mt-1">JDBC データアクセス</p>
+            </div>
+            <div class="col-span-1 text-center text-slate-400"><i class="fa-solid fa-arrow-left-long text-2xl"></i><p class="text-[10px] mt-1">SQL</p></div>
+            <div class="col-span-2 flow-card p-5 text-center border-red-200">
+                <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-2"><i class="fa-solid fa-database text-red-600 text-xl"></i></div>
+                <h3 class="font-bold text-slate-800">Oracle DB</h3>
+                <p class="text-xs text-slate-500 mt-1">データ保存</p>
+            </div>
+        </div>
+        <p class="text-center text-sm text-slate-500 mt-10">リクエストは <b>FrontController(Servlet)</b> が受け取り、URL(<code>*.do</code>)に応じた <b>Command(Service)</b> に委譲、Service は <b>DAO</b> を通じて Oracle と通信します。推薦アルゴリズム・外部APIは Util 層に分離しました。</p>
+    </div>
+</div>
+
+<!-- ============================= SLIDE 7 : DATABASE (ERD) ============================= -->
+<div class="slide-container bg-white text-slate-800">
+    <div class="absolute top-0 left-0 w-full h-1.5 accent-bar z-20"></div>
+    <div class="px-12 pt-10 pb-4 flex justify-between items-end border-b border-slate-100 bg-white relative z-10">
+        <div>
+            <span class="text-teal-600 font-bold tracking-wider uppercase text-sm mb-1 block">05. Database</span>
+            <h1 class="text-4xl font-black text-slate-900">データベース設計 <span class="text-2xl font-light text-slate-400 ml-2">ER図</span></h1>
+        </div>
+        <div class="text-slate-400 text-sm font-medium">Oracle · 8 Tables</div>
+    </div>
+    <div class="flex-1 px-12 py-8 bg-slate-50 grid grid-cols-4 gap-5 content-start">
+        <div class="erd-table"><div class="erd-title"><i class="fa-solid fa-user mr-1"></i> USERS</div>
+            <div class="erd-row"><span class="erd-pk">id (PK)</span><span class="text-slate-400">NUMBER</span></div>
+            <div class="erd-row"><span>email</span><span class="text-slate-400">VARCHAR2</span></div>
+            <div class="erd-row"><span>password</span><span class="text-slate-400">VARCHAR2</span></div>
+            <div class="erd-row"><span>nickname</span><span class="text-slate-400">VARCHAR2</span></div>
+            <div class="erd-row"><span>role</span><span class="text-slate-400">VARCHAR2</span></div>
+            <div class="erd-row"><span>status</span><span class="text-slate-400">VARCHAR2</span></div>
+        </div>
+        <div class="erd-table"><div class="erd-title"><i class="fa-solid fa-store mr-1"></i> PLACES</div>
+            <div class="erd-row"><span class="erd-pk">id (PK)</span><span class="text-slate-400">NUMBER</span></div>
+            <div class="erd-row"><span>name</span><span class="text-slate-400">VARCHAR2</span></div>
+            <div class="erd-row"><span>category</span><span class="text-slate-400">VARCHAR2</span></div>
+            <div class="erd-row"><span>region</span><span class="text-slate-400">VARCHAR2</span></div>
+            <div class="erd-row"><span>latitude / longitude</span><span class="text-slate-400">NUMBER</span></div>
+            <div class="erd-row"><span>google_place_id</span><span class="text-slate-400">VARCHAR2</span></div>
+            <div class="erd-row"><span>rating</span><span class="text-slate-400">NUMBER</span></div>
+        </div>
+        <div class="erd-table"><div class="erd-title"><i class="fa-solid fa-heart mr-1"></i> BOOKMARKS</div>
+            <div class="erd-row"><span class="erd-pk">id (PK)</span><span class="text-slate-400">NUMBER</span></div>
+            <div class="erd-row"><span class="erd-fk">users_id (FK)</span><span class="text-slate-400">NUMBER</span></div>
+            <div class="erd-row"><span class="erd-fk">places_id (FK)</span><span class="text-slate-400">NUMBER</span></div>
+            <div class="erd-row"><span>created_at</span><span class="text-slate-400">DATE</span></div>
+        </div>
+        <div class="erd-table"><div class="erd-title"><i class="fa-solid fa-calendar-check mr-1"></i> RESERVATIONS</div>
+            <div class="erd-row"><span class="erd-pk">id (PK)</span><span class="text-slate-400">NUMBER</span></div>
+            <div class="erd-row"><span class="erd-fk">users_id (FK)</span><span class="text-slate-400">NUMBER</span></div>
+            <div class="erd-row"><span class="erd-fk">slots_id (FK)</span><span class="text-slate-400">NUMBER</span></div>
+            <div class="erd-row"><span>status</span><span class="text-slate-400">VARCHAR2</span></div>
+        </div>
+        <div class="erd-table"><div class="erd-title"><i class="fa-solid fa-clock mr-1"></i> SLOTS</div>
+            <div class="erd-row"><span class="erd-pk">id (PK)</span><span class="text-slate-400">NUMBER</span></div>
+            <div class="erd-row"><span class="erd-fk">places_id (FK)</span><span class="text-slate-400">NUMBER</span></div>
+            <div class="erd-row"><span>slot_time</span><span class="text-slate-400">VARCHAR2</span></div>
+            <div class="erd-row"><span>capacity</span><span class="text-slate-400">NUMBER</span></div>
+        </div>
+        <div class="erd-table"><div class="erd-title"><i class="fa-solid fa-comment-dots mr-1"></i> REVIEWS</div>
+            <div class="erd-row"><span class="erd-pk">id (PK)</span><span class="text-slate-400">NUMBER</span></div>
+            <div class="erd-row"><span class="erd-fk">users_id (FK)</span><span class="text-slate-400">NUMBER</span></div>
+            <div class="erd-row"><span class="erd-fk">places_id (FK)</span><span class="text-slate-400">NUMBER</span></div>
+            <div class="erd-row"><span>rating / content</span><span class="text-slate-400">NUMBER</span></div>
+        </div>
+        <div class="erd-table"><div class="erd-title"><i class="fa-solid fa-route mr-1"></i> ROUTES</div>
+            <div class="erd-row"><span class="erd-pk">id (PK)</span><span class="text-slate-400">NUMBER</span></div>
+            <div class="erd-row"><span class="erd-fk">users_id (FK)</span><span class="text-slate-400">NUMBER</span></div>
+            <div class="erd-row"><span>title / region</span><span class="text-slate-400">VARCHAR2</span></div>
+        </div>
+        <div class="erd-table"><div class="erd-title"><i class="fa-solid fa-list-ol mr-1"></i> ROUTE_ITEMS</div>
+            <div class="erd-row"><span class="erd-pk">id (PK)</span><span class="text-slate-400">NUMBER</span></div>
+            <div class="erd-row"><span class="erd-fk">routes_id (FK)</span><span class="text-slate-400">NUMBER</span></div>
+            <div class="erd-row"><span class="erd-fk">places_id (FK)</span><span class="text-slate-400">NUMBER</span></div>
+            <div class="erd-row"><span>visit_order</span><span class="text-slate-400">NUMBER</span></div>
+        </div>
+    </div>
+    <div class="px-12 pb-5 bg-slate-50">
+        <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs">
+            <span class="font-bold text-slate-700">関係 <span class="text-slate-400 font-normal">Relations</span></span>
+            <span class="badge bg-teal-100 text-teal-700">USERS <b class="mx-1">1 : N</b> BOOKMARKS · RESERVATIONS · REVIEWS · ROUTES</span>
+            <span class="badge bg-emerald-100 text-emerald-700">PLACES <b class="mx-1">1 : N</b> BOOKMARKS · SLOTS · REVIEWS · ROUTE_ITEMS</span>
+            <span class="badge bg-amber-100 text-amber-700">SLOTS <b class="mx-1">1 : N</b> RESERVATIONS</span>
+        </div>
+        <p class="text-[11px] text-slate-400 text-center mt-2">Googleのリアルタイム店舗は <b>google_place_id</b> のみで自社DB(PLACES)と連携します。</p>
+    </div>
+</div>
+
+<!-- ============================= SLIDE 8 : FEATURE 1 (ROUTE ALGORITHM) ============================= -->
+<div class="slide-container bg-white text-slate-800">
+    <div class="absolute top-0 left-0 w-full h-1.5 accent-bar z-20"></div>
+    <div class="px-12 pt-10 pb-4 flex justify-between items-end border-b border-slate-100 bg-white relative z-10">
+        <div>
+            <span class="text-teal-600 font-bold tracking-wider uppercase text-sm mb-1 block">06. Core Feature 01</span>
+            <h1 class="text-4xl font-black text-slate-900">おすすめ旅行ルート <span class="text-2xl font-light text-slate-400 ml-2">推薦アルゴリズム</span></h1>
+        </div>
+        <div class="text-slate-400 text-sm font-medium">★ 担当のコア機能</div>
+    </div>
+    <div class="flex-1 px-12 py-8 bg-slate-50 flex gap-8">
+        <!-- Left: pipeline -->
+        <div class="flex-1">
+            <div class="flex items-center mb-5 pb-3 border-b border-slate-200"><div class="w-10 h-10 rounded-lg bg-teal-100 text-teal-600 flex items-center justify-center mr-3 text-xl"><i class="fa-solid fa-diagram-successor"></i></div><div><h3 class="text-lg font-bold text-slate-800">推薦パイプライン</h3><p class="text-xs text-slate-500">Recommendation Pipeline (推薦の流れ)</p></div></div>
+            <div class="bg-white p-6 rounded-xl card-shadow border border-slate-200">
+                <div class="process-step"><div class="step-indicator bg-teal-500"></div><h4 class="font-bold text-slate-800 text-sm">1. 候補選定 (テーマ・単一地域)</h4><p class="text-xs text-slate-600 mt-1">都市/カフェ/自然のテーマと <b>単一の地域</b> 内だけで店舗候補を取得 → 国・都市をまたぐ動線を防止</p></div>
+                <div class="process-step"><div class="step-indicator bg-teal-500"></div><h4 class="font-bold text-slate-800 text-sm">2. 重複除去 (Dedup)</h4><p class="text-xs text-slate-600 mt-1">シードデータと Google のお気に入りで重複保存された同一店舗を <b>名前基準</b> で除去</p></div>
+                <div class="process-step"><div class="step-indicator bg-teal-500"></div><h4 class="font-bold text-slate-800 text-sm">3. 選定 (多様性 + 評価)</h4><p class="text-xs text-slate-600 mt-1">カテゴリの <b>ラウンドロビン</b> で多様性を確保 + 評価順に上位N件を選定</p></div>
+                <div class="process-step"><div class="step-indicator bg-teal-600"></div><h4 class="font-bold text-slate-800 text-sm">4. 動線最適化 (NN + 2-opt)</h4><p class="text-xs text-slate-600 mt-1"><b>最近傍法</b> で初期経路 → <b>2-opt</b> で交差を除去し移動距離を短縮</p><div class="code-box">dist = Haversine(lat1,lng1, lat2,lng2)</div></div>
+                <div class="process-step"><div class="step-indicator bg-teal-600"></div><h4 class="font-bold text-slate-800 text-sm">5. 表示 (サムネイル・移動距離/時間)</h4><p class="text-xs text-slate-600 mt-1">区間ごとの距離・所要時間(徒歩/車の推定)とサムネイルをカードで提供</p></div>
+            </div>
+        </div>
+        <!-- Right: highlights -->
+        <div class="w-80 flex flex-col gap-4">
+            <div class="bg-white p-5 rounded-xl card-shadow border border-slate-200">
+                <h4 class="font-bold text-slate-800 flex items-center mb-3"><i class="fa-solid fa-wand-magic-sparkles text-teal-500 mr-2"></i>2-opt 動線最適化 <span class="text-xs font-normal text-slate-400 ml-1">最適化</span></h4>
+                <svg viewBox="0 0 280 125" class="w-full">
+                    <text x="14" y="14" font-size="11" fill="#e11d48" font-weight="700">Before · 交差</text>
+                    <path d="M25,38 L110,98 L110,38 L25,98" fill="none" stroke="#fb7185" stroke-width="2.5"/>
+                    <circle cx="25" cy="38" r="5" fill="#0f766e"/><circle cx="110" cy="38" r="5" fill="#0f766e"/><circle cx="110" cy="98" r="5" fill="#0f766e"/><circle cx="25" cy="98" r="5" fill="#0f766e"/>
+                    <text x="132" y="72" font-size="22" fill="#94a3b8">&#8594;</text>
+                    <text x="170" y="14" font-size="11" fill="#0d9488" font-weight="700">After · 最適</text>
+                    <path d="M178,38 L262,38 L262,98 L178,98" fill="none" stroke="#14b8a6" stroke-width="2.5"/>
+                    <circle cx="178" cy="38" r="5" fill="#0f766e"/><circle cx="262" cy="38" r="5" fill="#0f766e"/><circle cx="262" cy="98" r="5" fill="#0f766e"/><circle cx="178" cy="98" r="5" fill="#0f766e"/>
+                </svg>
+                <p class="text-xs text-slate-500 mt-1">交差する経路を入れ替え、<b>総移動距離を短縮</b>します。</p>
+            </div>
+            <div class="brand-grad text-white p-5 rounded-xl card-shadow flex-1">
+                <h4 class="font-bold flex items-center mb-3"><i class="fa-solid fa-star text-amber-300 mr-2"></i>コアポイント</h4>
+                <ul class="text-sm space-y-2 text-teal-50">
+                    <li><i class="fa-solid fa-check text-emerald-300 mr-2"></i>単一地域に限定し <b>現実的な動線</b></li>
+                    <li><i class="fa-solid fa-check text-emerald-300 mr-2"></i>Haversine + 2-opt で <b>移動距離を最小化</b></li>
+                    <li><i class="fa-solid fa-check text-emerald-300 mr-2"></i>移動時間の計算部を <b>分離設計</b><br/>(実道路APIへ差し替え可能)</li>
+                    <li><i class="fa-solid fa-check text-emerald-300 mr-2"></i>お気に入り店舗で <b>マイ旅行ルート</b> を自動生成</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================= SLIDE 9 : DEMO VIDEO 1 ============================= -->
+<div class="slide-container bg-white text-slate-800">
+    <div class="absolute top-0 left-0 w-full h-1.5 accent-bar z-20"></div>
+    <div class="px-12 pt-10 pb-4 flex justify-between items-end border-b border-slate-100 bg-white relative z-10">
+        <div>
+            <span class="text-teal-600 font-bold tracking-wider uppercase text-sm mb-1 block">Demo Video 01</span>
+            <h1 class="text-4xl font-black text-slate-900">おすすめルート デモ動画 <span class="text-2xl font-light text-slate-400 ml-2">Demo</span></h1>
+        </div>
+    </div>
+    <div class="flex-1 bg-slate-100 flex items-center justify-center">
+        <div class="video-wrapper">
+            <iframe src="https://www.youtube.com/embed/Q_EDx5cRRZE" title="おすすめルート デモ"
+                frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+    </div>
+</div>
+
+<!-- ============================= SLIDE 10 : FEATURE 2 (MAP / BOOKMARK) ============================= -->
+<div class="slide-container bg-white text-slate-800">
+    <div class="absolute top-0 left-0 w-full h-1.5 accent-bar z-20"></div>
+    <div class="px-12 pt-10 pb-4 flex justify-between items-end border-b border-slate-100 bg-white relative z-10">
+        <div>
+            <span class="text-teal-600 font-bold tracking-wider uppercase text-sm mb-1 block">07. Core Feature 02</span>
+            <h1 class="text-4xl font-black text-slate-900">地図検索・お気に入り <span class="text-2xl font-light text-slate-400 ml-2">Map &amp; Bookmark</span></h1>
+        </div>
+    </div>
+    <div class="flex-1 px-12 py-8 bg-slate-50 flex gap-8">
+        <div class="flex-1">
+            <div class="flex items-center mb-5 pb-3 border-b border-slate-200"><div class="w-10 h-10 rounded-lg bg-teal-100 text-teal-600 flex items-center justify-center mr-3 text-xl"><i class="fa-solid fa-map-location-dot"></i></div><div><h3 class="text-lg font-bold text-slate-800">地図ベースの店舗検索</h3><p class="text-xs text-slate-500">Google Places リアルタイム検索</p></div></div>
+            <div class="bg-white p-6 rounded-xl card-shadow border border-slate-200 space-y-4 text-sm text-slate-600">
+                <p><b class="text-slate-800"><i class="fa-solid fa-magnifying-glass text-teal-500 mr-2"></i>カテゴリ・キーワード検索</b><br/><span class="ml-6">地域選択後、カテゴリは <b>nearbySearch</b>、キーワードは <b>textSearch</b> に分岐し、地図マーカー + 結果カードで表示</span></p>
+                <p><b class="text-slate-800"><i class="fa-solid fa-shield-halved text-teal-500 mr-2"></i>Google規約に準拠した設計</b><br/><span class="ml-6">店舗情報はリアルタイム取得、自社DBには <b>google_place_id</b> のみ保存 → 永続保存禁止の規約遵守 + 重複防止</span></p>
+                <div class="flex flex-wrap gap-1 ml-6">
+                    <span class="keyword-chip bg-teal-100 text-teal-700">Places API</span>
+                    <span class="keyword-chip bg-teal-100 text-teal-700">nearbySearch</span>
+                    <span class="keyword-chip bg-teal-100 text-teal-700">textSearch</span>
+                    <span class="keyword-chip bg-teal-100 text-teal-700">Marker</span>
+                </div>
+            </div>
+        </div>
+        <div class="flex-1">
+            <div class="flex items-center mb-5 pb-3 border-b border-slate-200"><div class="w-10 h-10 rounded-lg bg-red-100 text-red-500 flex items-center justify-center mr-3 text-xl"><i class="fa-solid fa-heart"></i></div><div><h3 class="text-lg font-bold text-slate-800">お気に入り＆マイ旅行ルート</h3><p class="text-xs text-slate-500">Bookmark &amp; My Route</p></div></div>
+            <div class="bg-white p-6 rounded-xl card-shadow border border-slate-200 space-y-4 text-sm text-slate-600">
+                <p><b class="text-slate-800"><i class="fa-solid fa-star text-teal-500 mr-2"></i>お気に入りトグル(AJAX)</b><br/><span class="ml-6">Google店舗をお気に入りすると <b>place upsert</b>(place_id 基準で重複防止)後に bookmarks をトグル → リロードなしで★を更新</span></p>
+                <p><b class="text-slate-800"><i class="fa-solid fa-route text-teal-500 mr-2"></i>お気に入り巡回ルート</b><br/><span class="ml-6">お気に入り店舗を座標ベースの <b>最適動線</b> でつなぎ、地図 + タイムラインで提供</span></p>
+                <p><b class="text-slate-800"><i class="fa-solid fa-user-gear text-teal-500 mr-2"></i>管理者の店舗登録</b><br/><span class="ml-6">管理者(role)権限で店舗を直接登録し、推薦データを拡充</span></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================= SLIDE 11 : DEMO VIDEO 2 ============================= -->
+<div class="slide-container bg-white text-slate-800">
+    <div class="absolute top-0 left-0 w-full h-1.5 accent-bar z-20"></div>
+    <div class="px-12 pt-10 pb-4 flex justify-between items-end border-b border-slate-100 bg-white relative z-10">
+        <div>
+            <span class="text-teal-600 font-bold tracking-wider uppercase text-sm mb-1 block">Demo Video 02</span>
+            <h1 class="text-4xl font-black text-slate-900">地図・お気に入り デモ動画 <span class="text-2xl font-light text-slate-400 ml-2">Demo</span></h1>
+        </div>
+    </div>
+    <div class="flex-1 bg-slate-100 flex items-center justify-center">
+        <div class="video-wrapper">
+            <iframe src="https://www.youtube.com/embed/0CXIZ5d8AAI" title="地図・お気に入り デモ"
+                frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+    </div>
+</div>
+
+<!-- ============================= SLIDE 12 : AUTH ============================= -->
+<div class="slide-container bg-white text-slate-800">
+    <div class="absolute top-0 left-0 w-full h-1.5 accent-bar z-20"></div>
+    <div class="px-12 pt-10 pb-4 flex justify-between items-end border-b border-slate-100 bg-white relative z-10">
+        <div>
+            <span class="text-teal-600 font-bold tracking-wider uppercase text-sm mb-1 block">08. Auth &amp; Security</span>
+            <h1 class="text-4xl font-black text-slate-900">会員・認証機能 <span class="text-2xl font-light text-slate-400 ml-2">Authentication</span></h1>
+        </div>
+    </div>
+    <div class="flex-1 px-12 py-8 bg-slate-50 flex gap-8">
+        <div class="flex-1">
+            <div class="flex items-center mb-5 pb-3 border-b border-slate-200"><div class="w-10 h-10 rounded-lg bg-teal-100 text-teal-600 flex items-center justify-center mr-3 text-xl"><i class="fa-solid fa-user-plus"></i></div><div><h3 class="text-lg font-bold text-slate-800">会員登録・メール認証</h3><p class="text-xs text-slate-500">Registration &amp; Email Verify</p></div></div>
+            <div class="bg-white p-6 rounded-xl card-shadow border border-slate-200">
+                <div class="process-step"><div class="step-indicator bg-teal-500"></div><h4 class="font-bold text-slate-800 text-sm">1. 入力値の検証</h4><p class="text-xs text-slate-600 mt-1">JS(フロント) + Servlet(バック)の二重検証、メール・ニックネームの重複確認</p></div>
+                <div class="process-step"><div class="step-indicator bg-teal-500"></div><h4 class="font-bold text-slate-800 text-sm">2. メール認証(JavaMail)</h4><p class="text-xs text-slate-600 mt-1">認証コードを送信・確認後に登録完了</p></div>
+                <div class="process-step"><div class="step-indicator bg-teal-600"></div><h4 class="font-bold text-slate-800 text-sm">3. パスワードのハッシュ化(jBCrypt)</h4><p class="text-xs text-slate-600 mt-1">一方向ハッシュで保存、平文は保持しない</p><div class="code-box">PasswordUtil.hashPassword(pw) // bcrypt</div></div>
+            </div>
+        </div>
+        <div class="flex-1">
+            <div class="flex items-center mb-5 pb-3 border-b border-slate-200"><div class="w-10 h-10 rounded-lg bg-slate-200 text-slate-600 flex items-center justify-center mr-3 text-xl"><i class="fa-solid fa-right-to-bracket"></i></div><div><h3 class="text-lg font-bold text-slate-800">ログイン・セッション・検索</h3><p class="text-xs text-slate-500">Login / Session / Find</p></div></div>
+            <div class="bg-white p-6 rounded-xl card-shadow border border-slate-200 space-y-4 text-sm text-slate-600">
+                <p><b class="text-slate-800"><i class="fa-solid fa-key text-teal-500 mr-2"></i>ログイン/セッション</b><br/><span class="ml-6">jBCrypt 検証後、セッションにユーザー識別子を保存、状態(status)・権限(role)に基づくアクセス制御</span></p>
+                <p><b class="text-slate-800"><i class="fa-solid fa-id-card text-teal-500 mr-2"></i>ID検索</b><br/><span class="ml-6">ニックネームから登録メールを照会</span></p>
+                <p><b class="text-slate-800"><i class="fa-solid fa-unlock-keyhole text-teal-500 mr-2"></i>パスワード検索(再設定)</b><br/><span class="ml-6">メール確認後、新しいパスワードを <b>再ハッシュ</b> して保存 — 平文は露出しない</span></p>
+                <div class="flex flex-wrap gap-1 ml-6"><span class="keyword-chip bg-slate-200 text-slate-700">Session</span><span class="keyword-chip bg-slate-200 text-slate-700">jBCrypt</span><span class="keyword-chip bg-slate-200 text-slate-700">Role</span></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================= SLIDE 13 : TROUBLESHOOTING ============================= -->
+<div class="slide-container bg-white text-slate-800">
+    <div class="absolute top-0 left-0 w-full h-1.5 accent-bar z-20"></div>
+    <div class="px-12 pt-10 pb-4 flex justify-between items-end border-b border-slate-100 bg-white relative z-10">
+        <div>
+            <span class="text-teal-600 font-bold tracking-wider uppercase text-sm mb-1 block">09. Troubleshooting</span>
+            <h1 class="text-4xl font-black text-slate-900">トラブルシューティング＆改善 <span class="text-2xl font-light text-slate-400 ml-2">Troubleshooting</span></h1>
+        </div>
+    </div>
+    <div class="flex-1 px-12 py-8 bg-slate-50 grid grid-cols-2 gap-5 content-start">
+        <div class="bg-white p-5 rounded-xl card-shadow border-l-4 border-red-400">
+            <h4 class="font-bold text-slate-800 text-sm mb-1"><i class="fa-solid fa-triangle-exclamation text-red-500 mr-2"></i>推薦ルートが国をまたぐ</h4>
+            <p class="text-xs text-slate-500 mb-1"><b>課題</b> — 地域未指定時にソウル・東京が1コースに混在し非現実的な動線</p>
+            <p class="text-xs text-teal-700"><b>解決</b> — コントローラで <b>単一地域を強制</b> + 全地域フォールバックを削除</p>
+        </div>
+        <div class="bg-white p-5 rounded-xl card-shadow border-l-4 border-red-400">
+            <h4 class="font-bold text-slate-800 text-sm mb-1"><i class="fa-solid fa-triangle-exclamation text-red-500 mr-2"></i>同じ場所が2回推薦される</h4>
+            <p class="text-xs text-slate-500 mb-1"><b>課題</b> — シードデータと Google のお気に入りで同一店舗が重複保存</p>
+            <p class="text-xs text-teal-700"><b>解決</b> — 推薦段階で <b>名前基準の重複除去(dedup)</b> を適用</p>
+        </div>
+        <div class="bg-white p-5 rounded-xl card-shadow border-l-4 border-red-400">
+            <h4 class="font-bold text-slate-800 text-sm mb-1"><i class="fa-solid fa-triangle-exclamation text-red-500 mr-2"></i>ログインが繰り返し失敗</h4>
+            <p class="text-xs text-slate-500 mb-1"><b>課題</b> — ログインSQLが <code>status='ACTIVE'</code> を参照するが列が欠落</p>
+            <p class="text-xs text-teal-700"><b>解決</b> — <b>users.status 列を追加</b>(DEFAULT 'ACTIVE')して正常化</p>
+        </div>
+        <div class="bg-white p-5 rounded-xl card-shadow border-l-4 border-red-400">
+            <h4 class="font-bold text-slate-800 text-sm mb-1"><i class="fa-solid fa-triangle-exclamation text-red-500 mr-2"></i>認証情報のソース露出リスク</h4>
+            <p class="text-xs text-slate-500 mb-1"><b>課題</b> — APIキー・DB・メールのパスワードがコードにハードコード</p>
+            <p class="text-xs text-teal-700"><b>解決</b> — <b>環境変数に分離</b>(System.getenv) + 露出したキーを破棄</p>
+        </div>
+        <div class="bg-white p-5 rounded-xl card-shadow border-l-4 border-emerald-400 col-span-2">
+            <h4 class="font-bold text-slate-800 text-sm mb-1"><i class="fa-solid fa-arrow-trend-up text-emerald-500 mr-2"></i>改善・今後の計画 <span class="text-xs font-normal text-slate-400 ml-2">Future</span></h4>
+            <div class="grid grid-cols-3 gap-4 text-xs text-slate-600 mt-2">
+                <span><i class="fa-solid fa-angle-right text-emerald-500 mr-1"></i>移動時間を実道路API(Directions)に差し替え</span>
+                <span><i class="fa-solid fa-angle-right text-emerald-500 mr-1"></i>ドラッグでルート順を直接編集</span>
+                <span><i class="fa-solid fa-angle-right text-emerald-500 mr-1"></i>決済連携など予約の高度化</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================= SLIDE 14 : CONCLUSION ============================= -->
+<div class="slide-container brand-grad text-white">
+    <div class="absolute top-0 left-0 w-3 h-full bg-teal-500 z-10"></div>
+    <div class="absolute -bottom-32 -right-32 w-96 h-96 bg-teal-800 rounded-full opacity-50 z-0"></div>
+    <div class="absolute top-16 right-16 w-24 h-24 border-4 border-teal-700 rounded-full opacity-40 z-0"></div>
+    <div class="flex-1 flex flex-col justify-center px-24 z-10 relative">
+        <span class="text-teal-300 font-bold tracking-widest uppercase text-sm mb-2">Conclusion</span>
+        <h1 class="text-5xl font-black mb-10">まとめ <span class="text-3xl font-light text-teal-200 ml-2">Conclusion</span></h1>
+        <div class="grid grid-cols-3 gap-6 mb-10">
+            <div class="bg-teal-800/60 p-6 rounded-xl border border-teal-700">
+                <i class="fa-solid fa-trophy text-amber-300 text-2xl mb-3"></i>
+                <h3 class="text-xl font-bold mb-2">プロジェクト成果</h3>
+                <p class="text-sm text-teal-100 leading-relaxed">Servlet/JSP+Oracle の MVC で会員・地図・推薦・予約を網羅する統合サービスを4人チームで完成</p>
+            </div>
+            <div class="bg-teal-800/60 p-6 rounded-xl border border-teal-700">
+                <i class="fa-solid fa-graduation-cap text-amber-300 text-2xl mb-3"></i>
+                <h3 class="text-xl font-bold mb-2">学んだこと</h3>
+                <p class="text-sm text-teal-100 leading-relaxed">推薦アルゴリズムの設計、外部API規約・コストの考慮、セキュリティ(認証情報の分離)、Git協業とコード統合</p>
+            </div>
+            <div class="bg-teal-800/60 p-6 rounded-xl border border-teal-700">
+                <i class="fa-solid fa-rocket text-amber-300 text-2xl mb-3"></i>
+                <h3 class="text-xl font-bold mb-2">今後の計画</h3>
+                <p class="text-sm text-teal-100 leading-relaxed">実道路ベースの移動時間、ルート編集UI、予約の高度化で実運用レベルまで発展</p>
+            </div>
+        </div>
+        <div class="border-t border-teal-700 pt-6">
+            <h3 class="text-2xl font-bold mb-1">ご清聴ありがとうございました <span class="text-lg font-light text-teal-200 ml-2">Thank you</span></h3>
+        </div>
+    </div>
+    <div class="absolute bottom-0 w-full h-2 bg-gradient-to-r from-teal-400 via-teal-600 to-teal-800"></div>
+</div>
+
+<div id="scrollbar"></div>
+<script>
+  (function(){
+    var slides = Array.prototype.slice.call(document.querySelectorAll('.slide-container'));
+    slides.forEach(function(el, i){
+      el.classList.add('reveal');
+      var pg = document.createElement('div');
+      pg.className = 'page-indicator';
+      pg.textContent = ('0'+(i+1)).slice(-2) + ' / ' + ('0'+slides.length).slice(-2);
+      el.appendChild(pg);
+    });
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting) e.target.classList.add('in'); }); }, { threshold: 0.12 });
+      slides.forEach(function(s){ io.observe(s); });
+    } else { slides.forEach(function(s){ s.classList.add('in'); }); }
+    var bar = document.getElementById('scrollbar');
+    window.addEventListener('scroll', function(){
+      var h = document.documentElement;
+      var sc = h.scrollTop / (h.scrollHeight - h.clientHeight || 1);
+      bar.style.width = (sc*100) + '%';
+    });
+  })();
+</script>
+</body>
+</html>
